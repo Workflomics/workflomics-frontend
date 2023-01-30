@@ -1,5 +1,8 @@
 # Workflomics: A Workflow Benchmarking Platform (front end)
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
