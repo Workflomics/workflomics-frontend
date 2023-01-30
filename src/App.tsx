@@ -1,5 +1,6 @@
 import React, {FC } from 'react';
 import './App.css';
+import { HomeBox } from './components/HomeBox';
 
 const App:FC =  () => {
   
@@ -8,6 +9,7 @@ const App:FC =  () => {
   return (
     <div className="App">
       {platform_name}
+      <HomeBox title="Explore workflow" desc="Exploration of workflows" imgUrl=""/>
     </div>
   );
 }
