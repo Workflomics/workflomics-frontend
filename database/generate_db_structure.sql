@@ -6,11 +6,11 @@
 
 CREATE TABLE public."domain" (
 	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-	unique_label varchar NOT NULL,
-	repo_url varchar NULL,
-	tool_annotations_file_name varchar NULL,
-	ontology_file_name varchar NULL,
-	docker_image_url varchar NULL,
+	unique_label varchar(50) NOT NULL,
+	repo_url varchar(50) NULL,
+	tool_annotations_file_name varchar(50) NULL,
+	ontology_file_name varchar(50) NULL,
+	docker_image_url varchar(50) NULL,
 	public bool NOT NULL DEFAULT true,
 	CONSTRAINT "PK_domain" PRIMARY KEY (id),
 	CONSTRAINT "UQ_domain__unique_label" UNIQUE (unique_label)
@@ -27,7 +27,7 @@ CREATE TABLE public."permission" (
 	id int4 NOT NULL,
 	unique_label varchar(50) NOT NULL,
 	permission_level int4 NOT NULL,
-	description varchar NULL,
+	description varchar(100) NULL,
 	CONSTRAINT "PK_permission" PRIMARY KEY (id),
 	CONSTRAINT "UQ_permission__unique_label" UNIQUE (unique_label)
 );
@@ -42,7 +42,7 @@ CREATE TABLE public."permission" (
 CREATE TABLE public."role" (
 	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
 	unique_label varchar(50) NOT NULL,
-	description varchar NULL,
+	description varchar(100) NULL,
 	CONSTRAINT "PK_roles" PRIMARY KEY (id),
 	CONSTRAINT "UQ_role__unique_label" UNIQUE (unique_label)
 );
@@ -56,13 +56,12 @@ CREATE TABLE public."role" (
 
 CREATE TABLE public."user" (
 	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-	first_name varchar NULL,
-	last_name varchar NULL,
-	affiliation varchar NULL,
-	"position" varchar NULL,
-	orchid_id varchar NOT NULL,
+	first_name varchar(50) NULL,
+	last_name varchar(50) NULL,
+	affiliation varchar(50) NULL,
+	orchid_id varchar(50) NOT NULL,
 	archived bool NOT NULL DEFAULT false,
-	email varchar NOT NULL,
+	email varchar(50) NOT NULL,
 	created_date date NOT NULL DEFAULT CURRENT_DATE,
 	username varchar(50) NOT NULL,
 	CONSTRAINT "PK_user" PRIMARY KEY (id),
@@ -94,8 +93,8 @@ CREATE TABLE public.role_permission (
 
 CREATE TABLE public.topic_of_research (
 	id int4 NOT NULL GENERATED ALWAYS AS IDENTITY,
-	unique_label varchar NOT NULL,
-	description varchar NULL,
+	unique_label varchar(50) NOT NULL,
+	description varchar(100) NULL,
 	permission_id_required int4 NOT NULL,
 	CONSTRAINT "PK_topic_of_research" PRIMARY KEY (id),
 	CONSTRAINT "UQ_topic_of_research__unique_label" UNIQUE (unique_label),
