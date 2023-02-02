@@ -34,7 +34,10 @@ INSERT INTO public.role_permission (id,role_id_fk,permission_id_fk) VALUES
 INSERT INTO public.role_permission (id,role_id_fk,permission_id_fk) VALUES
 	 (11,2,3),
 	 (12,2,4),
-	 (13,2,8);
+	 (13,2,5),
+     (14,2,6),
+     (15,2,7),
+     (16,2,8);
 INSERT INTO public.topic_of_research (id,unique_label,description,permission_id_required) VALUES
 	 (4,'omics',NULL,5),
 	 (5,'metabolomics',NULL,5),
