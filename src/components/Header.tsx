@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import background from '../res/header_background.jpg';
+import logo from '../res/WORKFLOMICS_logo.png';
 
 interface Props {
   /** Name of the platform presented in the header. */
@@ -14,14 +14,14 @@ export function Header({ platform_name, user_name }: Props) {
   return (
     <div className="grid grid-flow-col auto-cols-auto w-full mt-4 mb-8">
       <div className="text-5xl font-bold">
-        <h1>{platform_name}</h1>
+        <img src={logo} alt="loading.." className='h-20 m-5 ml-10' />
       </div>
-      <div className="grid grid-flow-col auto-cols-max">
-        <h2 className='m-4'>
+      <div className="grid grid-flow-col auto-cols-max mt-5">
+        <h2 className='m-5'>
           {user_name}
         </h2>
         <div className="avatar">
-          <div className="w-14 rounded">
+          <div className="w-14 rounded h-20 w-20">
             <img src="https://lwlies.com/wp-content/uploads/2017/04/avatar-2009.jpg" />
           </div>
         </div>

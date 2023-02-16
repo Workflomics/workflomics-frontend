@@ -16,7 +16,7 @@ How to attribute it?
 For websites:
 
 Please, copy this code on your website to accredit the author:
-<a href="http://www.freepik.com">Designed by Freepik</a>
+Illustrations were designed by <a href="http://www.freepik.com">Freepik</a>.
 
 For printing:
 
