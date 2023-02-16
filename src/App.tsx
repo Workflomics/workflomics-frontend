@@ -24,15 +24,14 @@ const router = createBrowserRouter([
 const App: FC = () => {
 
   const platform_name: string = "Workflomics"
+  const user_name: string = "Jane Doe"
 
   return (
-    <>
-      <div className="App">
-        <Header platform_name={platform_name} />
-      </div>
+    <div className="App">
+      <Header platform_name={platform_name} user_name={user_name} />
 
       <RouterProvider router={router} />
-    </>
+    </div>
 
   );
 }

@@ -23,7 +23,7 @@ export function HomeBox({ label, descr, buttonText, imgUrl, isEnabled, component
   return (
     <div className="card w-96 bg-base-100 shadow-xl">
       <figure className="px-10 pt-10">
-        <img src={imgUrl} alt={label} className="rounded-xl" />
+        <img src={imgUrl} alt={label} className="rounded-xl min-h-40" />
       </figure>
       <div className="card-body items-center text-center">
         <h2 className="card-title">{label}</h2>
