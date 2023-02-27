@@ -1,25 +1,39 @@
-import React, {FC } from 'react';
+import React, { FC } from 'react';
 import './App.css';
-import { HomeBox } from './components/HomeBox';
+import { ExplorationView } from './components/Exploration';
+import { Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Test } from './components/Test';
+import Home from './components/Home';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
 
-const App:FC =  () => {
-  
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/explore",
+    element: <ExplorationView label={'Label'} />,
+  },
+  {
+    path: "/test",
+    element: <Test />,
+  },
+]);
+
+const App: FC = () => {
+
   const platform_name: string = "Workflomics"
+  const user_name: string = "Jane Doe"
 
   return (
     <div className="App">
-      
-      <div className="text-5xl font-bold">
-        <h1>{platform_name}</h1>
-      </div>
-
-      <div className="flex space-x-7 p-11">
-        <HomeBox label="Explore workflow" descr="Exploration of workflows" imgUrl="" buttonText="Explore" isEnabled={true}/>
-        <HomeBox label="Compose & benchmark" descr="Automatically compose and benchmark workflows" imgUrl="" buttonText="Compose" isEnabled={true}/>
-        <HomeBox label="Benchmark workflows" descr="Evaluate the quality of your workflows" imgUrl="" buttonText="Benchmark" isEnabled={true}/>
-        <HomeBox label="My workflows" descr="Explore discovered and uploaded workflows" imgUrl="" buttonText="Workflows" isEnabled={true}/>
-      </div>
+      <Header platform_name={platform_name} user_name={user_name} />
+      <RouterProvider router={router} />
+      <Footer />
     </div>
+
   );
 }
 
