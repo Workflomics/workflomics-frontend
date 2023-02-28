@@ -6,11 +6,11 @@ export interface Domain {
   label: string;
   description: string;
   topics: string[];
-  //verified?
+  verified: boolean[];
   inputOutputTypes: InputOutputTypes[]; // these types are domain-specific?
 }
 
-export default class DomainData {
+export class DomainStore {
 
   availableDomains: Domain[] = [];
   selectedDomain: Domain | null = null;
@@ -23,11 +23,13 @@ export default class DomainData {
     //TODO: load domain data from database
 
     // Load dummy data
+    this.availableDomains = [];
     this.availableDomains.push({
       id: "proteomics",
       label: "Proteomics",
       description: "bla bla",
       topics: ["OFFICIAL", "BIOINFORMATICS", "PROTEOMICS"],
+      verified: [true, false],
       inputOutputTypes: []
     });
     this.availableDomains.push({
@@ -35,8 +37,12 @@ export default class DomainData {
       label: "Metabolomics",
       description: "bla bla",
       topics: ["OFFICIAL", "BIOINFORMATICS", "METABOLOMICS"],
+      verified: [true, false],
       inputOutputTypes: []
     });
+    console.log("FLAG");
   }
 
 }
+
+export default new DomainStore();

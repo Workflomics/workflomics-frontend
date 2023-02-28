@@ -1,4 +1,4 @@
-import { Domain } from "./DomainData";
+import { Domain } from "./DomainStore";
 
 export type Workflow = {
   id: string;

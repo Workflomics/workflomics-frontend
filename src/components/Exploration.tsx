@@ -13,10 +13,10 @@ export function ExplorationView({ label }: Props) {
     <div>
       <ul className="steps">
         <li className="step step-primary">Choose a domain</li>
-        <li className="step step-primary">Inputs and outputs</li>
-        <li className="step step-primary">Workflow constraints</li>
-        <li className="step step-primary">Automated generation configuration</li>
-        <li className="step ">Generate workflows</li>
+        <li className="step">Inputs and outputs</li>
+        <li className="step">Workflow constraints</li>
+        <li className="step">Automated generation configuration</li>
+        <li className="step">Generate workflows</li>
       </ul>
       <ChooseDomain />
     </div>
