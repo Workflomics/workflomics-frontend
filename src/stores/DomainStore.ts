@@ -40,7 +40,6 @@ export class DomainStore {
       verified: [true, false],
       inputOutputTypes: []
     });
-    console.log("FLAG");
   }
 
 }
