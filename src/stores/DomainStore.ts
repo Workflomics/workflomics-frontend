@@ -1,13 +1,15 @@
-import { makeAutoObservable, runInAction } from "mobx";
-import { InputOutputTypes } from "./WorkflowData";
+import { makeAutoObservable } from "mobx";
 
 export interface Domain {
   id: string;
-  label: string;
+  unique_label: string;
   description: string;
-  topics: string[];
-  verified: boolean[];
-  inputOutputTypes: InputOutputTypes[]; // these types are domain-specific?
+  topic_of_research: TopicOfResearch[];
+}
+
+export interface TopicOfResearch {
+  id: string;
+  unique_label: string;
 }
 
 export class DomainStore {
@@ -19,29 +21,12 @@ export class DomainStore {
     makeAutoObservable(this);
   }
 
-  loadData() {
-    //TODO: load domain data from database
-
-    // Load dummy data
-    this.availableDomains = [];
-    this.availableDomains.push({
-      id: "proteomics",
-      label: "Proteomics",
-      description: "bla bla",
-      topics: ["OFFICIAL", "BIOINFORMATICS", "PROTEOMICS"],
-      verified: [true, false],
-      inputOutputTypes: []
-    });
-    this.availableDomains.push({
-      id: "metabolomics",
-      label: "Metabolomics",
-      description: "bla bla",
-      topics: ["OFFICIAL", "BIOINFORMATICS", "METABOLOMICS"],
-      verified: [true, false],
-      inputOutputTypes: []
-    });
+  async fetchData() {
+    const response = await fetch('http://localhost:3333/domain?select=id,unique_label,description,topic_of_research(id,unique_label)');
+    this.availableDomains = await response.json();
   }
 
 }
 
-export default new DomainStore();
+const domainStore = new DomainStore();
+export default domainStore;

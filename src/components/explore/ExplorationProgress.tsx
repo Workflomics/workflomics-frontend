@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 
 interface Props {
-  /** Title of the current domain. */
   index: number;
 }
 
