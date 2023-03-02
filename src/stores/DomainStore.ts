@@ -22,7 +22,7 @@ export class DomainStore {
   }
 
   async fetchData() {
-    const response = await fetch('http://localhost:3333/domain?select=id,unique_label,description,topic_of_research(id,unique_label)');
+    const response = await fetch('/api/domain?select=id,unique_label,description,topic_of_research(id,unique_label)');
     this.availableDomains = await response.json();
   }
 

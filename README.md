@@ -6,6 +6,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Development
+
+For now, it is assumed you already have a Postgres database and Postgrest API set up and running. See `docker-compose.yml` for an example configuration, and the `.sql` scripts in the `database` folder to load the tables and content.
+
+For development, a simple proxy server is run (through `setupProxy.js`, which is picked up by create-react-app). Configure the endpoints in a `.env` file in the project directory:
+
+```bash
+API_PROXY_TARGET=http://localhost:3333
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
