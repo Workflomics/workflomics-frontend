@@ -7,14 +7,13 @@ interface Props {
   platform_name: string;
   /** Name of the user currently logged in. */
   user_name: string;
-
 }
 
 export function Header({ platform_name, user_name }: Props) {
   return (
     <div className="grid grid-flow-col auto-cols-auto w-full mt-4 mb-8">
       <div className="text-5xl font-bold">
-        <img src={logo} alt="loading.." className='h-20 m-5 ml-10' />
+        <Link to="/"><img src={logo} alt="loading.." className='h-20 m-5 ml-10' /></Link>
       </div>
       <div className="grid grid-flow-col auto-cols-max mt-5">
         <h2 className='m-5'>

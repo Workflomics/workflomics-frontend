@@ -1,16 +1,41 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
+import { StoreProvider } from './store';
+import App from './App';
+import Home from './components/Home';
+import { ChooseDomain } from './components/explore/ChooseDomain';
+import { InputsOutputs } from './components/explore/InputsOutputs';
 
-
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <Home />
+      },
+      {
+        path: "explore",
+        children: [
+          { path: "domain", element: <ChooseDomain /> },
+          { path: "inputs-outputs", element: <InputsOutputs /> }
+        ]
+      }
+    ]
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App/>
+    <StoreProvider>
+      <RouterProvider router={router} />
+    </StoreProvider>
   </React.StrictMode>
 );
 
