@@ -7,6 +7,8 @@ import App from './App';
 import Home from './components/Home';
 import { ChooseDomain } from './components/explore/ChooseDomain';
 import { InputsOutputs } from './components/explore/InputsOutputs';
+import { WorkflowConstraints } from './components/explore/WorkflowConstraints';
+import { GenerationConfig } from './components/explore/GenerationConfig';
 
 const router = createBrowserRouter([
   {
@@ -21,7 +23,9 @@ const router = createBrowserRouter([
         path: "explore",
         children: [
           { path: "domain", element: <ChooseDomain /> },
-          { path: "inputs-outputs", element: <InputsOutputs /> }
+          { path: "inputs-outputs", element: <InputsOutputs /> },
+          { path: "constraints", element: <WorkflowConstraints /> },
+          { path: "configuration", element: <GenerationConfig /> }
         ]
       }
     ]
