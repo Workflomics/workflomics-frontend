@@ -11,10 +11,12 @@ export type Workflow = {
   method: string;
 }
 
+export type TypeFormatTuple = [InputOutputTypes | undefined, InputOutputFormats | undefined];
 
 export type WorkflowConfig = {
-  inputs: [ [InputOutputTypes, InputOutputFormats] ]
-  outputs: [ [InputOutputTypes, InputOutputFormats] ]
+  domain: Domain | undefined;
+  inputs: TypeFormatTuple[];
+  outputs: TypeFormatTuple[];
   //constraints: Constraint[]
   //order: ...
   minSteps: Number,
@@ -23,15 +25,12 @@ export type WorkflowConfig = {
   solutionCount: Number
 }
 
-//TODO: this will be different for each domain?
 export type InputOutputTypes = {
+  id: string,
   label: string
-  //...
 }
 
-export enum InputOutputFormats {
-  JSON = "JSON",
-  XML = "XML",
-  TEXT = "Text file",
-  HTML = "HTML"
+export type InputOutputFormats = {
+  id: string,
+  label: string
 }
