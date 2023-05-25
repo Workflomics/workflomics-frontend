@@ -25,6 +25,14 @@ services:
     volumes:
       - "${WF_DATA_DIR}/postgres_data:/var/lib/postgresql/data"
 
+  restape:
+    build:
+      context: ./RestAPE
+    image: rest-ape
+    restart: always
+    ports:
+
+
 networks:
   default:
     driver: bridge

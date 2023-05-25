@@ -8,7 +8,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Development
 
-For now, it is assumed you already have a Postgres database and Postgrest API set up and running. See `docker-compose.yml` for an example configuration, and the `.sql` scripts in the `database` folder to load the tables and content.
+For now, it is assumed you already have a Postgres database and Postgrest API set up and running. See `docker-compose.yml` for an example configuration, and the `.sql` scripts in the `database` folder to load the tables and content. In addition, the [REST APE](https://github.com/sanctuuary/restape) jar (requires local build) and the corresponding docker [file](https://github.com/sanctuuary/restape/blob/main/Dockerfile) have to be available under ./RestAPE path while running docker-compose. 
+
 
 For development, a simple proxy server is run (through `setupProxy.js`, which is picked up by create-react-app). Configure the endpoints in a `.env` file in the project directory:
 
