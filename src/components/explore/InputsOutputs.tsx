@@ -10,8 +10,8 @@ const InputsOutputs: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
   
-  const addInput = () => workflowConfig.inputs.push([undefined, undefined]);
-  const addOutput = () => workflowConfig.outputs.push([undefined, undefined]);
+  const addInput = () => workflowConfig.inputs.push([{id:"",label:""}, {id:"",label:""}]);
+  const addOutput = () => workflowConfig.outputs.push([{id:"",label:""}, {id:"",label:""}]);
 
   return (
     <div>
@@ -19,22 +19,26 @@ const InputsOutputs: React.FC<any> = observer((props) => {
       <ExplorationProgress index={1} />
 
       <div className="m-8">
-        <div className="overflow-x-auto text-left">
+        <div className="overflow-x-auto text-left space-y-6">
 
-          <div>
-            <span>Inputs:</span>
-            { workflowConfig.inputs.map((input: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
-                return (<InputsOutputSelection key={index} value={input} />)
-              })}
-            <button className="btn" onClick={() => addInput()}>Add input</button>
+          <div className="flex items-center space-x-4">
+            <span className="text-3xl flex-grow-0 w-32">Inputs</span>
+            <div className="flex flex-grow items-center">
+              { workflowConfig.inputs.map((input: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
+                  return (<InputsOutputSelection key={index} value={input} />)
+                })}
+              <button className="btn" onClick={() => addInput()}>+</button>
+            </div>
           </div>
 
-          <div>
-            <span>Outputs:</span>
-            { workflowConfig.outputs.map((output: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
-                return (<InputsOutputSelection key={index} value={output} />)
-              })}
-            <button className="btn" onClick={() => addOutput()}>Add output</button>
+          <div className="flex items-center space-x-4">
+            <span className="text-3xl flex-grow-0 w-32">Outputs</span>
+            <div className="flex flex-grow items-center">
+              { workflowConfig.outputs.map((output: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
+                  return (<InputsOutputSelection key={index} value={output} />)
+                })}
+              <button className="btn" onClick={() => addOutput()}>+</button>
+            </div>
           </div>
         </div>
       </div>
