@@ -1,3 +1,4 @@
+import { Constraint } from "./ConstraintStore";
 import { Domain } from "./DomainStore";
 
 export type Workflow = {
@@ -14,14 +15,14 @@ export type Workflow = {
 export type TypeFormatTuple = [InputOutputTypes | undefined, InputOutputFormats | undefined];
 
 export type WorkflowConfig = {
-  domain: Domain | undefined;
-  inputs: TypeFormatTuple[];
-  outputs: TypeFormatTuple[];
-  //constraints: Constraint[]
+  domain: Domain | undefined
+  inputs: TypeFormatTuple[]
+  outputs: TypeFormatTuple[]
+  constraints: ConstraintInstance[]
   //order: ...
-  minSteps: Number,
-  maxSteps: Number,
-  timeout: Number,
+  minSteps: Number
+  maxSteps: Number
+  timeout: Number
   solutionCount: Number
 }
 
@@ -33,4 +34,9 @@ export type InputOutputTypes = {
 export type InputOutputFormats = {
   id: string,
   label: string
+}
+
+export type ConstraintInstance = {
+  constraint: Constraint,
+  //TODO parameters
 }

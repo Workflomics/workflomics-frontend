@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { TypeFormatTuple, WorkflowConfig } from "./WorkflowTypes";
+import { ConstraintInstance, TypeFormatTuple, WorkflowConfig } from "./WorkflowTypes";
 
 
 const emptyWorkflowConfig = () => {
@@ -7,6 +7,7 @@ const emptyWorkflowConfig = () => {
     domain: undefined,
     inputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
     outputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
+    constraints: [ {constraint: {id:"",label:""}} as ConstraintInstance ],
     minSteps: 1,
     maxSteps: 10,
     timeout: 1000,
