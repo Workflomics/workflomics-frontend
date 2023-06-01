@@ -39,7 +39,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
       <ExplorationProgress index={1} />
 
       <div className="m-8">
-        <div className="overflow-x-auto text-left space-y-6 mt-10">
+        <div className="text-left space-y-6 mt-10">
 
           {/* Status messages */}
           { dataTaxStore.isLoading && <div className="alert alert-info">Loading data taxonomy...</div> }
