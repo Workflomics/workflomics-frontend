@@ -1,12 +1,12 @@
 import { makeAutoObservable } from "mobx";
-import { WorkflowConfig } from "./WorkflowTypes";
+import { TypeFormatTuple, WorkflowConfig } from "./WorkflowTypes";
 
 
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [],
-    outputs: [],
+    inputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
+    outputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
     minSteps: 1,
     maxSteps: 10,
     timeout: 1000,
