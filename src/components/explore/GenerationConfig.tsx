@@ -10,58 +10,7 @@ const GenerationConfig: React.FC<any> = observer((props) => {
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
 
   const runSynthesis = () => {
-
-    
-// {
-//   "tool_annotations_path": "string",
-//   "ontology_path": "string",
-//   "ontologyPrefixIRI": "string",
-//   "toolsTaxonomyRoot": "string",
-//   "dataDimensionsTaxonomyRoots": [
-//     "string"
-//   ],
-//   "strict_tool_annotations": true,
-//   "cwl_annotations_path": "string",
-//   "solution_length": {
-//     "min": 0,
-//     "max": 0
-//   },
-//   "timeout_sec": 0,
-//   "solutions": 0,
-//   "number_of_execution_scripts": 0,
-//   "number_of_generated_graphs": 0,
-//   "number_of_cwl_files": 0,
-//   "tool_seq_repeat": true,
-//   "inputs": [
-//     {
-//       "data_0006": [
-//         "string"
-//       ],
-//       "format_1915": [
-//         "string"
-//       ],
-//       "APE_label": [
-//         "string"
-//       ]
-//     }
-//   ],
-//   "outputs": [
-//     {
-//       "data_0006": [
-//         "string"
-//       ],
-//       "format_1915": [
-//         "string"
-//       ],
-//       "APE_label": [
-//         "string"
-//       ]
-//     }
-//   ],
-//   "debug_mode": true,
-//   "use_workflow_input": "NONE",
-//   "use_all_generated_data": "NONE"
-// }
+    exploreDataStore.runSynthesis(workflowConfig);
   };
 
   return (

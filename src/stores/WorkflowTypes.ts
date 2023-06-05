@@ -1,6 +1,7 @@
 import { Constraint } from "./ConstraintStore";
 import { Domain } from "./DomainStore";
 
+// Currently unused
 export type Workflow = {
   id: string;
   label: string;
