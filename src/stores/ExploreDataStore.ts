@@ -1,17 +1,18 @@
 import { makeAutoObservable } from "mobx";
 import { ConstraintInstance, TypeFormatTuple, WorkflowConfig } from "./WorkflowTypes";
 
-
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
-    outputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
+    inputs: [ [{id:"data_0943",label:"default"}, {id:"format_3244",label:"default"}] as TypeFormatTuple,
+              [{id:"data_2976",label:"default"}, {id:"format_1929",label:"default"}] as TypeFormatTuple ],
+    outputs: [ [{id:"data_0006",label:"default"}, {id:"format_3747",label:"default"}] as TypeFormatTuple ],
     constraints: [ {constraint: {id:"",label:""}} as ConstraintInstance ],
     minSteps: 3,
     maxSteps: 4,
     timeout: 120,
-    solutionCount: 3
+    solutionCount: 10,
+    run_id: ""
   }
 }
 
@@ -27,8 +28,8 @@ export class ExploreDataStore {
     return values.filter(value => value[0] !== undefined && value[1] !== undefined && value[0]!.id !== "" && value[1]!.id !== "")
       .map((value) => {
         return {
-          [dataRoot]: [value[0]!.id],
-          [formatRoot]: [value[1]!.id]
+          [dataRoot]: [value[0]!.id.replace("http://edamontology.org/", "")],
+          [formatRoot]: [value[1]!.id.replace("http://edamontology.org/", "")]
         };
     });
   }
@@ -74,7 +75,6 @@ export class ExploreDataStore {
   runSynthesis(config: WorkflowConfig) {
     const domainConfig = config.domain;
     const configJson: any = this.configToJSON(config);
-    console.log(config);
     fetch(`/ape/run_synthesis?config_path=${domainConfig?.repo_url}`, {
       method: "POST",
       headers: {
@@ -92,8 +92,6 @@ export class ExploreDataStore {
         console.error(error);
     });
   }
-
-
 }
 
 const exploreDataStore = new ExploreDataStore();
