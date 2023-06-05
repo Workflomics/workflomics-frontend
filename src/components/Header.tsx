@@ -20,7 +20,7 @@ export function Header({ platform_name, user_name }: Props) {
           {user_name}
         </h2>
         <div className="h-14 w-18">
-          <img alt="profile" src="user_profile.png" className="h-full w-full object-scale-down"/>
+          <img alt="profile" src="/user_profile.png" className="h-full w-full object-scale-down"/>
         </div>
       </div>
     </div>
