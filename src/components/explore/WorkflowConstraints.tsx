@@ -31,7 +31,9 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     workflowConfig.constraints.push({constraint: {id:"",label:"",parameters:[]}});
   };
 
-  console.log(allConstraints);
+  const removeConstraint = () => {
+    workflowConfig.constraints.pop();
+  };
 
   return (
     <div>
@@ -55,7 +57,8 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                     nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(node)}
                     placeholder="Type of constraint" />)
                 })}
-              <button className="btn" onClick={() => addConstraint()}>+</button>
+              <button className="btn m-1" onClick={() => addConstraint()}>+</button>
+              <button className="btn m-1" onClick={() => removeConstraint()}>-</button>
             </div>
           </div>
 

@@ -26,10 +26,22 @@ const InputsOutputs: React.FC<any> = observer((props) => {
       workflowConfig.inputs.push([{id:"",label:""}, {id:"",label:""}]);
     });
   };
+
+  const removeInput = () => {
+    runInAction(() => {
+      workflowConfig.inputs.pop();
+    });
+  };
   
   const addOutput = () => {
     runInAction(() => {
       workflowConfig.outputs.push([{id:"",label:""}, {id:"",label:""}]);
+    });
+  };
+
+  const removeOutput = () => {
+    runInAction(() => {
+      workflowConfig.outputs.pop();
     });
   };
 
@@ -53,7 +65,8 @@ const InputsOutputs: React.FC<any> = observer((props) => {
               { workflowConfig.inputs.map((input: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
                   return (<InputsOutputSelection key={index} value={input} dataTaxs={dataTaxs} />)
                 })}
-              <button className="btn" onClick={() => addInput()}>+</button>
+              <button className="btn m-1" onClick={() => addInput()}>+</button>
+              <button className="btn m-1" onClick={() => removeInput()}>-</button>
             </div>
           </div>
 
@@ -64,7 +77,8 @@ const InputsOutputs: React.FC<any> = observer((props) => {
               { workflowConfig.outputs.map((output: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
                   return (<InputsOutputSelection key={index} value={output} dataTaxs={dataTaxs} />)
                 })}
-              <button className="btn" onClick={() => addOutput()}>+</button>
+              <button className="btn m-1" onClick={() => addOutput()}>+</button>
+              <button className="btn m-1" onClick={() => removeOutput()}>-</button>
             </div>
           </div>
 
