@@ -47,7 +47,6 @@ const TreeSelectionBox: React.FC<any> = ({nodes, value, onChange, placeholder}) 
   };
 
   const onSelectNode = (node: TreeNode) => {
-    console.log(node.id);
     setCurrentValue(node);
     onChange(node);
     setIsDropDownOpen(false);
@@ -57,12 +56,17 @@ const TreeSelectionBox: React.FC<any> = ({nodes, value, onChange, placeholder}) 
 
   const renderSubNodes = (nodes:any) => {
     return (
-      <ul className="dropdown-content menu menu-compact p-1 w-80">
+      <ul className="dropdown-content p-1 w-80">
         {nodes.map((node: TreeNode) => (
             (<li className="pl-6" key={node.label}>
                 { node.filteredSubsets && node.filteredSubsets.length > 0 ? 
-                    (<details><summary>{node.label}</summary>{ renderSubNodes(node.filteredSubsets) }</details>) :
-                    (<button onClick={() => onSelectNode(node)}>{node.label}</button>)
+                    // Node with children
+                    (<details>
+                      <summary><button className="hover:bg-sky-200 p-2 rounded" onClick={() => onSelectNode(node)}>{node.label}</button></summary>
+                      { renderSubNodes(node.filteredSubsets) }
+                    </details>) :
+                    // Node without children
+                    (<button className="hover:bg-sky-200 p-2 rounded" onClick={() => onSelectNode(node)}>{node.label}</button>)
                 }
               </li>)
             ))
