@@ -37,13 +37,12 @@ const GenerationResults: React.FC<any> = observer((props) => {
 
   return (
     <div>
-
       <ExplorationProgress index={4} />
-
       <div className="m-20">
 
         {/* Status messages */}
         { exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div> }
+        { exploreDataStore.generationError && <div className="alert alert-error">An error occurred while generating the workflows: {exploreDataStore.generationError.toString()}</div> }
 
         {/* Results */}
         <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">

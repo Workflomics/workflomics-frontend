@@ -22,6 +22,7 @@ export class ExploreDataStore {
   workflowConfig: WorkflowConfig = emptyWorkflowConfig();
   workflowSolutions: WorkflowSolution[] = [];
   isGenerating: boolean = false;
+  generationError: string = "";
 
   constructor() {
     makeAutoObservable(this, {}, { deep: true });
@@ -85,6 +86,7 @@ export class ExploreDataStore {
     const configJson: any = this.configToJSON(config);
 
     this.isGenerating = true;
+    this.workflowSolutions = [];
     fetch(`/ape/run_synthesis?config_path=${domainConfig?.repo_url}`, {
       method: "POST",
       headers: {
@@ -92,16 +94,21 @@ export class ExploreDataStore {
       },
       body: JSON.stringify(configJson),
     })
-      .then(response => response.json())
-      .then(data => {
-        // Handle the response
-        console.log(data);
-        this.workflowSolutions = data;
-        this.isGenerating = false;
-      })
-      .catch(error => {
-        // Handle errors
-        console.error(error);
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("Success:", data);
+      this.workflowSolutions = data;
+      this.isGenerating = false;
+    })
+    .catch(error => {
+      console.log("Error:", error);
+      this.generationError = error;
+      this.isGenerating = false;
     });
   }
 
