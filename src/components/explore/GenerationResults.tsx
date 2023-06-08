@@ -12,8 +12,10 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const handleSelected = (solution: WorkflowSolution, event: React.ChangeEvent<HTMLInputElement>) => {
     runInAction(() => {
       solution.isSelected = event.target.checked;
+      if (solution.image === undefined) {
+        exploreDataStore.loadImage(solution);
+      }
     });
-    console.log(solution.isSelected);
   };
 
   const downloadFile = (run_id: string, cwl_name: string) => {
@@ -38,13 +40,13 @@ const GenerationResults: React.FC<any> = observer((props) => {
 
       <ExplorationProgress index={4} />
 
-      <div className="m-8">
-        <div className="overflow-x-auto text-left space-y-6 mt-10 flex justify-center">
+      <div className="m-20">
 
-          {/* Status messages */}
-          { exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div> }
+        {/* Status messages */}
+        { exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div> }
 
-          {/* Results */}
+        {/* Results */}
+        <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
           <table className="table w-4/5">
             <thead>
               <tr>
@@ -69,10 +71,13 @@ const GenerationResults: React.FC<any> = observer((props) => {
         </div>
 
         {/* Selected solutions */}
-        <div>
+        <div className="flex justify-center gap-8">
             { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
                 .map((solution: WorkflowSolution, index: number) => (
-              <div key={index}>solution: { solution.name }</div>
+              <div key={index} className="border-8 border-red-200 rounded-lg overflow-hidden p-2">
+                <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
+                { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+              </div>
             ))}
           </div>
       </div>

@@ -48,5 +48,6 @@ export type WorkflowSolution = {
   workflow_length: Number,
   name: string,
   figure_name: string,
-  isSelected: boolean
+  isSelected: boolean,
+  image: string | undefined
 }

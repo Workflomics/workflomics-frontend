@@ -108,18 +108,16 @@ export class ExploreDataStore {
   loadImage(solution: WorkflowSolution) {
     const { run_id, figure_name } = solution;
     fetch(`/ape/get_image?run_id=${run_id}&file_name=${figure_name}`)
-      .then(response => response.json())
-      .then(data => {
-        // Handle the response
-        console.log(data);
-      })
-      .catch(error => {
-        // Handle errors
-        console.error(error);
+    .then(response => response.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      solution.image = url;
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle error, display fallback image, or show error message
     });
   }
-
-
 }
 
 const exploreDataStore = new ExploreDataStore();
