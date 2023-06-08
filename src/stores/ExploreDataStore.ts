@@ -1,5 +1,5 @@
-import { makeAutoObservable } from "mobx";
-import { ConstraintInstance, TypeFormatTuple, WorkflowConfig } from "./WorkflowTypes";
+import { makeAutoObservable, runInAction } from "mobx";
+import { ConstraintInstance, TypeFormatTuple, WorkflowConfig, WorkflowSolution } from "./WorkflowTypes";
 
 const emptyWorkflowConfig = () => {
   return {
@@ -19,6 +19,33 @@ const emptyWorkflowConfig = () => {
 export class ExploreDataStore {
 
   workflowConfig: WorkflowConfig = emptyWorkflowConfig();
+  workflowSolutions: WorkflowSolution[] = [
+    {
+      "cwl_name": "workflowSolution_0.cwl",
+      "run_id": "5d16582eec1686141522045",
+      "workflow_length": 3,
+      "name": "workflowSolution_0",
+      "figure_name": "workflowSolution_0.png",
+      "isSelected": false
+    },
+    {
+      "cwl_name": "workflowSolution_1.cwl",
+      "run_id": "5d16582eec1686141522045",
+      "workflow_length": 3,
+      "name": "workflowSolution_1",
+      "figure_name": "workflowSolution_1.png",
+      "isSelected": false
+    },
+    {
+      "cwl_name": "workflowSolution_2.cwl",
+      "run_id": "5d16582eec1686141522045",
+      "workflow_length": 4,
+      "name": "workflowSolution_2",
+      "figure_name": "workflowSolution_2.png",
+      "isSelected": false
+    }
+  ];
+  isGenerating: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -75,6 +102,8 @@ export class ExploreDataStore {
   runSynthesis(config: WorkflowConfig) {
     const domainConfig = config.domain;
     const configJson: any = this.configToJSON(config);
+
+    this.isGenerating = true;
     fetch(`/ape/run_synthesis?config_path=${domainConfig?.repo_url}`, {
       method: "POST",
       headers: {
@@ -86,12 +115,30 @@ export class ExploreDataStore {
       .then(data => {
         // Handle the response
         console.log(data);
+        this.workflowSolutions = data;
+        this.isGenerating = false;
       })
       .catch(error => {
         // Handle errors
         console.error(error);
     });
   }
+
+  loadImage(solution: WorkflowSolution) {
+    const { run_id, figure_name } = solution;
+    fetch(`/ape/get_image?run_id=${run_id}&file_name=${figure_name}`)
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response
+        console.log(data);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error(error);
+    });
+  }
+
+
 }
 
 const exploreDataStore = new ExploreDataStore();

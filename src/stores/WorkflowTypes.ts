@@ -41,3 +41,12 @@ export type ConstraintInstance = {
   constraint: Constraint,
   //TODO parameters
 }
+
+export type WorkflowSolution = {
+  cwl_name: string,
+  run_id: string,
+  workflow_length: Number,
+  name: string,
+  figure_name: string,
+  isSelected: boolean
+}
