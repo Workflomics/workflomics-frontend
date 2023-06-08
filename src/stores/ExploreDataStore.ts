@@ -1,5 +1,6 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { ConstraintInstance, TypeFormatTuple, WorkflowConfig, WorkflowSolution } from "./WorkflowTypes";
+import { makePersistable } from "mobx-persist-store";
 
 const emptyWorkflowConfig = () => {
   return {
@@ -19,36 +20,16 @@ const emptyWorkflowConfig = () => {
 export class ExploreDataStore {
 
   workflowConfig: WorkflowConfig = emptyWorkflowConfig();
-  workflowSolutions: WorkflowSolution[] = [
-    {
-      "cwl_name": "workflowSolution_0.cwl",
-      "run_id": "5d16582eec1686141522045",
-      "workflow_length": 3,
-      "name": "workflowSolution_0",
-      "figure_name": "workflowSolution_0.png",
-      "isSelected": false
-    },
-    {
-      "cwl_name": "workflowSolution_1.cwl",
-      "run_id": "5d16582eec1686141522045",
-      "workflow_length": 3,
-      "name": "workflowSolution_1",
-      "figure_name": "workflowSolution_1.png",
-      "isSelected": false
-    },
-    {
-      "cwl_name": "workflowSolution_2.cwl",
-      "run_id": "5d16582eec1686141522045",
-      "workflow_length": 4,
-      "name": "workflowSolution_2",
-      "figure_name": "workflowSolution_2.png",
-      "isSelected": false
-    }
-  ];
+  workflowSolutions: WorkflowSolution[] = [];
   isGenerating: boolean = false;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, {}, { deep: true });
+    makePersistable(this, { 
+      name: "ExploreDataStore",
+      properties: ["workflowConfig", "workflowSolutions"],
+      storage: window.localStorage
+    });
   }
 
   inputsOutputsToJSON(values: TypeFormatTuple[], dataRoot: string, formatRoot: string) {
