@@ -9,15 +9,14 @@ export interface TreeNode {
 
 const TreeSelectionBox: React.FC<any> = ({nodes, value, onChange, placeholder}) => {
   const dropdownRef = React.useRef<HTMLDivElement>(null);
-  const [currentValue, setCurrentValue] = React.useState<TreeNode>(value);
   const [filter, setFilter] = React.useState<string>("");
   const [filteredNodes, setFilteredNodes] = React.useState<Array<TreeNode>>([]);
   const [isDropDownOpen, setIsDropDownOpen] = React.useState<boolean>(false);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setFilter(value);
-    setFilteredNodes(filterNodes(nodes, value));
+    const filterValue = event.target.value;
+    setFilter(filterValue);
+    setFilteredNodes(filterNodes(nodes, filterValue));
     setIsDropDownOpen(true);
   };
 
@@ -47,12 +46,11 @@ const TreeSelectionBox: React.FC<any> = ({nodes, value, onChange, placeholder}) 
   };
 
   const onSelectNode = (node: TreeNode) => {
-    setCurrentValue(node);
     onChange(node);
     setIsDropDownOpen(false);
   };
 
-  const currentText = !isDropDownOpen && currentValue.id !== "" ? currentValue.label : filter;
+  const currentText = !isDropDownOpen && value.id !== "" ? value.label : filter;
 
   const renderSubNodes = (nodes:any) => {
     return (
