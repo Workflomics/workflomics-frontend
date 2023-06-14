@@ -25,8 +25,44 @@ const GenerationConfig: React.FC<any> = observer((props) => {
 
           {/* Configuration */}
           <div className="flex items-center space-x-4">
-            <span className="text-3xl flex-grow-0 w-32">Configuration</span>
-            <div className="flex flex-grow items-center">
+            <h2 className="text-3xl w-80 m-4">Configuration</h2>
+            <div className="flex flex-col m-4">
+              <div className="flex items-center m-2">
+                <label className="w-80 text-lg">Min # of steps</label>
+                <input
+                  type="number"
+                  className="input input-bordered w-full max-w-xs"
+                  value={workflowConfig.minSteps.toString()}
+                  onChange={(event) => (workflowConfig.minSteps = parseInt(event.target.value))}
+                />
+              </div>
+              <div className="flex items-center m-2">
+                <label className="w-80 text-lg">Max # of steps</label>
+                <input
+                  type="number"
+                  className="input input-bordered w-full max-w-xs"
+                  value={workflowConfig.maxSteps.toString()}
+                  onChange={(event) => (workflowConfig.maxSteps = parseInt(event.target.value))}
+                />
+              </div>
+              <div className="flex items-center m-2">
+                <label className="w-80 text-lg">Timeout (seconds)</label>
+                <input
+                  type="number"
+                  className="input input-bordered w-full max-w-xs"
+                  value={workflowConfig.timeout.toString()}
+                  onChange={(event) => (workflowConfig.timeout = parseInt(event.target.value))}
+                />
+              </div>
+              <div className="flex items-center m-2">
+                <label className="w-80 text-lg">Number of solutions (max)</label>
+                <input
+                  type="number"
+                  className="input input-bordered w-full max-w-xs"
+                  value={workflowConfig.solutionCount.toString()}
+                  onChange={(event) => (workflowConfig.solutionCount = parseInt(event.target.value))}
+                />
+              </div>
             </div>
           </div>
 
