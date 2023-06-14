@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
+import { runInAction } from 'mobx';
 
 const InputsOutputSelection: React.FC<any> = observer(({value, dataTaxs}) => {
 
   const onTypeChange = (node: TreeNode) => {
-    value[0] = {id: node.id, label: node.label}
+    runInAction(() => {
+      value[0] = {id: node.id, label: node.label}
+    });
   };
 
   const onFormatChange = (node: TreeNode) => {
-    value[1] = {id: node.id, label: node.label}
+    runInAction(() => {
+      value[1] = {id: node.id, label: node.label}
+    });
   };
 
   return (

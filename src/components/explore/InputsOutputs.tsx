@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
-import { InputOutputFormats, InputOutputTypes, WorkflowConfig } from '../../stores/WorkflowTypes';
+import { InputOutputFormats, InputOutputTypes, TypeFormatTuple, WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
@@ -45,6 +45,18 @@ const InputsOutputs: React.FC<any> = observer((props) => {
     });
   };
 
+  const useDemoData = () => {
+    runInAction(() => {
+      workflowConfig.inputs = [
+        [{id:"data_0943",label:"Mass spectrum"}, {id:"format_3244",label:"mzML"}] as TypeFormatTuple,
+        [{id:"data_2976",label:"Protein sequence"}, {id:"format_1929",label:"FASTA"}] as TypeFormatTuple
+      ];
+      workflowConfig.outputs = [
+        [{id:"data_0006",label:"Data"}, {id:"format_3747",label:"protXML"}] as TypeFormatTuple
+      ];
+    });
+  };
+
   return (
     <div>
 
@@ -79,6 +91,14 @@ const InputsOutputs: React.FC<any> = observer((props) => {
                 })}
               <button className="btn m-1" onClick={() => addOutput()}>+</button>
               <button className="btn m-1" onClick={() => removeOutput()}>-</button>
+            </div>
+          </div>
+
+          {/* Button for demo data */}
+          <div className="flex items-center space-x-4">
+            <span className="text-3xl flex-grow-0 w-32"></span>
+            <div className="flex flex-grow items-center">
+              <button className="btn m-1" onClick={() => useDemoData()}>Use demo data</button>
             </div>
           </div>
 

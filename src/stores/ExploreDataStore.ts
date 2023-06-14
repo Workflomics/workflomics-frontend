@@ -5,9 +5,8 @@ import { makePersistable } from "mobx-persist-store";
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [ [{id:"data_0943",label:"default"}, {id:"format_3244",label:"default"}] as TypeFormatTuple,
-              [{id:"data_2976",label:"default"}, {id:"format_1929",label:"default"}] as TypeFormatTuple ],
-    outputs: [ [{id:"data_0006",label:"default"}, {id:"format_3747",label:"default"}] as TypeFormatTuple ],
+    inputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
+    outputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple],
     constraints: [ {constraint: {id:"",label:""}} as ConstraintInstance ],
     minSteps: 3,
     maxSteps: 4,

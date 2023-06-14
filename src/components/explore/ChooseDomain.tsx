@@ -5,6 +5,7 @@ import { Domain } from '../../stores/DomainStore';
 import { useNavigate } from 'react-router-dom';
 import { ExplorationProgress } from './ExplorationProgress';
 import { WorkflowConfig } from '../../stores/WorkflowTypes';
+import { runInAction } from 'mobx';
 
 const ChooseDomain: React.FC<any> = observer((props) => {
   let { domainStore } = useStore();
@@ -18,7 +19,9 @@ const ChooseDomain: React.FC<any> = observer((props) => {
   }, [domainStore]);
 
   const onChooseDomain = (domain: Domain) => {
-    workflowConfig.domain = domain;
+    runInAction(() => {
+      workflowConfig.domain = domain;
+    });
     navigate('/explore/inputs-outputs');
   };
 
