@@ -77,8 +77,8 @@ const InputsOutputs: React.FC<any> = observer((props) => {
               { workflowConfig.inputs.map((input: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
                   return (<InputsOutputSelection key={index} value={input} dataTaxs={dataTaxs} />)
                 })}
-              <button className="btn m-1" onClick={() => addInput()}>+</button>
-              <button className="btn m-1" onClick={() => removeInput()}>-</button>
+              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
+              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeInput()}>-</button>
             </div>
           </div>
 
@@ -89,8 +89,8 @@ const InputsOutputs: React.FC<any> = observer((props) => {
               { workflowConfig.outputs.map((output: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
                   return (<InputsOutputSelection key={index} value={output} dataTaxs={dataTaxs} />)
                 })}
-              <button className="btn m-1" onClick={() => addOutput()}>+</button>
-              <button className="btn m-1" onClick={() => removeOutput()}>-</button>
+              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
+              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeOutput()}>-</button>
             </div>
           </div>
 

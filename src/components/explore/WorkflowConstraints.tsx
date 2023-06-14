@@ -57,8 +57,8 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                     nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(node)}
                     placeholder="Type of constraint" />)
                 })}
-              <button className="btn m-1" onClick={() => addConstraint()}>+</button>
-              <button className="btn m-1" onClick={() => removeConstraint()}>-</button>
+              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addConstraint()}>+</button>
+              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeConstraint()}>-</button>
             </div>
           </div>
 
