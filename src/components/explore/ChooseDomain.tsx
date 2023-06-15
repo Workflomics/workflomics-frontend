@@ -27,9 +27,9 @@ const ChooseDomain: React.FC<any> = observer((props) => {
 
   return (<div>
     <ExplorationProgress index={0} />
-    <div className="m-8">
-      <div className="flex">
-        <table className="table w-full">
+    <div className="m-20">
+      <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
+        <table className="table w-4/5">
           <thead>
             <tr>
               <th>Name</th>
