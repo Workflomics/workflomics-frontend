@@ -73,7 +73,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
         <div className="flex justify-center gap-8">
             { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
                 .map((solution: WorkflowSolution, index: number) => (
-              <div key={index} className="border-8 border-red-200 rounded-lg overflow-hidden p-2">
+              <div key={index} className="border-2 border-red-200 rounded-xl overflow-hidden p-2 shadow-lg">
                 <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
                 { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
               </div>
