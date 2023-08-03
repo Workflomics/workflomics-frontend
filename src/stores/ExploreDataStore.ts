@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
-import { ConstraintInstance, TypeFormatTuple, WorkflowConfig, WorkflowSolution } from "./WorkflowTypes";
+import { TypeFormatTuple, WorkflowConfig, WorkflowSolution } from "./WorkflowTypes";
+import { ConstraintInstance } from "./ConstraintStore";
 import { makePersistable } from "mobx-persist-store";
 
 const emptyWorkflowConfig = () => {
@@ -49,7 +50,19 @@ export class ExploreDataStore {
 
     const inputs = this.inputsOutputsToJSON(config.inputs, dataRoot, formatRoot);
     const outputs = this.inputsOutputsToJSON(config.outputs, dataRoot, formatRoot);
-    
+
+    const constraints = config.constraints.map((constraint:ConstraintInstance) => {
+      const params = constraint.parameters.map((param, index) => {
+        return {
+          [constraint.constraint.parameters[index].id]: [param.id]
+        };
+      });
+      return {
+        constraintid: constraint.constraint.id,
+        parameters: params
+      };
+    });
+
     //TODO: figure out how much of this to hardcode
     const obj: any = {
       "ontology_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/edam.owl",
@@ -60,7 +73,7 @@ export class ExploreDataStore {
       ],
       "tool_annotations_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/bio.tools.json",
       "strict_tool_annotations": "true",
-      "constraints_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/constraints.json",
+      "constraints": constraints,
       "timeout_sec": config.timeout,
       "solutions_dir_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/",
       "solution_length": {

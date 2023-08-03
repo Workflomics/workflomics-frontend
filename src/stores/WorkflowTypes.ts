@@ -1,4 +1,4 @@
-import { Constraint } from "./ConstraintStore";
+import { ConstraintInstance } from "./ConstraintStore";
 import { Domain } from "./DomainStore";
 
 // Currently unused
@@ -35,11 +35,6 @@ export type InputOutputTypes = {
 export type InputOutputFormats = {
   id: string,
   label: string
-}
-
-export type ConstraintInstance = {
-  constraint: Constraint,
-  //TODO parameters
 }
 
 export type WorkflowSolution = {

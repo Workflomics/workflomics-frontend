@@ -2,9 +2,9 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
 import { Link } from 'react-router-dom';
-import { ConstraintInstance, WorkflowConfig } from '../../stores/WorkflowTypes';
+import { WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
-import { Constraint } from '../../stores/ConstraintStore';
+import { Constraint, ConstraintInstance } from '../../stores/ConstraintStore';
 import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
 import { ToolTax } from '../../stores/ToolTaxStore';
 import { runInAction } from 'mobx';
@@ -28,7 +28,10 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   const addConstraint = () => {
     runInAction(() => {
-      workflowConfig.constraints.push({constraint: {id: "",label: "",parameters: []}});
+      workflowConfig.constraints.push({
+        constraint: {id: "", label: "", parameters: []},
+        parameters: []
+      });
     });
   };
 
@@ -38,15 +41,19 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     });
   };
 
-  const onConstraintTypeChange = (index: number, node: TreeNode) => {
+  const onConstraintTypeChange = (constraintIndex: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[index].constraint = {id: node.id, label: node.label, parameters:[{id:"",label:""}]};
+      workflowConfig.constraints[constraintIndex] = {
+        constraint: {id: node.id, label: node.label, parameters:[{id:"",label:""}]},
+        parameters: [{id:"",label:""}]
+      };
     });
   };
 
-  const onParameterChange = (index: number, node: TreeNode) => {
+  const onParameterChange = (constraintIndex: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[index].constraint.parameters[0] = {id: node.id, label: node.label};
+      const constraintInstance = workflowConfig.constraints[constraintIndex];
+      constraintInstance.parameters[0] = { id: node.id, label: node.label };
     });
   };
 
@@ -72,7 +79,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                       <TreeSelectionBox value={constraint.constraint} 
                         nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
                         placeholder="Type of constraint" />
-                      { constraint.constraint.id !== "" && <TreeSelectionBox value={constraint.constraint.parameters.length > 0 ? constraint.constraint.parameters[0] : ""}
+                      { constraint.constraint.id !== "" && <TreeSelectionBox value={constraint.parameters.length > 0 ? constraint.parameters[0] : ""}
                         nodes={allTools} onChange={(node: TreeNode) => onParameterChange(index, node)}
                         placeholder="Operation" /> }
                       </div>);

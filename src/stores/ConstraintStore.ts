@@ -1,9 +1,16 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
+// The constraint as it is stored in the backend
 export interface Constraint {
   id: string
   label: string
   parameters: { [key: string]: string }[]
+};
+
+// An instance of a constraint as it is stored in the frontend
+export type ConstraintInstance = {
+  constraint: Constraint,
+  parameters: { id: string, label: string }[]
 };
 
 function renameKey<T extends Record<string, any>>(obj: T, oldKey: string, newKey: keyof T): T {
