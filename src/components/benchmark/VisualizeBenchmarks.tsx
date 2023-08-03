@@ -2,6 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { Benchmark, BenchmarkValues, sampleBenchmarkValues, sampleBenchmarks, sampleWorkflows } from '../../stores/BenchmarkTypes';
 import { Workflow } from '../../stores/WorkflowTypes';
+import * as d3 from 'd3';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
   const benchmarkValues: BenchmarkValues = sampleBenchmarkValues;
@@ -9,16 +10,14 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
   const benchmarks: Benchmark[] = sampleBenchmarks;
 
   function mapValueToColor(value: number, minValue: number, maxValue: number) {
-    const startColor = { r: 255, g: 0, b: 0 }; // Red
-    const endColor = { r: 0, g: 255, b: 0 };   // Green
-    const fraction = (value - minValue) / (maxValue - minValue);
-    const r = Math.round(startColor.r + fraction * (endColor.r - startColor.r));
-    const g = Math.round(startColor.g + fraction * (endColor.g - startColor.g));
-    const b = Math.round(startColor.b + fraction * (endColor.b - startColor.b));
-    return `rgb(${r},${g},${b})`;
+    const colorScale = d3.scaleSequential()
+      .domain([minValue, maxValue])
+      .interpolator(d3.interpolateRdYlGn);
+    const color = colorScale(value);
+    return color;
   }
 
-  return (<div>
+return (<div>
     <div className="m-20">
       <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
         <table className="table w-4/5">
