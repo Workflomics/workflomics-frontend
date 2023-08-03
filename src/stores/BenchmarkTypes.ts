@@ -11,16 +11,21 @@ export enum BenchmarkType {
 export type Benchmark = {
   id: string,
   label: string,
-  type: BenchmarkType,
-  goodValue?: number,
-  badValue?: number
+  type: BenchmarkType, // not sure if this adds much
 }
 
-export interface BenchmarkValues {
+export type BenchmarkValue = {
+  value: string | number | boolean,
+  desirabilityValue: number,  // A number between 0 and 1 that will be used to calculate the color
+}
+
+export interface BenchmarkTable {
   [workflow_id: string]: {
-    [benchmark_id: string]: string | number | boolean
+    [benchmark_id: string]: BenchmarkValue
   }
 };
+
+// Some hard-coded sample data (workflows, benchmarks, and benchmark values)
 
 const sampleWorkflows: Workflow[] = [{
   id: '1',
@@ -46,9 +51,7 @@ const sampleWorkflows: Workflow[] = [{
 const sampleBenchmarks: Benchmark[] = [{
   id: '1',
   label: 'Benchmark 1',
-  type: BenchmarkType.NUMERIC,
-  goodValue: 10,
-  badValue: 0,
+  type: BenchmarkType.NUMERIC
 },{
   id: '2',
   label: 'Benchmark 2',
@@ -60,18 +63,18 @@ const sampleBenchmarks: Benchmark[] = [{
 }];
 
 
-const sampleBenchmarkValues: BenchmarkValues = {
+const sampleBenchmarkTable: BenchmarkTable = {
   [sampleWorkflows[0].id]: { 
-    [sampleBenchmarks[0].id]: 3,
-    [sampleBenchmarks[1].id]: true,
-    [sampleBenchmarks[2].id]: 'hello'
+    [sampleBenchmarks[0].id]: {value: 3, desirabilityValue: 0.3},
+    [sampleBenchmarks[1].id]: {value: true, desirabilityValue: 1},
+    [sampleBenchmarks[2].id]: {value: 'hello', desirabilityValue: 0.5}
   },
   [sampleWorkflows[1].id]: {
-    [sampleBenchmarks[0].id]: 8,
-    [sampleBenchmarks[1].id]: false,
-    [sampleBenchmarks[2].id]: 'world'
+    [sampleBenchmarks[0].id]: {value: 8, desirabilityValue: 0.8},
+    [sampleBenchmarks[1].id]: {value: false, desirabilityValue: 0},
+    [sampleBenchmarks[2].id]: {value: 'world', desirabilityValue: 0.2}
   }
 };
 
-export { sampleWorkflows, sampleBenchmarks, sampleBenchmarkValues };
+export { sampleWorkflows, sampleBenchmarks, sampleBenchmarkTable };
 

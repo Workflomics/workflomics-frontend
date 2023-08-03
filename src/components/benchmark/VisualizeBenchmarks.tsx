@@ -1,23 +1,26 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Benchmark, BenchmarkValues, sampleBenchmarkValues, sampleBenchmarks, sampleWorkflows } from '../../stores/BenchmarkTypes';
+import { Benchmark, BenchmarkValue, BenchmarkTable, sampleBenchmarkTable, sampleBenchmarks, sampleWorkflows } from '../../stores/BenchmarkTypes';
 import { Workflow } from '../../stores/WorkflowTypes';
 import * as d3 from 'd3';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
-  const benchmarkValues: BenchmarkValues = sampleBenchmarkValues;
+  const benchmarkValues: BenchmarkTable = sampleBenchmarkTable;
   const workflows: Workflow[] = sampleWorkflows;
   const benchmarks: Benchmark[] = sampleBenchmarks;
 
-  function mapValueToColor(value: number, minValue: number, maxValue: number) {
+  function mapValueToColor(value: number) {
     const colorScale = d3.scaleSequential()
-      .domain([minValue, maxValue])
+      .domain([0, 1])
       .interpolator(d3.interpolateRdYlGn);
-    const color = colorScale(value);
+    const limitRange = d3.scaleLinear()
+      .domain([0, 1])
+      .range([0.2, 0.8]);
+    const color = colorScale(limitRange(value));
     return color;
   }
 
-return (<div>
+  return (<div>
     <div className="m-20">
       <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
         <table className="table w-4/5">
@@ -32,12 +35,9 @@ return (<div>
             <tr key={benchmark.id}>
               <td>{ benchmark.label }</td>
               { workflows.map(workflow => {
-                const value = benchmarkValues[workflow.id][benchmark.id];
-                let color = 'lightblue';
-                if (typeof value === 'number') {
-                  color = mapValueToColor(value, benchmark.badValue || 0, benchmark.goodValue || 1);
-                }
-                return (<td key={workflow.id} style={{backgroundColor: color}}>{value.toString()}</td>);
+                const bmValue: BenchmarkValue = benchmarkValues[workflow.id][benchmark.id];
+                const color = mapValueToColor(bmValue.desirabilityValue);
+                return (<td key={workflow.id} style={{backgroundColor: color}}>{bmValue.value.toString()}</td>);
               })}
             </tr>
           ))}
