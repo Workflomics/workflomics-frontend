@@ -1,13 +1,13 @@
 import { makeAutoObservable } from "mobx";
-import { ConstraintInstance, TypeFormatTuple, WorkflowConfig, WorkflowSolution } from "./WorkflowTypes";
+import { ConstraintInstance, InOutTuple, Operation, WorkflowConfig, WorkflowSolution } from "./WorkflowTypes";
 import { makePersistable } from "mobx-persist-store";
 
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
-    outputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple],
-    constraints: [ {constraint: {id:"",label:""}} as ConstraintInstance ],
+    inputs: [[{ id: "", label: "" }, { id: "", label: "" }] as InOutTuple],
+    outputs: [[{ id: "", label: "" }, { id: "", label: "" }] as InOutTuple],
+    constraints: [{ id: "", label: "", parameters: [] } as ConstraintInstance],
     minSteps: 3,
     maxSteps: 4,
     timeout: 120,
@@ -25,21 +25,42 @@ export class ExploreDataStore {
 
   constructor() {
     makeAutoObservable(this, {}, { deep: true });
-    makePersistable(this, { 
+    makePersistable(this, {
       name: "ExploreDataStore",
       properties: ["workflowConfig", "workflowSolutions"],
       storage: window.localStorage
     });
   }
 
-  inputsOutputsToJSON(values: TypeFormatTuple[], dataRoot: string, formatRoot: string) {
+  inputsOutputsToJSON(values: InOutTuple[]) {
     return values.filter(value => value[0] !== undefined && value[1] !== undefined && value[0]!.id !== "" && value[1]!.id !== "")
       .map((value) => {
         return {
-          [dataRoot]: [value[0]!.id.replace("http://edamontology.org/", "")],
-          [formatRoot]: [value[1]!.id.replace("http://edamontology.org/", "")]
+          [value[0]!.root]: [value[0]!.id],
+          [value[1]!.root]: [value[1]!.id]
         };
-    });
+      });
+  }
+
+  operationToJSON(values: Operation[]) {
+    return values.filter(value => value !== undefined && value!.id !== "")
+      .map((value) => {
+        return {
+          [value!.root]: [value!.id]
+        };
+      });
+  }
+
+  constraintsToJSON(values: ConstraintInstance[]) {
+    return values
+      .map((value) => {
+        return {
+          ["id"]: value.id.replace("http://edamontology.org/", ""),
+          ["parameters"]: value.parameters.map((parameter) => {
+            return {};
+          }),
+        };
+      });
   }
 
   configToJSON(config: WorkflowConfig): any {
@@ -47,9 +68,10 @@ export class ExploreDataStore {
     const formatRoot: string = "format_1915";
     const toolsRoot: string = "operation_0004";
 
-    const inputs = this.inputsOutputsToJSON(config.inputs, dataRoot, formatRoot);
-    const outputs = this.inputsOutputsToJSON(config.outputs, dataRoot, formatRoot);
-    
+    const inputs = this.inputsOutputsToJSON(config.inputs);
+    const outputs = this.inputsOutputsToJSON(config.outputs);
+    const constraints = this.constraintsToJSON(config.constraints);
+
     //TODO: figure out how much of this to hardcode
     const obj: any = {
       "ontology_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/edam.owl",
@@ -60,9 +82,7 @@ export class ExploreDataStore {
       ],
       "tool_annotations_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/bio.tools.json",
       "strict_tool_annotations": "true",
-      "constraints_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/constraints.json",
       "timeout_sec": config.timeout,
-      "solutions_dir_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/",
       "solution_length": {
         "min": config.minSteps,
         "max": config.maxSteps
@@ -75,7 +95,8 @@ export class ExploreDataStore {
       "use_all_generated_data": "all",
       "tool_seq_repeat": "false",
       "inputs": inputs,
-      "outputs": outputs
+      "outputs": outputs,
+      "constraints": constraints
     };
     return obj;
   }
@@ -93,36 +114,36 @@ export class ExploreDataStore {
       },
       body: JSON.stringify(configJson),
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Request failed: ${response.status} ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log("Success:", data);
-      this.workflowSolutions = data;
-      this.isGenerating = false;
-    })
-    .catch(error => {
-      console.log("Error:", error);
-      this.generationError = error;
-      this.isGenerating = false;
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log("Success:", data);
+        this.workflowSolutions = data;
+        this.isGenerating = false;
+      })
+      .catch(error => {
+        console.log("Error:", error);
+        this.generationError = error;
+        this.isGenerating = false;
+      });
   }
 
   loadImage(solution: WorkflowSolution) {
     const { run_id, figure_name } = solution;
     fetch(`/ape/get_image?run_id=${run_id}&file_name=${figure_name}`)
-    .then(response => response.blob())
-    .then(blob => {
-      const url = URL.createObjectURL(blob);
-      solution.image = url;
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      // Handle error, display fallback image, or show error message
-    });
+      .then(response => response.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        solution.image = url;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle error, display fallback image, or show error message
+      });
   }
 }
 

@@ -1,4 +1,4 @@
-import { Constraint } from "./ConstraintStore";
+import { ConstraintTemplate } from "./ConstraintStore";
 import { Domain } from "./DomainStore";
 
 // Currently unused
@@ -13,12 +13,18 @@ export type Workflow = {
   method: string;
 }
 
-export type TypeFormatTuple = [InputOutputTypes | undefined, InputOutputFormats | undefined];
+/**
+ * Represents an array containing DataType and DataFormat as elements.
+ */
+export type InOutTuple = [DataType | undefined, DataFormat | undefined];
 
+/**
+ * Represents a configuration for a workflow.
+ */
 export type WorkflowConfig = {
   domain: Domain | undefined
-  inputs: TypeFormatTuple[]
-  outputs: TypeFormatTuple[]
+  inputs: InOutTuple[]
+  outputs: InOutTuple[]
   constraints: ConstraintInstance[]
   //order: ...
   minSteps: Number
@@ -27,19 +33,37 @@ export type WorkflowConfig = {
   solutionCount: Number
 }
 
-export type InputOutputTypes = {
+/**
+ * Represents a type that can be an operation.
+ */
+export type Operation = {
   id: string,
-  label: string
+  label: string,
+  root: string
 }
 
-export type InputOutputFormats = {
+/**
+ * Represents a type that can be a data type.
+ */
+export type DataType = {
   id: string,
-  label: string
+  label: string,
+  root: string
+}
+
+/**
+ * Represents a type that can be a data format.
+ */
+export type DataFormat = {
+  id: string,
+  label: string,
+  root: string
 }
 
 export type ConstraintInstance = {
-  constraint: Constraint,
-  //TODO parameters
+  id: string,
+  label: string,
+  parameters: (Operation | InOutTuple)[]
 }
 
 export type WorkflowSolution = {

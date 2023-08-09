@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
-import { InputOutputFormats, InputOutputTypes, TypeFormatTuple, WorkflowConfig } from '../../stores/WorkflowTypes';
+import { DataFormat, DataType, InOutTuple, WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
@@ -23,7 +23,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
 
   const addInput = () => {
     runInAction(() => {
-      workflowConfig.inputs.push([{id:"",label:""}, {id:"",label:""}]);
+      workflowConfig.inputs.push([{ id: "", label: "", root: "data_0006" }, { id: "", label: "", root: "format_1915" }]);
     });
   };
 
@@ -32,10 +32,10 @@ const InputsOutputs: React.FC<any> = observer((props) => {
       workflowConfig.inputs.pop();
     });
   };
-  
+
   const addOutput = () => {
     runInAction(() => {
-      workflowConfig.outputs.push([{id:"",label:""}, {id:"",label:""}]);
+      workflowConfig.outputs.push([{ id: "", label: "", root: "data_0006" }, { id: "", label: "", root: "format_1915" }]);
     });
   };
 
@@ -48,11 +48,11 @@ const InputsOutputs: React.FC<any> = observer((props) => {
   const useDemoData = () => {
     runInAction(() => {
       workflowConfig.inputs = [
-        [{id:"data_0943",label:"Mass spectrum"}, {id:"format_3244",label:"mzML"}] as TypeFormatTuple,
-        [{id:"data_2976",label:"Protein sequence"}, {id:"format_1929",label:"FASTA"}] as TypeFormatTuple
+        [{ id: "data_0943", label: "Mass spectrum", root: "data_0006" }, { id: "format_3244", label: "mzML", root: "format_1915" }] as InOutTuple,
+        [{ id: "data_2976", label: "Protein sequence", root: "data_0006" }, { id: "format_1929", label: "FASTA", root: "format_1915" }] as InOutTuple
       ];
       workflowConfig.outputs = [
-        [{id:"data_0006",label:"Data"}, {id:"format_3747",label:"protXML"}] as TypeFormatTuple
+        [{ id: "data_0006", label: "Data", root: "data_0006" }, { id: "format_3747", label: "protXML", root: "format_1915" }] as InOutTuple
       ];
     });
   };
@@ -66,17 +66,17 @@ const InputsOutputs: React.FC<any> = observer((props) => {
         <div className="text-left space-y-6 mt-10">
 
           {/* Status messages */}
-          { dataTaxStore.isLoading && <div className="alert alert-info">Loading data taxonomy...</div> }
-          { workflowConfig.domain === undefined && <div className="alert alert-error">Domain could not be retrieved</div> }
-          { dataTaxStore.error && <div className="alert alert-error">Data taxonomy could not be retrieved ({dataTaxStore.error})</div> }
+          {dataTaxStore.isLoading && <div className="alert alert-info">Loading data taxonomy...</div>}
+          {workflowConfig.domain === undefined && <div className="alert alert-error">Domain could not be retrieved</div>}
+          {dataTaxStore.error && <div className="alert alert-error">Data taxonomy could not be retrieved ({dataTaxStore.error})</div>}
 
           {/* Inputs */}
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Inputs</span>
             <div className="flex flex-grow items-center">
-              { workflowConfig.inputs.map((input: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
-                  return (<InputsOutputSelection key={index} value={input} dataTaxs={dataTaxs} />)
-                })}
+              {workflowConfig.inputs.map((input: [DataType | undefined, DataFormat | undefined], index: number) => {
+                return (<InputsOutputSelection key={index} value={input} dataTaxs={dataTaxs} />)
+              })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeInput()}>-</button>
             </div>
@@ -86,9 +86,9 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Outputs</span>
             <div className="flex flex-grow items-center">
-              { workflowConfig.outputs.map((output: [InputOutputTypes | undefined, InputOutputFormats | undefined], index:number) => {
-                  return (<InputsOutputSelection key={index} value={output} dataTaxs={dataTaxs} />)
-                })}
+              {workflowConfig.outputs.map((output: [DataType | undefined, DataFormat | undefined], index: number) => {
+                return (<InputsOutputSelection key={index} value={output} dataTaxs={dataTaxs} />)
+              })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeOutput()}>-</button>
             </div>

@@ -4,7 +4,7 @@ import { ExplorationProgress } from './ExplorationProgress';
 import { Link } from 'react-router-dom';
 import { ConstraintInstance, WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
-import { Constraint } from '../../stores/ConstraintStore';
+import { ConstraintTemplate } from '../../stores/ConstraintStore';
 import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
 import { ToolTax } from '../../stores/ToolTaxStore';
 import { runInAction } from 'mobx';
@@ -13,8 +13,8 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
   let { constraintStore } = useStore();
-  const allConstraints: Constraint[] = constraintStore.availableConstraints.filter(
-    (constraint: Constraint) => constraint.id === "use_m" || constraint.id === "nuse_m"
+  const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraints.filter(
+    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m"
   );
   let { toolTaxStore } = useStore();
   const allTools: ToolTax[] = toolTaxStore.availableToolTax;
@@ -28,7 +28,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   const addConstraint = () => {
     runInAction(() => {
-      workflowConfig.constraints.push({constraint: {id: "",label: "",parameters: []}});
+      workflowConfig.constraints.push({ id: "", label: "", parameters: [] });
     });
   };
 
@@ -40,13 +40,13 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   const onConstraintTypeChange = (index: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[index].constraint = {id: node.id, label: node.label, parameters:[{id:"",label:""}]};
+      workflowConfig.constraints[index] = { id: node.id, label: node.label, parameters: [{ id: "", label: "", root: "" }] };
     });
   };
 
   const onParameterChange = (index: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[index].constraint.parameters[0] = {id: node.id, label: node.label};
+      workflowConfig.constraints[index].parameters[0] = { id: node.id, label: node.label, root: node.root };
     });
   };
 
@@ -59,24 +59,24 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
         <div className="text-left space-y-6 mt-10">
 
           {/* Status messages */}
-          { constraintStore.isLoading && <div className="alert alert-info">Loading constraints...</div> }
-          { workflowConfig.domain === undefined && <div className="alert alert-error">Domain could not be retrieved</div> }
-          { constraintStore.error && <div className="alert alert-error">Constraints could not be retrieved ({constraintStore.error})</div> }
+          {constraintStore.isLoading && <div className="alert alert-info">Loading constraints...</div>}
+          {workflowConfig.domain === undefined && <div className="alert alert-error">Domain could not be retrieved</div>}
+          {constraintStore.error && <div className="alert alert-error">Constraints could not be retrieved ({constraintStore.error})</div>}
 
           {/* Constraints */}
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-40">Constraints</span>
             <div className="flex flex-grow items-center">
-              { workflowConfig.constraints.map((constraint: ConstraintInstance, index:number) => {
-                  return (<div key={index}>
-                      <TreeSelectionBox value={constraint.constraint} 
-                        nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
-                        placeholder="Type of constraint" />
-                      { constraint.constraint.id !== "" && <TreeSelectionBox value={constraint.constraint.parameters.length > 0 ? constraint.constraint.parameters[0] : ""}
-                        nodes={allTools} onChange={(node: TreeNode) => onParameterChange(index, node)}
-                        placeholder="Operation" /> }
-                      </div>);
-                })}
+              {workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
+                return (<div key={index}>
+                  <TreeSelectionBox value={constraint}
+                    nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
+                    placeholder="Type of constraint" />
+                  {constraint.id !== "" && <TreeSelectionBox value={constraint.parameters.length > 0 ? constraint.parameters[0] : ""}
+                    nodes={allTools} onChange={(node: TreeNode) => onParameterChange(index, node)}
+                    placeholder="Operation" />}
+                </div>);
+              })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addConstraint()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeConstraint()}>-</button>
             </div>

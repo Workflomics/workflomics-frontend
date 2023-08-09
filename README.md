@@ -15,11 +15,16 @@ For development, a simple proxy server is run (through `setupProxy.js`, which is
 
 ```bash
 API_PROXY_TARGET=http://localhost:3333
+APE_PROXY_TARGET=http://localhost:4444
 ```
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+### `npm install .`
+
+Installs all required dependencies.
 
 ### `npm start`
 

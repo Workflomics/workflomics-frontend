@@ -3,17 +3,17 @@ import { observer } from 'mobx-react-lite';
 import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
 import { runInAction } from 'mobx';
 
-const InputsOutputSelection: React.FC<any> = observer(({value, dataTaxs}) => {
+const InputsOutputSelection: React.FC<any> = observer(({ value, dataTaxs }) => {
 
   const onTypeChange = (node: TreeNode) => {
     runInAction(() => {
-      value[0] = {id: node.id, label: node.label}
+      value[0] = { id: node.id, label: node.label }
     });
   };
 
   const onFormatChange = (node: TreeNode) => {
     runInAction(() => {
-      value[1] = {id: node.id, label: node.label}
+      value[1] = { id: node.id, label: node.label }
     });
   };
 

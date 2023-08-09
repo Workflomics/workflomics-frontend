@@ -3,11 +3,13 @@ import * as React from 'react';
 export interface TreeNode {
   id: string;
   label: string;
+  // TODO: root is not instantiated in the current implementation
+  root: string;
   subsets: Array<TreeNode> | undefined;
   filteredSubsets: Array<TreeNode> | undefined;
 }
 
-const TreeSelectionBox: React.FC<any> = ({nodes, value, onChange, placeholder}) => {
+const TreeSelectionBox: React.FC<any> = ({ nodes, value, onChange, placeholder }) => {
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const [filter, setFilter] = React.useState<string>("");
   const [filteredNodes, setFilteredNodes] = React.useState<Array<TreeNode>>([]);
@@ -52,22 +54,22 @@ const TreeSelectionBox: React.FC<any> = ({nodes, value, onChange, placeholder}) 
 
   const currentText = !isDropDownOpen && value.id !== "" ? value.label : filter;
 
-  const renderSubNodes = (nodes:any) => {
+  const renderSubNodes = (nodes: any) => {
     return (
       <ul className="dropdown-content p-1 w-80">
         {nodes.map((node: TreeNode) => (
-            (<li className="pl-6" key={node.label}>
-                { node.filteredSubsets && node.filteredSubsets.length > 0 ? 
-                    // Node with children
-                    (<details>
-                      <summary><button className="hover:bg-sky-200 p-2 rounded" onClick={() => onSelectNode(node)}>{node.label}</button></summary>
-                      { renderSubNodes(node.filteredSubsets) }
-                    </details>) :
-                    // Node without children
-                    (<button className="hover:bg-sky-200 p-2 rounded" onClick={() => onSelectNode(node)}>{node.label}</button>)
-                }
-              </li>)
-            ))
+          (<li className="pl-6" key={node.label}>
+            {node.filteredSubsets && node.filteredSubsets.length > 0 ?
+              // Node with children
+              (<details>
+                <summary><button className="hover:bg-sky-200 p-2 rounded" onClick={() => onSelectNode(node)}>{node.label}</button></summary>
+                {renderSubNodes(node.filteredSubsets)}
+              </details>) :
+              // Node without children
+              (<button className="hover:bg-sky-200 p-2 rounded" onClick={() => onSelectNode(node)}>{node.label}</button>)
+            }
+          </li>)
+        ))
         }
       </ul>
     );
@@ -77,13 +79,13 @@ const TreeSelectionBox: React.FC<any> = ({nodes, value, onChange, placeholder}) 
     <div className="relative" onBlur={handleBlur}>
       {/* Textbox that displays value, allows filter */}
       <input type="text" value={currentText} onChange={handleSearch}
-          onFocus={() => handleFocus()}
-          placeholder={placeholder} className="input input-bordered w-80 m-1"></input>
+        onFocus={() => handleFocus()}
+        placeholder={placeholder} className="input input-bordered w-80 m-1"></input>
 
       {/* Dropdown with tree */}
-      { isDropDownOpen && <div className="absolute border bg-white shadow rounded w-80 m-1 z-10" ref={dropdownRef}>
-          {renderSubNodes(filteredNodes)}
-      </div> }
+      {isDropDownOpen && <div className="absolute border bg-white shadow rounded w-80 m-1 z-10" ref={dropdownRef}>
+        {renderSubNodes(filteredNodes)}
+      </div>}
     </div>
   );
 };
