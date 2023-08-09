@@ -1,10 +1,14 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
+/**
+ * A constraint as it is stored in the backend.
+ */
 export interface ConstraintTemplate {
   id: string
   label: string
   parameters: { [key: string]: string }[]
 };
+
 
 export class ConstraintStore {
 
