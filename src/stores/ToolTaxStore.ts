@@ -8,7 +8,7 @@ export interface ToolTax {
 
 export class ToolTaxStore {
 
-  availableToolTax: ToolTax[] = [];
+  availableToolTax: Map<string, ToolTax> = new Map();
   isLoading: boolean = false;
   error: string = "";
 
@@ -24,7 +24,7 @@ export class ToolTaxStore {
     //     .replace("/tree/", "/") + "/config.json";
     // "https://github.com/sanctuuary/APE_UseCases/tree/master/MassSpectometry"
     // "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/MassSpectometry/config.json"
-    
+
     const response = await fetch(`/ape/get_tools?config_path=${config_path}`);
     const result = await response.json();
     runInAction(() => {
@@ -33,7 +33,9 @@ export class ToolTaxStore {
         this.error = result.error;
       }
       else {
-        this.availableToolTax = result.subsets;
+        const taxMap: Map<string, ToolTax> = new Map();
+        taxMap.set(result.id, result);
+        this.availableToolTax = taxMap;
       }
     });
   }

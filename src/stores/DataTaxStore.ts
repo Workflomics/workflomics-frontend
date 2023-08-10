@@ -1,4 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
+import { TaxParameter, TaxonomyClass } from "./WorkflowTypes";
 
 export interface DataTax {
   id: string;
@@ -8,7 +9,8 @@ export interface DataTax {
 
 export class DataTaxStore {
 
-  availableDataTax: DataTax[] = [];
+  availableDataTax: Map<string, DataTax> = new Map();
+  dataDimensions: Array<string> = [];
   isLoading: boolean = false;
   error: string = "";
 
@@ -24,7 +26,7 @@ export class DataTaxStore {
     //     .replace("/tree/", "/") + "/config.json";
     // "https://github.com/sanctuuary/APE_UseCases/tree/master/MassSpectometry"
     // "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/MassSpectometry/config.json"
-    
+
     const response = await fetch(`/ape/get_data?config_path=${config_path}`);
     const result = await response.json();
     runInAction(() => {
@@ -33,12 +35,30 @@ export class DataTaxStore {
         this.error = result.error;
       }
       else {
-        this.availableDataTax = result;
+        const taxMap: Map<string, DataTax> = new Map();
+        for (let dataTax of result) {
+          taxMap.set(dataTax.id, dataTax);
+          this.dataDimensions.push(dataTax.id);
+        }
+
+        this.availableDataTax = taxMap;
       }
     });
   }
 
-}
+  getDimensions(): Array<string> {
+    return this.dataDimensions;
+  }
 
+
+  getEmptyTaxParameter(): TaxParameter {
+    const emptyTaxParameter: TaxParameter = new Map<string, TaxonomyClass>();
+    for (let dimension of this.dataDimensions) {
+      emptyTaxParameter.set(dimension, { id: "", label: "", root: dimension });
+    }
+
+    return emptyTaxParameter;
+  }
+}
 const dataTaxStore = new DataTaxStore();
 export default dataTaxStore;

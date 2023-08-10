@@ -1,12 +1,13 @@
 import { makeAutoObservable } from "mobx";
-import { ConstraintInstance, InOutTuple, Operation, WorkflowConfig, WorkflowSolution } from "./WorkflowTypes";
+import { ConstraintInstance, TaxParameter, WorkflowConfig, WorkflowSolution, isTaxParameterComplete as isTaxParameterComplete } from "./WorkflowTypes";
 import { makePersistable } from "mobx-persist-store";
+import DomainStore from "./DomainStore";
 
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [[{ id: "", label: "" }, { id: "", label: "" }] as InOutTuple],
-    outputs: [[{ id: "", label: "" }, { id: "", label: "" }] as InOutTuple],
+    inputs: [{} as TaxParameter],
+    outputs: [{} as TaxParameter],
     constraints: [{ id: "", label: "", parameters: [] } as ConstraintInstance],
     minSteps: 3,
     maxSteps: 4,
@@ -32,38 +33,46 @@ export class ExploreDataStore {
     });
   }
 
-  inputsOutputsToJSON(values: InOutTuple[]) {
-    return values.filter(value => value[0] !== undefined && value[1] !== undefined && value[0]!.id !== "" && value[1]!.id !== "")
-      .map((value) => {
-        return {
-          [value[0]!.root]: [value[0]!.id],
-          [value[1]!.root]: [value[1]!.id]
-        };
-      });
+  /**
+   * Returns a JSON representation of a list of inputs or outputs that can be used in a workflow config.
+   * @param inputsOutputs list of inputs or outputs
+   * @returns JSON representation of the inputs or outputs
+   */
+  inputsOutputsToJSON(inputsOutputs: TaxParameter[]) {
+    return inputsOutputs.filter(parameter => isTaxParameterComplete(parameter))
+      .map((parameter) => this.parameterToJSON(parameter));
   }
 
-  operationToJSON(values: Operation[]) {
-    return values.filter(value => value !== undefined && value!.id !== "")
-      .map((value) => {
-        return {
-          [value!.root]: [value!.id]
-        };
-      });
+  /**
+   * Returns a JSON representation of a TaxParameter that can be used in a workflow config.
+   * @param param taxonomy parameter
+   * @returns JSON representation of the parameter
+   */
+  parameterToJSON(param: TaxParameter) {
+    const objectArray: any[] = [];
+    Array.from(param.entries()).map(([key, data]) => (
+      objectArray.push({ [key]: [data!.id] })));
+    return objectArray;
   }
 
-  constraintsToJSON(values: ConstraintInstance[]) {
-    return values
+  /**
+   * Returns a JSON representation of a list of constraints that can be used in a workflow config.
+   * @param constraints list of constraints
+   * @returns JSON representation of the constraints
+   */
+  constraintsToJSON(constraints: ConstraintInstance[]) {
+    return constraints
       .map((value) => {
         return {
-          ["id"]: value.id.replace("http://edamontology.org/", ""),
-          ["parameters"]: value.parameters.map((parameter) => {
-            return {};
-          }),
+          ["id"]: value!.id,
+          ["parameters"]: value!.parameters.map((parameter) => this.parameterToJSON(parameter)
+          )
         };
       });
   }
 
   configToJSON(config: WorkflowConfig): any {
+    // These should be dynamically generated from the domain configuration file
     const dataRoot: string = "data_0006";
     const formatRoot: string = "format_1915";
     const toolsRoot: string = "operation_0004";
@@ -134,7 +143,7 @@ export class ExploreDataStore {
 
   loadImage(solution: WorkflowSolution) {
     const { run_id, figure_name } = solution;
-    fetch(`/ape/get_image?run_id=${run_id}&file_name=${figure_name}`)
+    fetch(`/ ape / get_image ? run_id = ${run_id} & file_name=${figure_name}`)
       .then(response => response.blob())
       .then(blob => {
         const url = URL.createObjectURL(blob);

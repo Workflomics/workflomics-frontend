@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
-import { DataFormat, DataType, InOutTuple, WorkflowConfig } from '../../stores/WorkflowTypes';
+import { TaxParameter, WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
   let { dataTaxStore } = useStore();
-  const dataTaxs: DataTax[] = dataTaxStore.availableDataTax;
+  const dataTaxs: Map<string, DataTax> = dataTaxStore.availableDataTax;
 
   React.useEffect(() => {
     if (workflowConfig.domain !== undefined) {
@@ -23,7 +23,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
 
   const addInput = () => {
     runInAction(() => {
-      workflowConfig.inputs.push([{ id: "", label: "", root: "data_0006" }, { id: "", label: "", root: "format_1915" }]);
+      workflowConfig.inputs.push(dataTaxStore.getEmptyTaxParameter());
     });
   };
 
@@ -35,7 +35,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
 
   const addOutput = () => {
     runInAction(() => {
-      workflowConfig.outputs.push([{ id: "", label: "", root: "data_0006" }, { id: "", label: "", root: "format_1915" }]);
+      workflowConfig.outputs.push(dataTaxStore.getEmptyTaxParameter());
     });
   };
 
@@ -45,14 +45,24 @@ const InputsOutputs: React.FC<any> = observer((props) => {
     });
   };
 
+
   const useDemoData = () => {
     runInAction(() => {
       workflowConfig.inputs = [
-        [{ id: "data_0943", label: "Mass spectrum", root: "data_0006" }, { id: "format_3244", label: "mzML", root: "format_1915" }] as InOutTuple,
-        [{ id: "data_2976", label: "Protein sequence", root: "data_0006" }, { id: "format_1929", label: "FASTA", root: "format_1915" }] as InOutTuple
-      ];
+        new Map([
+          ["data_0006", { id: "data_0943", label: "Mass spectrum", root: "data_0006" }],
+          ["format_1915", { id: "format_3244", label: "mzML", root: "format_1915" }],
+        ]),
+        new Map([
+          ["data_0006", { id: "data_2976", label: "Protein sequence", root: "data_0006" }],
+          ["format_1915", { id: "format_1929", label: "FASTA", root: "format_1915" }],
+        ]),
+      ]
       workflowConfig.outputs = [
-        [{ id: "data_0006", label: "Data", root: "data_0006" }, { id: "format_3747", label: "protXML", root: "format_1915" }] as InOutTuple
+        new Map([
+          ["data_0006", { id: "data_0006", label: "Data", root: "data_0006" }],
+          ["format_3747", { id: "format_3747", label: "protXML", root: "format_1915" }],
+        ]),
       ];
     });
   };
@@ -74,7 +84,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Inputs</span>
             <div className="flex flex-grow items-center">
-              {workflowConfig.inputs.map((input: [DataType | undefined, DataFormat | undefined], index: number) => {
+              {workflowConfig.inputs.map((input: TaxParameter, index: number) => {
                 return (<InputsOutputSelection key={index} value={input} dataTaxs={dataTaxs} />)
               })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
@@ -86,7 +96,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Outputs</span>
             <div className="flex flex-grow items-center">
-              {workflowConfig.outputs.map((output: [DataType | undefined, DataFormat | undefined], index: number) => {
+              {workflowConfig.outputs.map((output: TaxParameter, index: number) => {
                 return (<InputsOutputSelection key={index} value={output} dataTaxs={dataTaxs} />)
               })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>

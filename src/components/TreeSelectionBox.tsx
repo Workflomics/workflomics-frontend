@@ -1,12 +1,25 @@
 import * as React from 'react';
+import { TaxonomyClass } from '../stores/WorkflowTypes';
 
-export interface TreeNode {
+export class TreeNode {
   id: string;
   label: string;
   // TODO: root is not instantiated in the current implementation
-  root: string;
   subsets: Array<TreeNode> | undefined;
   filteredSubsets: Array<TreeNode> | undefined;
+
+
+  constructor(id: string, label: string, subsets: Array<TreeNode>, filteredSubsets: Array<TreeNode>) {
+    this.id = id;
+    this.label = label;
+    this.subsets = subsets;
+    this.filteredSubsets = filteredSubsets;
+  }
+
+
+  getTaxonomyClass(root: string): TaxonomyClass {
+    return { id: this.id, label: this.label, root: root };
+  }
 }
 
 const TreeSelectionBox: React.FC<any> = ({ nodes, value, onChange, placeholder }) => {

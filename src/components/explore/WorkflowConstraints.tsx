@@ -17,7 +17,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m"
   );
   let { toolTaxStore } = useStore();
-  const allTools: ToolTax[] = toolTaxStore.availableToolTax;
+  const allTools: Map<string, ToolTax> = toolTaxStore.availableToolTax;
 
   React.useEffect(() => {
     if (workflowConfig.domain !== undefined) {
@@ -40,13 +40,17 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   const onConstraintTypeChange = (constraintIndex: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[constraintIndex] = { id: node.id, label: node.label, parameters: [{ id: "", label: "", root: "" }] };
+      workflowConfig.constraints[constraintIndex] = { id: node.id, label: node.label, parameters: [] };
     });
   };
 
   const onParameterChange = (constraintIndex: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[constraintIndex].parameters[0] = { id: node.id, label: node.label, root: node.root };
+      workflowConfig.constraints[constraintIndex].parameters[0] =
+        new Map([
+          ["operation_0004", { id: node.id, label: node.label, root: "operation_0004" }],
+        ])
+        ;
     });
   };
 

@@ -14,17 +14,35 @@ export type Workflow = {
 }
 
 /**
- * Represents an array containing DataType and DataFormat as elements.
+ * Represents an APE lib parameter, either a data parameter (usually a pair of DataType and DataFormat) or a operation parameter.
  */
-export type InOutTuple = [DataType | undefined, DataFormat | undefined];
+export type TaxParameter = Map<string, TaxonomyClass>;
+
+/**
+ * Instance that represent a class in the taxonomy (data or operation).
+ */
+export type TaxonomyClass = {
+  id: string,
+  label: string,
+  root: string
+}
+
+export function isTaxParameterComplete(taxParam: TaxParameter): boolean {
+  const complete: boolean = true;
+  Array.from(taxParam.entries()).map(([key, data]) => ({
+    complete: complete && data !== undefined && data.id !== ""
+  }));
+
+  return complete;
+}
 
 /**
  * Represents a configuration for a workflow.
  */
 export type WorkflowConfig = {
   domain: Domain | undefined
-  inputs: InOutTuple[]
-  outputs: InOutTuple[]
+  inputs: TaxParameter[]
+  outputs: TaxParameter[]
   constraints: ConstraintInstance[]
   //order: ...
   minSteps: Number
@@ -33,37 +51,10 @@ export type WorkflowConfig = {
   solutionCount: Number
 }
 
-/**
- * Represents a type that can be an operation.
- */
-export type Operation = {
-  id: string,
-  label: string,
-  root: string
-}
-
-/**
- * Represents a type that can be a data type.
- */
-export type DataType = {
-  id: string,
-  label: string,
-  root: string
-}
-
-/**
- * Represents a type that can be a data format.
- */
-export type DataFormat = {
-  id: string,
-  label: string,
-  root: string
-}
-
 export type ConstraintInstance = {
   id: string,
   label: string,
-  parameters: (Operation | InOutTuple)[]
+  parameters: TaxParameter[]
 }
 
 export type WorkflowSolution = {
