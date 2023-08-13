@@ -6,8 +6,8 @@ import { ConstraintInstance, WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { ConstraintTemplate } from '../../stores/ConstraintStore';
 import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
-import { ToolTax } from '../../stores/ToolTaxStore';
 import { runInAction } from 'mobx';
+import { ApeTaxTuple } from '../../stores/TaxStore';
 
 const WorkflowConstraints: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
@@ -16,15 +16,16 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
   const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraints.filter(
     (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m"
   );
-  let { toolTaxStore } = useStore();
-  const allTools: Map<string, ToolTax> = toolTaxStore.availableToolTax;
+  let { taxStore } = useStore();
+  const allToolsTax: ApeTaxTuple = taxStore.availableToolTax;
+  const allDataTax: ApeTaxTuple = taxStore.availableDataTax;
 
   React.useEffect(() => {
     if (workflowConfig.domain !== undefined) {
       constraintStore.fetchData(workflowConfig.domain.repo_url);
-      toolTaxStore.fetchData(workflowConfig.domain.repo_url);
+      taxStore.fetchData(workflowConfig.domain.repo_url);
     }
-  }, [constraintStore, toolTaxStore, workflowConfig.domain]);
+  }, [constraintStore, taxStore, workflowConfig.domain]);
 
   const addConstraint = () => {
     runInAction(() => {
@@ -48,7 +49,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     runInAction(() => {
       workflowConfig.constraints[constraintIndex].parameters[0] =
         new Map([
-          ["operation_0004", { id: node.id, label: node.label, root: "operation_0004" }],
+          ["operation_0004", node],
         ])
         ;
     });
@@ -78,7 +79,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                       nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
                       placeholder="Type of constraint" />
                     {constraint.id !== "" && <TreeSelectionBox value={constraint.parameters.length > 0 ? constraint.parameters[0] : ""}
-                      nodes={allTools} onChange={(node: TreeNode) => onParameterChange(index, node)}
+                      nodes={allToolsTax.get("operation_0004")!.subsets} onChange={(node: TreeNode) => onParameterChange(index, node)}
                       placeholder="Operation" />}
                   </div>);
                 })

@@ -1,13 +1,14 @@
 import { makeAutoObservable } from "mobx";
-import { ConstraintInstance, TaxParameter, WorkflowConfig, WorkflowSolution, isTaxParameterComplete as isTaxParameterComplete } from "./WorkflowTypes";
+import { ConstraintInstance, WorkflowConfig, WorkflowSolution, isTaxParameterComplete as isTaxParameterComplete } from "./WorkflowTypes";
 import { makePersistable } from "mobx-persist-store";
 import DomainStore from "./DomainStore";
+import { ApeTaxTuple } from "./TaxStore";
 
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [{} as TaxParameter],
-    outputs: [{} as TaxParameter],
+    inputs: [{} as ApeTaxTuple],
+    outputs: [{} as ApeTaxTuple],
     constraints: [{ id: "", label: "", parameters: [] } as ConstraintInstance],
     minSteps: 3,
     maxSteps: 4,
@@ -38,7 +39,7 @@ export class ExploreDataStore {
    * @param inputsOutputs list of inputs or outputs
    * @returns JSON representation of the inputs or outputs
    */
-  inputsOutputsToJSON(inputsOutputs: TaxParameter[]) {
+  inputsOutputsToJSON(inputsOutputs: ApeTaxTuple[]) {
     return inputsOutputs.filter(parameter => isTaxParameterComplete(parameter))
       .map((parameter) => this.parameterToJSON(parameter));
   }
@@ -48,9 +49,9 @@ export class ExploreDataStore {
    * @param param taxonomy parameter
    * @returns JSON representation of the parameter
    */
-  parameterToJSON(param: TaxParameter) {
+  parameterToJSON(param: ApeTaxTuple) {
     const objectArray: any[] = [];
-    Array.from(param.entries()).map(([key, data]) => (
+    Array.from(param.entries()).forEach(([key, data]) => (
       objectArray.push({ [key]: [data!.id] })));
     return objectArray;
   }

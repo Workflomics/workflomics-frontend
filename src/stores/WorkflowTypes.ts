@@ -1,5 +1,6 @@
 import { ConstraintTemplate } from "./ConstraintStore";
 import { Domain } from "./DomainStore";
+import { ApeTaxTuple } from "./TaxStore";
 
 // Currently unused
 export type Workflow = {
@@ -13,23 +14,9 @@ export type Workflow = {
   method: string;
 }
 
-/**
- * Represents an APE lib parameter, either a data parameter (usually a pair of DataType and DataFormat) or a operation parameter.
- */
-export type TaxParameter = Map<string, TaxonomyClass>;
-
-/**
- * Instance that represent a class in the taxonomy (data or operation).
- */
-export type TaxonomyClass = {
-  id: string,
-  label: string,
-  root: string
-}
-
-export function isTaxParameterComplete(taxParam: TaxParameter): boolean {
+export function isTaxParameterComplete(taxParam: ApeTaxTuple): boolean {
   const complete: boolean = true;
-  Array.from(taxParam.entries()).map(([key, data]) => ({
+  Array.from(taxParam.entries()).forEach(([key, data]) => ({
     complete: complete && data !== undefined && data.id !== ""
   }));
 
@@ -41,8 +28,8 @@ export function isTaxParameterComplete(taxParam: TaxParameter): boolean {
  */
 export type WorkflowConfig = {
   domain: Domain | undefined
-  inputs: TaxParameter[]
-  outputs: TaxParameter[]
+  inputs: ApeTaxTuple[]
+  outputs: ApeTaxTuple[]
   constraints: ConstraintInstance[]
   //order: ...
   minSteps: Number
@@ -54,7 +41,7 @@ export type WorkflowConfig = {
 export type ConstraintInstance = {
   id: string,
   label: string,
-  parameters: TaxParameter[]
+  parameters: ApeTaxTuple[]
 }
 
 export type WorkflowSolution = {

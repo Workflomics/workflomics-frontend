@@ -1,28 +1,32 @@
 import * as React from 'react';
-import { TaxonomyClass } from '../stores/WorkflowTypes';
+import { TaxonomyClass } from '../stores/TaxStore';
 
-export class TreeNode {
+export class TreeNode implements TaxonomyClass {
   id: string;
   label: string;
-  // TODO: root is not instantiated in the current implementation
-  subsets: Array<TreeNode> | undefined;
+  root: string;
+  subsets?: Array<TreeNode>;
   filteredSubsets: Array<TreeNode> | undefined;
 
 
-  constructor(id: string, label: string, subsets: Array<TreeNode>, filteredSubsets: Array<TreeNode>) {
+  constructor(id: string, label: string, root: string, subsets: Array<TreeNode>, filteredSubsets: Array<TreeNode>) {
     this.id = id;
     this.label = label;
+    this.root = root;
     this.subsets = subsets;
     this.filteredSubsets = filteredSubsets;
   }
 
-
-  getTaxonomyClass(root: string): TaxonomyClass {
-    return { id: this.id, label: this.label, root: root };
-  }
 }
 
-const TreeSelectionBox: React.FC<any> = ({ nodes, value, onChange, placeholder }) => {
+interface TreeSelectionBoxProps {
+  nodes: Array<any> | undefined;
+  value: any;
+  onChange: (node: any) => void;
+  placeholder: string;
+}
+
+const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, onChange, placeholder }) => {
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const [filter, setFilter] = React.useState<string>("");
   const [filteredNodes, setFilteredNodes] = React.useState<Array<TreeNode>>([]);
@@ -35,10 +39,10 @@ const TreeSelectionBox: React.FC<any> = ({ nodes, value, onChange, placeholder }
     setIsDropDownOpen(true);
   };
 
-  const filterNodes = (nodes: Array<TreeNode>, filter: string): Array<TreeNode> => {
+  const filterNodes = (nodes?: Array<TreeNode>, filter?: string): Array<TreeNode> => {
     const items: Array<TreeNode> = [];
-    const lcFilter = filter.toLowerCase();
-    nodes.forEach(node => {
+    const lcFilter = filter!.toLowerCase();
+    nodes!.forEach(node => {
       node.filteredSubsets = node.subsets ? filterNodes(node.subsets, filter) : [];
       if (node.label.toLowerCase().includes(lcFilter) || node.filteredSubsets.length > 0 || lcFilter === "") {
         items.push(node);

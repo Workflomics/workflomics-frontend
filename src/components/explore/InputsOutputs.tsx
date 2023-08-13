@@ -1,29 +1,29 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
-import { TaxParameter, WorkflowConfig } from '../../stores/WorkflowTypes';
+import { WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
-import { DataTax } from '../../stores/DataTaxStore';
 import { runInAction } from 'mobx';
+import { ApeTaxTuple } from '../../stores/TaxStore';
 
 
 const InputsOutputs: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
-  let { dataTaxStore } = useStore();
-  const dataTaxs: Map<string, DataTax> = dataTaxStore.availableDataTax;
+  let { taxStore } = useStore();
+  const allDataTax: ApeTaxTuple = taxStore.availableDataTax;
 
   React.useEffect(() => {
     if (workflowConfig.domain !== undefined) {
-      dataTaxStore.fetchData(workflowConfig.domain.repo_url);
+      taxStore.fetchDataDimensions(workflowConfig.domain.repo_url);
     }
-  }, [dataTaxStore, workflowConfig.domain]);
+  }, [taxStore, workflowConfig.domain]);
 
   const addInput = () => {
     runInAction(() => {
-      workflowConfig.inputs.push(dataTaxStore.getEmptyTaxParameter());
+      workflowConfig.inputs.push(taxStore.getEmptyTaxParameter());
     });
   };
 
@@ -35,7 +35,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
 
   const addOutput = () => {
     runInAction(() => {
-      workflowConfig.outputs.push(dataTaxStore.getEmptyTaxParameter());
+      workflowConfig.outputs.push(taxStore.getEmptyTaxParameter());
     });
   };
 
@@ -76,16 +76,16 @@ const InputsOutputs: React.FC<any> = observer((props) => {
         <div className="text-left space-y-6 mt-10">
 
           {/* Status messages */}
-          {dataTaxStore.isLoading && <div className="alert alert-info">Loading data taxonomy...</div>}
+          {taxStore.isLoading && <div className="alert alert-info">Loading data taxonomy...</div>}
           {workflowConfig.domain === undefined && <div className="alert alert-error">Domain could not be retrieved</div>}
-          {dataTaxStore.error && <div className="alert alert-error">Data taxonomy could not be retrieved ({dataTaxStore.error})</div>}
+          {taxStore.error && <div className="alert alert-error">Data taxonomy could not be retrieved ({taxStore.error})</div>}
 
           {/* Inputs */}
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Inputs</span>
             <div className="flex flex-grow items-center">
-              {workflowConfig.inputs.map((input: TaxParameter, index: number) => {
-                return (<InputsOutputSelection key={index} value={input} dataTaxs={dataTaxs} />)
+              {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
+                return (<InputsOutputSelection key={index} taxParam={input} dataTax={allDataTax} />)
               })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeInput()}>-</button>
@@ -96,8 +96,8 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Outputs</span>
             <div className="flex flex-grow items-center">
-              {workflowConfig.outputs.map((output: TaxParameter, index: number) => {
-                return (<InputsOutputSelection key={index} value={output} dataTaxs={dataTaxs} />)
+              {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
+                return (<InputsOutputSelection key={index} taxParam={output} dataTax={allDataTax} />)
               })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeOutput()}>-</button>
