@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { TaxonomyClass } from '../stores/TaxStore';
 
-export class TreeNode implements TaxonomyClass {
+export class Node implements TaxonomyClass {
   id: string;
   label: string;
   root: string;
-  subsets?: Array<TreeNode>;
-  filteredSubsets: Array<TreeNode> | undefined;
+  subsets?: Array<Node>;
+  filteredSubsets: Array<Node> | undefined;
 
 
-  constructor(id: string, label: string, root: string, subsets: Array<TreeNode>, filteredSubsets: Array<TreeNode>) {
+  constructor(id: string, label: string, root: string, subsets: Array<Node>, filteredSubsets: Array<Node>) {
     this.id = id;
     this.label = label;
     this.root = root;
@@ -19,18 +19,18 @@ export class TreeNode implements TaxonomyClass {
 
 }
 
-interface TreeSelectionBoxProps {
+interface SelectionBoxProps {
   nodes: Array<any> | undefined;
   value: any;
-  root: string;
+  root?: string;
   onChange: (node: any) => void;
   placeholder: string;
 }
 
-const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root, onChange, placeholder }) => {
+const SelectionBox: React.FC<SelectionBoxProps> = ({ nodes, value, root, onChange, placeholder }) => {
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const [filter, setFilter] = React.useState<string>("");
-  const [filteredNodes, setFilteredNodes] = React.useState<Array<TreeNode>>([]);
+  const [filteredNodes, setFilteredNodes] = React.useState<Array<Node>>([]);
   const [isDropDownOpen, setIsDropDownOpen] = React.useState<boolean>(false);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +40,8 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
     setIsDropDownOpen(true);
   };
 
-  const filterNodes = (nodes?: Array<TreeNode>, filter?: string): Array<TreeNode> => {
-    const items: Array<TreeNode> = [];
+  const filterNodes = (nodes?: Array<Node>, filter?: string): Array<Node> => {
+    const items: Array<Node> = [];
     const lcFilter = filter!.toLowerCase();
     nodes!.forEach(node => {
       node.filteredSubsets = node.subsets ? filterNodes(node.subsets, filter) : [];
@@ -65,7 +65,7 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
     }, 0);
   };
 
-  const onSelectNode = (node: TreeNode) => {
+  const onSelectNode = (node: Node) => {
     onChange(node);
     setIsDropDownOpen(false);
   };
@@ -75,7 +75,7 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
   const renderSubNodes = (nodes: any) => {
     return (
       <ul className="dropdown-content p-1 w-80">
-        {nodes.map((node: TreeNode) => (
+        {nodes.map((node: Node) => (
           (<li className="pl-6" key={node.label}>
             {node.filteredSubsets && node.filteredSubsets.length > 0 ?
               // Node with children
@@ -108,4 +108,4 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
   );
 };
 
-export { TreeSelectionBox };
+export { SelectionBox };

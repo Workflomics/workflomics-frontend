@@ -3,17 +3,23 @@ import { observer } from 'mobx-react-lite';
 import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
 import { runInAction } from 'mobx';
 import { ApeTaxTuple } from '../../stores/TaxStore';
+import { isInaccessible } from '@testing-library/react';
 
 interface InputsOutputSelectionProps {
-  taxParam: ApeTaxTuple;
+  taxParam: any;
   dataTax: ApeTaxTuple;
 }
 
 const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ taxParam, dataTax }) => {
 
-  const onTypeChange = (node: TreeNode, root: string) => {
+  const onTypeChange = (node: TreeNode) => {
     runInAction(() => {
-      taxParam.set(root, node);
+      if (taxParam.root === "http://edamontology.org/data_0006") {
+        taxParam[0] = node;
+      } else {
+        taxParam[1] = node;
+      }
+      console.log("Node:", node.label)
     });
   };
 
@@ -23,12 +29,27 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
       {
         Array.from(dataTax.values()).map((paramClass) => {
           // try {
+          const keys = dataTax.keys;
+          const keysSize = dataTax.keys.length;
+          const x = dataTax.values();
+
+          let val;
+          console.log("classa:", paramClass.id);
+          if (paramClass.id === "http://edamontology.org/data_0006") {
+            console.log("Type");
+            val = taxParam[0];
+          } else {
+            console.log("Format");
+            val = taxParam[1];
+          }
+
           return (
             <TreeSelectionBox
               key={paramClass.id}
-              nodes={dataTax.get(paramClass.id)!.subsets}
-              value={paramClass}
-              onChange={(node: TreeNode) => onTypeChange(node, paramClass.root)}
+              nodes={dataTax.get(paramClass.root)!.subsets}
+              value={taxParam}
+              root={paramClass.id}
+              onChange={(node: TreeNode) => onTypeChange(node)}
               placeholder={paramClass.label}
             />
           );

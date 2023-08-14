@@ -92,7 +92,7 @@ export class TaxStore {
   getEmptyTaxParameter(): ApeTaxTuple {
     const emptyTaxParameter: ApeTaxTuple = new Map<string, TaxonomyClass>();
     for (let dimension of this.dataDimensions) {
-      emptyTaxParameter.set(dimension, { id: "", label: "", root: dimension });
+      emptyTaxParameter.set(dimension, { id: dimension, label: "Root", root: dimension });
     }
 
     return emptyTaxParameter;

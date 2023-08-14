@@ -7,8 +7,8 @@ import { ApeTaxTuple } from "./TaxStore";
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [{} as ApeTaxTuple],
-    outputs: [{} as ApeTaxTuple],
+    inputs: [new Map() as ApeTaxTuple],
+    outputs: [new Map() as ApeTaxTuple],
     constraints: [{ id: "", label: "", parameters: [] } as ConstraintInstance],
     minSteps: 3,
     maxSteps: 4,

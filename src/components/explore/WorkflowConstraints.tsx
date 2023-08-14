@@ -6,6 +6,7 @@ import { ConstraintInstance, WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { ConstraintTemplate } from '../../stores/ConstraintStore';
 import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
+import { Node, SelectionBox } from '../SelectionBox';
 import { runInAction } from 'mobx';
 import { ApeTaxTuple } from '../../stores/TaxStore';
 
@@ -75,11 +76,11 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
               {
                 workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
                   return (<div key={index}>
-                    <TreeSelectionBox value={constraint}
+                    <SelectionBox value={constraint}
                       nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
                       placeholder="Type of constraint" />
                     {constraint.id !== "" && <TreeSelectionBox value={constraint.parameters.length > 0 ? constraint.parameters[0] : ""}
-                      nodes={allToolsTax.get("operation_0004")!.subsets} onChange={(node: TreeNode) => onParameterChange(index, node)}
+                      nodes={allToolsTax.get("operation_0004")!.subsets} root={"operation_0004"} onChange={(node: TreeNode) => onParameterChange(index, node)}
                       placeholder="Operation" />}
                   </div>);
                 })
