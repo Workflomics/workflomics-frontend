@@ -50,18 +50,18 @@ const InputsOutputs: React.FC<any> = observer((props) => {
     runInAction(() => {
       workflowConfig.inputs = [
         new Map([
-          ["data_0006", { id: "data_0943", label: "Mass spectrum", root: "data_0006" }],
-          ["format_1915", { id: "format_3244", label: "mzML", root: "format_1915" }],
+          ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006" }],
+          ["http://edamontology.org/format_1915", { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915" }],
         ]),
         new Map([
-          ["data_0006", { id: "data_2976", label: "Protein sequence", root: "data_0006" }],
-          ["format_1915", { id: "format_1929", label: "FASTA", root: "format_1915" }],
+          ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006" }],
+          ["http://edamontology.org/format_1915", { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915" }],
         ]),
       ]
       workflowConfig.outputs = [
         new Map([
-          ["data_0006", { id: "data_0006", label: "Data", root: "data_0006" }],
-          ["format_3747", { id: "format_3747", label: "protXML", root: "format_1915" }],
+          ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006" }],
+          ["http://edamontology.org/format_3747", { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915" }],
         ]),
       ];
     });
@@ -84,8 +84,9 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Inputs</span>
             <div className="flex flex-grow items-center">
-              {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
-                return (<InputsOutputSelection key={index} taxParam={input} dataTax={allDataTax} />)
+              {workflowConfig.inputs.map((input: ApeTaxTuple, index: number, array: ApeTaxTuple[]) => {
+                console.log("Ins:", workflowConfig.inputs.length)
+                return (<InputsOutputSelection key={index} parameterPair={input} dataTaxonomy={allDataTax} />)
               })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeInput()}>-</button>
@@ -96,8 +97,12 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Outputs</span>
             <div className="flex flex-grow items-center">
-              {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
-                return (<InputsOutputSelection key={index} taxParam={output} dataTax={allDataTax} />)
+              {workflowConfig.outputs.map((output: ApeTaxTuple, index: number, array: ApeTaxTuple[]) => {
+                console.log("Outs:", workflowConfig.outputs.length)
+                console.log("Array", output instanceof Array);
+                console.log("Map", output instanceof Map);
+                console.log(output)
+                return (<InputsOutputSelection key={index} parameterPair={output} dataTaxonomy={allDataTax} />)
               })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeOutput()}>-</button>

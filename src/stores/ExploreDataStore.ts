@@ -7,8 +7,22 @@ import { ApeTaxTuple } from "./TaxStore";
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [new Map() as ApeTaxTuple],
-    outputs: [new Map() as ApeTaxTuple],
+    inputs: [
+      new Map([
+        ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006" }],
+        ["http://edamontology.org/format_1915", { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915" }],
+      ]),
+      new Map([
+        ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006" }],
+        ["http://edamontology.org/format_1915", { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915" }],
+      ]),
+    ],
+    outputs: [
+      new Map([
+        ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006" }],
+        ["http://edamontology.org/format_3747", { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915" }],
+      ]),
+    ],
     constraints: [{ id: "", label: "", parameters: [] } as ConstraintInstance],
     minSteps: 3,
     maxSteps: 4,
@@ -74,8 +88,8 @@ export class ExploreDataStore {
 
   configToJSON(config: WorkflowConfig): any {
     // These should be dynamically generated from the domain configuration file
-    const dataRoot: string = "data_0006";
-    const formatRoot: string = "format_1915";
+    const dataRoot: string = "http://edamontology.org/data_0006";
+    const formatRoot: string = "http://edamontology.org/format_1915";
     const toolsRoot: string = "operation_0004";
 
     const inputs = this.inputsOutputsToJSON(config.inputs);

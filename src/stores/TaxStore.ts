@@ -30,7 +30,6 @@ export class TaxStore {
   /** Data roots mapped to their respective taxonomies. */
   availableDataTax: ApeTaxTuple = new Map<string, TaxonomyClass>();
   /** List of data dimensions. */
-  dataDimensions: Array<string> = [];
   isLoading: boolean = false;
   error: string = "";
 
@@ -80,7 +79,6 @@ export class TaxStore {
         const taxMap: ApeTaxTuple = new Map();
         for (let dataTax of resultData) {
           taxMap.set(dataTax.id, dataTax);
-          this.dataDimensions.push(dataTax.id);
         }
 
         this.availableDataTax = taxMap;
@@ -91,15 +89,10 @@ export class TaxStore {
 
   getEmptyTaxParameter(): ApeTaxTuple {
     const emptyTaxParameter: ApeTaxTuple = new Map<string, TaxonomyClass>();
-    for (let dimension of this.dataDimensions) {
-      emptyTaxParameter.set(dimension, { id: dimension, label: "Root", root: dimension });
-    }
-
+    Array.from(this.availableDataTax.values()).forEach((taxRoot) => {
+      emptyTaxParameter.set(taxRoot.id, { id: taxRoot.id, label: taxRoot.label, root: taxRoot.id });
+    });
     return emptyTaxParameter;
-  }
-
-  getDimensions(): Array<string> {
-    return this.dataDimensions;
   }
 
 }

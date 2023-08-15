@@ -6,20 +6,15 @@ import { ApeTaxTuple } from '../../stores/TaxStore';
 import { isInaccessible } from '@testing-library/react';
 
 interface InputsOutputSelectionProps {
-  taxParam: any;
-  dataTax: ApeTaxTuple;
+  parameterPair: ApeTaxTuple;
+  dataTaxonomy: ApeTaxTuple;
 }
 
-const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ taxParam, dataTax }) => {
+const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ parameterPair, dataTaxonomy }) => {
 
   const onTypeChange = (node: TreeNode) => {
     runInAction(() => {
-      if (taxParam.root === "http://edamontology.org/data_0006") {
-        taxParam[0] = node;
-      } else {
-        taxParam[1] = node;
-      }
-      console.log("Node:", node.label)
+      parameterPair.set(node.root, node);
     });
   };
 
@@ -27,27 +22,16 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
   return (
     <div>
       {
-        Array.from(dataTax.values()).map((paramClass) => {
+        Array.from(dataTaxonomy.values()).map((paramClass) => {
           // try {
-          const keys = dataTax.keys;
-          const keysSize = dataTax.keys.length;
-          const x = dataTax.values();
-
-          let val;
-          console.log("classa:", paramClass.id);
-          if (paramClass.id === "http://edamontology.org/data_0006") {
-            console.log("Type");
-            val = taxParam[0];
-          } else {
-            console.log("Format");
-            val = taxParam[1];
-          }
-
+          const temp = parameterPair;
+          console.log("M ", temp instanceof Map)
+          console.log("A ", temp instanceof Array)
           return (
             <TreeSelectionBox
               key={paramClass.id}
-              nodes={dataTax.get(paramClass.root)!.subsets}
-              value={taxParam}
+              nodes={paramClass.subsets}
+              value={parameterPair}
               root={paramClass.id}
               onChange={(node: TreeNode) => onTypeChange(node)}
               placeholder={paramClass.label}
@@ -55,7 +39,6 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
           );
           // } catch (error) {
           //   console.error("Error occurred:", error);
-          //   console.log("Key:", key, "\n", "Data:", data, "TaxParam:", taxParam);
           //   return null; // or some placeholder component
           // }
         })}
