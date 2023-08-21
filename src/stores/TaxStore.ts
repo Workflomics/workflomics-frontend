@@ -8,7 +8,7 @@ export interface TaxonomyClass {
   id: string;
   label: string;
   root: string;
-  subsets?: Array<TaxonomyClass>;
+  subsets: Array<TaxonomyClass> | [];
 }
 
 /**
@@ -17,7 +17,7 @@ export interface TaxonomyClass {
  * 
  * Note: In case of the operation there is only one dimension of data. 
  */
-export type ApeTaxTuple = Map<string, TaxonomyClass>;
+export type ApeTaxTuple = { [key: string]: TaxonomyClass };
 
 /**
  * The class represents a store for the taxonomy data. It is used to store the data on operation and data taxonomies,
@@ -26,9 +26,9 @@ export type ApeTaxTuple = Map<string, TaxonomyClass>;
 export class TaxStore {
 
   /** Tool root mapped to its taxonomy. */
-  availableToolTax: ApeTaxTuple = new Map<string, TaxonomyClass>();
+  availableToolTax: ApeTaxTuple = {};
   /** Data roots mapped to their respective taxonomies. */
-  availableDataTax: ApeTaxTuple = new Map<string, TaxonomyClass>();
+  availableDataTax: ApeTaxTuple = {};
   /** List of data dimensions. */
   isLoading: boolean = false;
   error: string = "";
@@ -59,8 +59,9 @@ export class TaxStore {
         this.error = resultOperations.error;
       }
       else {
-        const taxMap: ApeTaxTuple = new Map();
-        taxMap.set(resultOperations.id, resultOperations);
+        const taxMap: ApeTaxTuple = {
+          [resultOperations.id]: resultOperations
+        };
         this.availableToolTax = taxMap;
       }
     });
@@ -76,11 +77,10 @@ export class TaxStore {
         this.error = resultData.error;
       }
       else {
-        const taxMap: ApeTaxTuple = new Map();
+        const taxMap: ApeTaxTuple = {};
         for (let dataTax of resultData) {
-          taxMap.set(dataTax.id, dataTax);
+          taxMap[dataTax.id] = dataTax;
         }
-
         this.availableDataTax = taxMap;
       }
     });
@@ -88,10 +88,10 @@ export class TaxStore {
   }
 
   getEmptyTaxParameter(): ApeTaxTuple {
-    const emptyTaxParameter: ApeTaxTuple = new Map<string, TaxonomyClass>();
-    Array.from(this.availableDataTax.values()).forEach((taxRoot) => {
-      emptyTaxParameter.set(taxRoot.id, { id: taxRoot.id, label: taxRoot.label, root: taxRoot.id });
-    });
+    const emptyTaxParameter: ApeTaxTuple = {};
+    for (let taxRoot of Object.values(this.availableDataTax)) {
+      emptyTaxParameter[taxRoot.id] = { id: taxRoot.id, label: taxRoot.label, root: taxRoot.root, subsets: [] };
+    }
     return emptyTaxParameter;
   }
 

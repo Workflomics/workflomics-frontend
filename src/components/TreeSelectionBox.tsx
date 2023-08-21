@@ -5,8 +5,8 @@ export class TreeNode implements TaxonomyClass {
   id: string;
   label: string;
   root: string;
-  subsets?: Array<TreeNode>;
-  filteredSubsets: Array<TreeNode> | undefined;
+  subsets: Array<TreeNode> | [];
+  filteredSubsets: Array<TreeNode> | [];
 
 
   constructor(id: string, label: string, root: string, subsets: Array<TreeNode>, filteredSubsets: Array<TreeNode>) {
@@ -20,7 +20,7 @@ export class TreeNode implements TaxonomyClass {
 }
 
 interface TreeSelectionBoxProps {
-  nodes: Array<any> | undefined;
+  nodes: Array<any>;
   value: any;
   root: string;
   onChange: (node: any) => void;
@@ -40,10 +40,10 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
     setIsDropDownOpen(true);
   };
 
-  const filterNodes = (nodes?: Array<TreeNode>, filter?: string): Array<TreeNode> => {
+  const filterNodes = (nodes: Array<TreeNode>, filter: string): Array<TreeNode> => {
     const items: Array<TreeNode> = [];
     const lcFilter = filter!.toLowerCase();
-    nodes!.forEach(node => {
+    nodes.forEach(node => {
       node.filteredSubsets = node.subsets ? filterNodes(node.subsets, filter) : [];
       if (node.label.toLowerCase().includes(lcFilter) || node.filteredSubsets.length > 0 || lcFilter === "") {
         items.push(node);
@@ -70,7 +70,7 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
     setIsDropDownOpen(false);
   };
 
-  const currentText = !isDropDownOpen && value!.id !== "" ? value.label : filter;
+  const currentText = !isDropDownOpen && value && value.id !== "" ? value.label : filter;
 
   const renderSubNodes = (nodes: any) => {
     return (

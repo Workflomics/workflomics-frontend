@@ -1,27 +1,26 @@
 import { makeAutoObservable } from "mobx";
 import { ConstraintInstance, WorkflowConfig, WorkflowSolution, isTaxParameterComplete as isTaxParameterComplete } from "./WorkflowTypes";
 import { makePersistable } from "mobx-persist-store";
-import DomainStore from "./DomainStore";
 import { ApeTaxTuple } from "./TaxStore";
 
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
     inputs: [
-      new Map([
-        ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006" }],
-        ["http://edamontology.org/format_1915", { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915" }],
-      ]),
-      new Map([
-        ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006" }],
-        ["http://edamontology.org/format_1915", { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915" }],
-      ]),
+      {
+        "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006", subsets: [] },
+        "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915", subsets: [] },
+      },
+      {
+        "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006", subsets: [] },
+        "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915", subsets: [] },
+      }
     ],
     outputs: [
-      new Map([
-        ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006" }],
-        ["http://edamontology.org/format_3747", { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915" }],
-      ]),
+      {
+        "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006", subsets: [] },
+        "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915", subsets: [] },
+      }
     ],
     constraints: [{ id: "", label: "", parameters: [] } as ConstraintInstance],
     minSteps: 3,
@@ -65,8 +64,9 @@ export class ExploreDataStore {
    */
   parameterToJSON(param: ApeTaxTuple) {
     const objectArray: any[] = [];
-    Array.from(param.entries()).forEach(([key, data]) => (
-      objectArray.push({ [key]: [data!.id] })));
+    for (const [key, data] of Object.entries(param)) {
+      objectArray.push({ [key]: [data!.id] });
+    }
     return objectArray;
   }
 
@@ -79,8 +79,8 @@ export class ExploreDataStore {
     return constraints
       .map((value) => {
         return {
-          ["id"]: value!.id,
-          ["parameters"]: value!.parameters.map((parameter) => this.parameterToJSON(parameter)
+          "id": value!.id,
+          "parameters": value!.parameters.map((parameter) => this.parameterToJSON(parameter)
           )
         };
       });

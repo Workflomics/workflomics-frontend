@@ -1,4 +1,3 @@
-import { ConstraintTemplate } from "./ConstraintStore";
 import { Domain } from "./DomainStore";
 import { ApeTaxTuple } from "./TaxStore";
 
@@ -15,12 +14,9 @@ export type Workflow = {
 }
 
 export function isTaxParameterComplete(taxParam: ApeTaxTuple): boolean {
-  const complete: boolean = true;
-  Array.from(taxParam.entries()).forEach(([key, data]) => ({
-    complete: complete && data !== undefined && data.id !== ""
-  }));
-
-  return complete;
+  return Object.entries(taxParam).reduce((complete, [key, data]) => {
+    return complete && data !== undefined && data.id !== "";
+  }, true);
 }
 
 /**

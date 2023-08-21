@@ -6,7 +6,7 @@ import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
 import { runInAction } from 'mobx';
-import { ApeTaxTuple } from '../../stores/TaxStore';
+import { ApeTaxTuple, TaxonomyClass } from '../../stores/TaxStore';
 
 
 const InputsOutputs: React.FC<any> = observer((props) => {
@@ -45,24 +45,23 @@ const InputsOutputs: React.FC<any> = observer((props) => {
     });
   };
 
-
   const useDemoData = () => {
     runInAction(() => {
       workflowConfig.inputs = [
-        new Map([
-          ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006" }],
-          ["http://edamontology.org/format_1915", { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915" }],
-        ]),
-        new Map([
-          ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006" }],
-          ["http://edamontology.org/format_1915", { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915" }],
-        ]),
+        {
+          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006", subsets: [] },
+          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915", subsets: [] },
+        },
+        {
+          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006", subsets: [] },
+          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915", subsets: [] },
+        }
       ]
       workflowConfig.outputs = [
-        new Map([
-          ["http://edamontology.org/data_0006", { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006" }],
-          ["http://edamontology.org/format_3747", { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915" }],
-        ]),
+        {
+          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006", subsets: [] },
+          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915", subsets: [] },
+        }
       ];
     });
   };
@@ -84,7 +83,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Inputs</span>
             <div className="flex flex-grow items-center">
-              {workflowConfig.inputs.map((input: ApeTaxTuple, index: number, array: ApeTaxTuple[]) => {
+              {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
                 console.log("Ins:", workflowConfig.inputs.length)
                 return (<InputsOutputSelection key={index} parameterPair={input} dataTaxonomy={allDataTax} />)
               })}
@@ -97,7 +96,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32">Outputs</span>
             <div className="flex flex-grow items-center">
-              {workflowConfig.outputs.map((output: ApeTaxTuple, index: number, array: ApeTaxTuple[]) => {
+              {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
                 console.log("Outs:", workflowConfig.outputs.length)
                 console.log("Array", output instanceof Array);
                 console.log("Map", output instanceof Map);

@@ -48,10 +48,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
   const onParameterChange = (constraintIndex: number, node: TreeNode) => {
     runInAction(() => {
       workflowConfig.constraints[constraintIndex].parameters[0] =
-        new Map([
-          ["operation_0004", node],
-        ])
-        ;
+        {"operation_0004": node};
     });
   };
 
@@ -79,7 +76,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                       nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
                       placeholder="Type of constraint" />
                     {constraint.id !== "" && <TreeSelectionBox value={constraint.parameters.length > 0 ? constraint.parameters[0] : ""}
-                      nodes={allToolsTax.get("operation_0004")!.subsets} root={"operation_0004"} onChange={(node: TreeNode) => onParameterChange(index, node)}
+                      nodes={allToolsTax["operation_0004"]!.subsets} root={"operation_0004"} onChange={(node: TreeNode) => onParameterChange(index, node)}
                       placeholder="Operation" />}
                   </div>);
                 })
