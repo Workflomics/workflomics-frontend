@@ -23,7 +23,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
 
   const addInput = () => {
     runInAction(() => {
-      workflowConfig.inputs.push(taxStore.getEmptyTaxParameter());
+      workflowConfig.inputs.push(taxStore.getEmptyTaxParameter(taxStore.availableDataTax));
     });
   };
 
@@ -35,7 +35,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
 
   const addOutput = () => {
     runInAction(() => {
-      workflowConfig.outputs.push(taxStore.getEmptyTaxParameter());
+      workflowConfig.outputs.push(taxStore.getEmptyTaxParameter(taxStore.availableDataTax));
     });
   };
 

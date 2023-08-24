@@ -29,7 +29,9 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   const addConstraint = () => {
     runInAction(() => {
-      workflowConfig.constraints.push({ id: "", label: "", parameters: [] });
+      workflowConfig.constraints.push({ id: "", label: "", parameters: [
+        taxStore.getEmptyTaxParameter(taxStore.availableToolTax)
+      ]});
     });
   };
 
@@ -41,14 +43,14 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   const onConstraintTypeChange = (constraintIndex: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[constraintIndex] = { id: node.id, label: node.label, parameters: [] };
+      workflowConfig.constraints[constraintIndex] = node as unknown as ConstraintInstance;
     });
   };
 
-  const onParameterChange = (constraintIndex: number, node: TreeNode) => {
+  const onParameterChange = (constraintIndex: number, node: TreeNode, root: string) => {
     runInAction(() => {
-      workflowConfig.constraints[constraintIndex].parameters[0] =
-        {"operation_0004": node};
+      const parameterTuple: ApeTaxTuple = workflowConfig.constraints[constraintIndex].parameters[0];
+      parameterTuple[root] = node;
     });
   };
 
@@ -62,29 +64,41 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
           {/* Status messages */}
           {constraintStore.isLoading && <div className="alert alert-info">Loading constraints...</div>}
+          {taxStore.isLoading && <div className="alert alert-info">Loading tools...</div>}
           {workflowConfig.domain === undefined && <div className="alert alert-error">Domain could not be retrieved</div>}
           {constraintStore.error && <div className="alert alert-error">Constraints could not be retrieved ({constraintStore.error})</div>}
+          {taxStore.error && <div className="alert alert-error">Tools could not be retrieved ({taxStore.error})</div>}
 
           {/* Constraints */}
-          <div className="flex items-center space-x-4">
-            <span className="text-3xl flex-grow-0 w-40">Constraints</span>
-            <div className="flex flex-grow items-center">
-              {
-                workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
-                  return (<div key={index}>
-                    <TreeSelectionBox value={constraint} root={""}
-                      nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
-                      placeholder="Type of constraint" />
-                    {constraint.id !== "" && <TreeSelectionBox value={constraint.parameters.length > 0 ? constraint.parameters[0] : ""}
-                      nodes={allToolsTax["operation_0004"]!.subsets} root={"operation_0004"} onChange={(node: TreeNode) => onParameterChange(index, node)}
-                      placeholder="Operation" />}
-                  </div>);
-                })
-              }
-              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addConstraint()}>+</button>
-              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeConstraint()}>-</button>
+          { !constraintStore.isLoading && !taxStore.isLoading && !constraintStore.error && !taxStore.error && 
+            constraintStore.availableConstraints.length > 0 && Object.entries(allToolsTax).length > 0 &&
+            <div className="flex items-center space-x-4">
+              <span className="text-3xl flex-grow-0 w-40">Constraints</span>
+              <div className="flex flex-grow items-center">
+                {
+                  workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
+                    const root = "http://edamontology.org/operation_0004";
+                    console.log(constraint.parameters)
+                    return (<div key={index}>
+                      <TreeSelectionBox value={constraint} root={""}
+                        nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
+                        placeholder="Type of constraint" />
+
+                      {constraint.id !== "" && constraint.parameters.length > 0 && 
+                      <TreeSelectionBox 
+                        value={constraint.parameters.length > 0 ? constraint.parameters[0][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
+                        nodes={allToolsTax[root].subsets}
+                        root={root}
+                        onChange={(node: TreeNode) => onParameterChange(index, node, root)}
+                        placeholder="Operation" />}
+                    </div>);
+                  })
+                }
+                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addConstraint()}>+</button>
+                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeConstraint()}>-</button>
+              </div >
             </div >
-          </div >
+          }
 
           {/* Prev/next buttons */}
           < div className="flex justify-between p-10" >

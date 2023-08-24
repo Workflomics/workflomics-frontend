@@ -22,7 +22,7 @@ const emptyWorkflowConfig = () => {
         "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915", subsets: [] },
       }
     ],
-    constraints: [{ id: "", label: "", parameters: [] } as ConstraintInstance],
+    constraints: [{id: "", label: "", parameters: []} as ConstraintInstance],
     minSteps: 3,
     maxSteps: 4,
     timeout: 120,
@@ -54,7 +54,7 @@ export class ExploreDataStore {
    */
   inputsOutputsToJSON(inputsOutputs: ApeTaxTuple[]) {
     return inputsOutputs.filter(parameter => isTaxParameterComplete(parameter))
-      .map((parameter) => this.parameterToJSON(parameter));
+      .map(this.parameterToJSON);
   }
 
   /**
@@ -63,11 +63,9 @@ export class ExploreDataStore {
    * @returns JSON representation of the parameter
    */
   parameterToJSON(param: ApeTaxTuple) {
-    const objectArray: any[] = [];
-    for (const [key, data] of Object.entries(param)) {
-      objectArray.push({ [key]: [data!.id] });
-    }
-    return objectArray;
+    return Object.entries(param).reduce(
+      (obj, [key, data]) => { return { ...obj, [key]: [data.id] } }, {}
+    );
   }
 
   /**
@@ -80,8 +78,11 @@ export class ExploreDataStore {
       .map((value) => {
         return {
           "id": value!.id,
-          "parameters": value!.parameters.map((parameter) => this.parameterToJSON(parameter)
-          )
+          "parameters": value!.parameters.map( //TODO: how to pass the parameters?
+            param => Object.entries(param).reduce(
+              (obj, [key, data]) => { return { ...obj, [key]: data.id} }, {}
+            ))
+          // "parameters": value!.parameters.map(this.parameterToJSON)
         };
       });
   }

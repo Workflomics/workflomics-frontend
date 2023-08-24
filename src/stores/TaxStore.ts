@@ -42,7 +42,6 @@ export class TaxStore {
    * @param config_path The path to the APE configuration file.
    */
   async fetchData(config_path: string) {
-
     this.fetchDataDimensions(config_path);
     this.fetchTools(config_path);
   }
@@ -68,7 +67,6 @@ export class TaxStore {
   }
 
   async fetchDataDimensions(config_path: string) {
-
     const responseData = await fetch(`/ape/get_data?config_path=${config_path}`);
     const resultData = await responseData.json();
     runInAction(() => {
@@ -87,9 +85,9 @@ export class TaxStore {
 
   }
 
-  getEmptyTaxParameter(): ApeTaxTuple {
+  getEmptyTaxParameter(root: ApeTaxTuple): ApeTaxTuple {
     const emptyTaxParameter: ApeTaxTuple = {};
-    for (let taxRoot of Object.values(this.availableDataTax)) {
+    for (let taxRoot of Object.values(root)) {
       emptyTaxParameter[taxRoot.id] = { id: taxRoot.id, label: taxRoot.label, root: taxRoot.root, subsets: [] };
     }
     return emptyTaxParameter;

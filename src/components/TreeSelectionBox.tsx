@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { TaxonomyClass } from '../stores/TaxStore';
 
-export class TreeNode implements TaxonomyClass {
+export class TreeNode implements TaxonomyClass { 
+  //TODO: wouldn't it be better to have TaxonomyClass implement TreeNode?
+  //TODO: what's the added value of root? it's not used in the tree
   id: string;
   label: string;
   root: string;
@@ -71,6 +73,7 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
   };
 
   const currentText = !isDropDownOpen && value && value.id !== "" ? value.label : filter;
+  console.log("currentText", currentText, value.id, value.label, filter, value)
 
   const renderSubNodes = (nodes: any) => {
     return (

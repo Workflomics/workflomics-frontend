@@ -5,7 +5,7 @@ import { runInAction } from 'mobx';
 import taxStore, { ApeTaxTuple } from '../../stores/TaxStore';
 
 interface InputsOutputSelectionProps {
-  parameterPair: ApeTaxTuple;
+  parameterPair: ApeTaxTuple; // TODO rename this to parameterTuple?
   dataTaxonomy: ApeTaxTuple;
 }
 
@@ -30,7 +30,7 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
             <TreeSelectionBox
               key={paramClass.id}
               nodes={paramClass.subsets}
-              value={parameterPair ? parameterPair[paramClass.id] : taxStore.getEmptyTaxParameter()}
+              value={parameterPair ? parameterPair[paramClass.id] : taxStore.getEmptyTaxParameter(taxStore.availableDataTax)}
               root={paramClass.id}
               onChange={(node: TreeNode) => onTypeChange(paramClass.id, node)}
               placeholder={paramClass.label}
