@@ -35,14 +35,27 @@ const GenerationResults: React.FC<any> = observer((props) => {
     });
   }
 
+  const downloadInputFile = (run_id: string) => {
+    fetch(`/ape/get_cwl_input?run_id=${run_id}`)
+    .then(response => response.text())
+    .then(data => {
+      const blob = new Blob([data], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "inputs.yml";
+      link.click();
+      URL.revokeObjectURL(url);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+
   return (
     <div>
       <ExplorationProgress index={4} />
       <div className="m-20">
-
-        {/* Status messages */}
-        { exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div> }
-        { exploreDataStore.generationError && <div className="alert alert-error">An error occurred while generating the workflows: {exploreDataStore.generationError.toString()}</div> }
 
         {/* Results */}
         <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
@@ -53,6 +66,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                 <th>Name</th>
                 <th>Workflow length</th>
                 <th>Action</th>
+                {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button></th>}
               </tr>
             </thead>
             <tbody>
@@ -69,6 +83,12 @@ const GenerationResults: React.FC<any> = observer((props) => {
           </table>
         </div>
 
+         {/* Status messages */}
+         {exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div>}
+        { ! exploreDataStore.isGenerating && ! exploreDataStore.generationError && <div className="alert alert-warning"> No solutions were found for given specification. Try a different a specification (e.g., change  maximum workflow length, expected inputs and/or outputs, or remove some constraints). </div> }
+        { exploreDataStore.generationError && <div className="alert alert-error">An error occurred while generating the workflows: {exploreDataStore.generationError.toString()}</div> }
+
+        
         {/* Selected solutions */}
         <div className="flex justify-center gap-8">
             { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
