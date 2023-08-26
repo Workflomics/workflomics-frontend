@@ -84,8 +84,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
             <span className="text-3xl flex-grow-0 w-32">Inputs</span>
             <div className="flex flex-grow items-center">
               {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
-                console.log("Ins:", workflowConfig.inputs.length)
-                return (<InputsOutputSelection key={index} parameterPair={input} dataTaxonomy={allDataTax} />)
+                return (<InputsOutputSelection key={index} parameterTuple={input} dataTaxonomy={allDataTax} />)
               })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeInput()}>-</button>
@@ -97,11 +96,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
             <span className="text-3xl flex-grow-0 w-32">Outputs</span>
             <div className="flex flex-grow items-center">
               {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
-                console.log("Outs:", workflowConfig.outputs.length)
-                console.log("Array", output instanceof Array);
-                console.log("Map", output instanceof Map);
-                console.log(output)
-                return (<InputsOutputSelection key={index} parameterPair={output} dataTaxonomy={allDataTax} />)
+                return (<InputsOutputSelection key={index} parameterTuple={output} dataTaxonomy={allDataTax} />)
               })}
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
               <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeOutput()}>-</button>

@@ -68,20 +68,23 @@ export class ExploreDataStore {
     );
   }
 
+
   /**
    * Returns a JSON representation of a list of constraints that can be used in a workflow config.
-   * @param constraints list of constraints
+   * @param allConstraints list of constraints
    * @returns JSON representation of the constraints
    */
-  constraintsToJSON(constraints: ConstraintInstance[]) {
-    return constraints
-      .map((value) => {
+  constraintsToJSON(allConstraints: ConstraintInstance[]) {
+    return allConstraints
+      .map((constraint) => {
         return {
-          "id": value!.id,
-          "parameters": value!.parameters.map( //TODO: how to pass the parameters?
-            param => Object.entries(param).reduce(
-              (obj, [key, data]) => { return { ...obj, [key]: data.id} }, {}
-            ))
+          "constraintid": constraint!.id,
+          "parameters": constraint!.parameters.map(this.parameterToJSON
+          //TODO: how to pass the parameters?
+            // param => Object.entries(param).reduce(
+            //   (obj, [key, data]) => { return { ...obj, [key]: data.id} }, {}
+            // )
+          )
           // "parameters": value!.parameters.map(this.parameterToJSON)
         };
       });

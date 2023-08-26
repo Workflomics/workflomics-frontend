@@ -78,7 +78,6 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                 {
                   workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
                     const root = "http://edamontology.org/operation_0004";
-                    console.log(constraint.parameters)
                     return (<div key={index}>
                       <TreeSelectionBox value={constraint} root={""}
                         nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}

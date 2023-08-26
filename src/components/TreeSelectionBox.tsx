@@ -73,7 +73,6 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
   };
 
   const currentText = !isDropDownOpen && value && value.id !== "" ? value.label : filter;
-  console.log("currentText", currentText, value.id, value.label, filter, value)
 
   const renderSubNodes = (nodes: any) => {
     return (

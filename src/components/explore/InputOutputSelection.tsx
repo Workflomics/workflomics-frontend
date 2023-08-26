@@ -5,15 +5,15 @@ import { runInAction } from 'mobx';
 import taxStore, { ApeTaxTuple } from '../../stores/TaxStore';
 
 interface InputsOutputSelectionProps {
-  parameterPair: ApeTaxTuple; // TODO rename this to parameterTuple?
+  parameterTuple: ApeTaxTuple;
   dataTaxonomy: ApeTaxTuple;
 }
 
-const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ parameterPair, dataTaxonomy }) => {
+const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ parameterTuple, dataTaxonomy }) => {
 
   const onTypeChange = (root: string, node: TreeNode) => {
     runInAction(() => {
-      parameterPair[root] = node;
+      parameterTuple[root] = node;
     });
   };
 
@@ -22,15 +22,12 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
       {
         Object.values(dataTaxonomy).map((paramClass) => {
           // try {
-          const temp = parameterPair;
-          console.log("M ", temp instanceof Map)
-          console.log("A ", temp instanceof Array)
-
+          const temp = parameterTuple;
           return (
             <TreeSelectionBox
               key={paramClass.id}
               nodes={paramClass.subsets}
-              value={parameterPair ? parameterPair[paramClass.id] : taxStore.getEmptyTaxParameter(taxStore.availableDataTax)}
+              value={parameterTuple ? parameterTuple[paramClass.id] : taxStore.getEmptyTaxParameter(taxStore.availableDataTax)}
               root={paramClass.id}
               onChange={(node: TreeNode) => onTypeChange(paramClass.id, node)}
               placeholder={paramClass.label}

@@ -11,6 +11,7 @@ const GenerationConfig: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
 
   const runSynthesis = () => {
+    console.log("runSynthesis_config:", JSON.stringify(exploreDataStore.configToJSON(workflowConfig)));
     exploreDataStore.runSynthesis(workflowConfig);
     navigate('/explore/results');
   };
