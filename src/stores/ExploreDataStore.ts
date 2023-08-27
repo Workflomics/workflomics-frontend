@@ -120,7 +120,7 @@ export class ExploreDataStore {
       "number_of_generated_graphs": config.solutionCount,
       "debug_mode": "false",
       "use_workflow_input": "all",
-      "use_all_generated_data": "all",
+      "use_all_generated_data": "one",
       "tool_seq_repeat": "false",
       "inputs": inputs,
       "outputs": outputs,
