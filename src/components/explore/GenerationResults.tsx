@@ -85,7 +85,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
 
          {/* Status messages */}
          {exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div>}
-        { ! exploreDataStore.isGenerating && ! exploreDataStore.generationError && <div className="alert alert-warning"> No solutions were found for given specification. Try a different a specification (e.g., change  maximum workflow length, expected inputs and/or outputs, or remove some constraints). </div> }
+        { !exploreDataStore.isGenerating && !exploreDataStore.generationError && workflowSolutions.length == 0 && <div className="alert alert-warning"> No solutions were found for given specification. Try a different a specification (e.g., change  maximum workflow length, expected inputs and/or outputs, or remove some constraints). </div> }
         { exploreDataStore.generationError && <div className="alert alert-error">An error occurred while generating the workflows: {exploreDataStore.generationError.toString()}</div> }
 
         

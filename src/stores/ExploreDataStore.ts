@@ -75,7 +75,7 @@ export class ExploreDataStore {
    * @returns JSON representation of the constraints
    */
   constraintsToJSON(allConstraints: ConstraintInstance[]) {
-    return allConstraints
+    return allConstraints.filter(constraint => constraint.id != "")
       .map((constraint) => {
         return {
           "constraintid": constraint!.id,
