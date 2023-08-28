@@ -162,7 +162,7 @@ export class ExploreDataStore {
 
   loadImage(solution: WorkflowSolution) {
     const { run_id, figure_name } = solution;
-    fetch(`/ ape / get_image ? run_id = ${run_id} & file_name=${figure_name}`)
+    fetch(`/ape/get_image?run_id=${run_id}&file_name=${figure_name}`)
       .then(response => response.blob())
       .then(blob => {
         const url = URL.createObjectURL(blob);
