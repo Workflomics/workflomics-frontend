@@ -62,7 +62,7 @@ const sampleBenchmarks: Benchmark[] = [{
   type: BenchmarkType.NUMERIC,
 },{
   id: '4',
-  label: '% of tools on GalaxyEU',
+  label: '% of tools on usegalaxy.eu',
   type: BenchmarkType.NUMERIC
 }];
 

@@ -37,7 +37,7 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
               { benchmarks.map(benchmark => {
                 const bmValue: BenchmarkValue = benchmarkValues[workflow.id][benchmark.id];
                 const color = mapValueToColor(bmValue.desirabilityValue);
-                return (<td key={workflow.id} style={{backgroundColor: color}}>{bmValue.value.toString()}</td>);
+                return (<td key={benchmark.id} style={{backgroundColor: color}}>{bmValue.value.toString()}</td>);
               })}
             </tr>
           ))}
