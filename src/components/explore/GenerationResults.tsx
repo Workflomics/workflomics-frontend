@@ -43,7 +43,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = "inputs.yml";
+      link.download = "input.yml";
       link.click();
       URL.revokeObjectURL(url);
     })
