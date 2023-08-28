@@ -50,29 +50,35 @@ const sampleWorkflows: Workflow[] = [{
 
 const sampleBenchmarks: Benchmark[] = [{
   id: '1',
-  label: 'Benchmark 1',
+  label: '# of steps',
   type: BenchmarkType.NUMERIC
 },{
   id: '2',
-  label: 'Benchmark 2',
-  type: BenchmarkType.BOOLEAN
+  label: '# of executed steps',
+  type: BenchmarkType.NUMERIC
 },{
   id: '3',
-  label: 'Benchmark 3',
-  type: BenchmarkType.STRING,
+  label: '# of identified proteins',
+  type: BenchmarkType.NUMERIC,
+},{
+  id: '4',
+  label: 'UseGalaxyEU % availability?',
+  type: BenchmarkType.NUMERIC
 }];
 
 
 const sampleBenchmarkTable: BenchmarkTable = {
   [sampleWorkflows[0].id]: { 
     [sampleBenchmarks[0].id]: {value: 3, desirabilityValue: 0.3},
-    [sampleBenchmarks[1].id]: {value: true, desirabilityValue: 1},
-    [sampleBenchmarks[2].id]: {value: 'hello', desirabilityValue: 0.5}
+    [sampleBenchmarks[1].id]: {value: 3, desirabilityValue: 1.0},
+    [sampleBenchmarks[2].id]: {value: 42, desirabilityValue: 0.42},
+    [sampleBenchmarks[3].id]: {value: 87, desirabilityValue: 1.0}
   },
   [sampleWorkflows[1].id]: {
     [sampleBenchmarks[0].id]: {value: 8, desirabilityValue: 0.8},
-    [sampleBenchmarks[1].id]: {value: false, desirabilityValue: 0},
-    [sampleBenchmarks[2].id]: {value: 'world', desirabilityValue: 0.2}
+    [sampleBenchmarks[1].id]: {value: 4, desirabilityValue: 0.5},
+    [sampleBenchmarks[2].id]: {value: 0, desirabilityValue: 0.0},
+    [sampleBenchmarks[3].id]: {value: 50, desirabilityValue: 0.5}
   }
 };
 

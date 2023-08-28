@@ -27,14 +27,14 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
           <thead>
             <tr>
               <th></th>
-              { workflows.map(workflow => (<th key={workflow.id}>{workflow.label}</th>)) }
+              { benchmarks.map(benchmark => (<th key={benchmark.id}>{benchmark.label}</th>)) }
             </tr>
           </thead>
           <tbody>
-          { benchmarks.map(benchmark => (
-            <tr key={benchmark.id}>
-              <td>{ benchmark.label }</td>
-              { workflows.map(workflow => {
+          { workflows.map(workflow => (
+            <tr key={workflow.id}>
+              <td>{ workflow.label }</td>
+              { benchmarks.map(benchmark => {
                 const bmValue: BenchmarkValue = benchmarkValues[workflow.id][benchmark.id];
                 const color = mapValueToColor(bmValue.desirabilityValue);
                 return (<td key={workflow.id} style={{backgroundColor: color}}>{bmValue.value.toString()}</td>);
