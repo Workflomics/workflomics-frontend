@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Benchmark, BenchmarkValue, BenchmarkTable, sampleBenchmarkTable, sampleBenchmarks, sampleWorkflows } from '../../stores/BenchmarkTypes';
-import { Workflow } from '../../stores/WorkflowTypes';
+import { Benchmark, BenchmarkValue, BenchmarkTable, sampleBenchmarks } from '../../stores/BenchmarkTypes';
+import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import * as d3 from 'd3';
+import { useStore } from '../../store';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
-  const benchmarkValues: BenchmarkTable = sampleBenchmarkTable;
-  const workflows: Workflow[] = sampleWorkflows;
+  const { exploreDataStore } = useStore();
+  const workflows: WorkflowSolution[] = exploreDataStore.selectedWorkflowSolutions;
   const benchmarks: Benchmark[] = sampleBenchmarks;
 
   function mapValueToColor(value: number) {
@@ -20,6 +21,20 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
     return color;
   }
 
+  // Generate random benchmark values
+  const benchmarkValues: BenchmarkTable = {};
+  workflows.forEach((workflow: WorkflowSolution, index: number) => {
+    const n_proteins = Math.floor(Math.random() * 100);
+    const availability = Math.floor(Math.random() * 100);
+    const executedSteps = Math.floor(Math.random() * (workflow.workflow_length + 1));
+    benchmarkValues[workflow.name] = {
+      '1': {value: workflow.workflow_length, desirabilityValue: (workflow.workflow_length / 10.0)} as BenchmarkValue,
+      '2': {value: executedSteps, desirabilityValue: (executedSteps) / workflow.workflow_length} as BenchmarkValue,
+      '3': {value: n_proteins, desirabilityValue: 0.01 * n_proteins} as BenchmarkValue,
+      '4': {value: availability, desirabilityValue: 0.01 * availability} as BenchmarkValue
+    };
+  });
+
   return (<div>
     <div className="m-20">
       <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
@@ -32,12 +47,13 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
           </thead>
           <tbody>
           { workflows.map(workflow => (
-            <tr key={workflow.id}>
-              <td>{ workflow.label }</td>
+            <tr key={workflow.name}>
+              <td>{ workflow.name }</td>
               { benchmarks.map(benchmark => {
-                const bmValue: BenchmarkValue = benchmarkValues[workflow.id][benchmark.id];
+                const key = `${workflow.name}-${benchmark.id}`;
+                const bmValue: BenchmarkValue = benchmarkValues[workflow.name][benchmark.id];
                 const color = mapValueToColor(bmValue.desirabilityValue);
-                return (<td key={benchmark.id} style={{backgroundColor: color}}>{bmValue.value.toString()}</td>);
+                return (<td key={key} style={{backgroundColor: color}}>{bmValue.value.toString()}</td>);
               })}
             </tr>
           ))}

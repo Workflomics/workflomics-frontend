@@ -1,18 +1,6 @@
 import { Domain } from "./DomainStore";
 import { ApeTaxTuple } from "./TaxStore";
 
-// Currently unused
-export type Workflow = {
-  id: string;
-  label: string;
-  domain: Domain;
-  lengths: Number[]; //TODO: what type is this?
-  time: string;
-  benchMarkCount: Number;
-  benchMarkTotal: Number;
-  method: string;
-}
-
 export function isTaxParameterComplete(taxParam: ApeTaxTuple): boolean {
   return Object.entries(taxParam).reduce((complete, [key, data]) => {
     return complete && data !== undefined && data.id !== "";
@@ -43,7 +31,7 @@ export type ConstraintInstance = {
 export type WorkflowSolution = {
   cwl_name: string,
   run_id: string,
-  workflow_length: Number,
+  workflow_length: number,
   name: string,
   figure_name: string,
   isSelected: boolean,

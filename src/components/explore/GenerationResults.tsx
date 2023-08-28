@@ -4,8 +4,10 @@ import { ExplorationProgress } from './ExplorationProgress';
 import { useStore } from '../../store';
 import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
+import { useNavigate } from 'react-router-dom';
 
 const GenerationResults: React.FC<any> = observer((props) => {
+  const navigate = useNavigate();
   const { exploreDataStore } = useStore();
   const workflowSolutions = exploreDataStore.workflowSolutions;
 
@@ -52,6 +54,15 @@ const GenerationResults: React.FC<any> = observer((props) => {
     });
   }
 
+  const compareSelected = () => {
+    runInAction(() => {
+      const selectedWorkflows: WorkflowSolution[] = workflowSolutions.filter(
+        (solution: WorkflowSolution) => solution.isSelected);
+      exploreDataStore.selectedWorkflowSolutions = selectedWorkflows;
+      navigate('/benchmark/visualize');
+    });
+  }
+
   return (
     <div>
       <ExplorationProgress index={4} />
@@ -67,6 +78,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                 <th>Workflow length</th>
                 <th>Action</th>
                 {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button></th>}
+                {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => compareSelected()}>Compare<br />selected</button></th>}
               </tr>
             </thead>
             <tbody>

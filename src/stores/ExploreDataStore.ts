@@ -35,6 +35,7 @@ export class ExploreDataStore {
 
   workflowConfig: WorkflowConfig = emptyWorkflowConfig();
   workflowSolutions: WorkflowSolution[] = [];
+  selectedWorkflowSolutions: WorkflowSolution[] = [];
   isGenerating: boolean = false;
   generationError: string = "";
 
