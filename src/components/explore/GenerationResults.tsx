@@ -5,6 +5,7 @@ import { useStore } from '../../store';
 import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
 import { useNavigate } from 'react-router-dom';
+import './HorizontalScroll.css'; 
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
@@ -102,6 +103,8 @@ const GenerationResults: React.FC<any> = observer((props) => {
 
         
         {/* Selected solutions */}
+        <div className="horizontal-scroll-container">
+      <div className="horizontal-scroll-content">
         <div className="flex justify-center gap-8">
             { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
                 .map((solution: WorkflowSolution, index: number) => (
@@ -111,7 +114,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
               </div>
             ))}
           </div>
-      </div>
+          </div>
+        </div>
+        </div>
     </div>
   );
 });

@@ -76,7 +76,7 @@ export class ExploreDataStore {
    * @returns JSON representation of the constraints
    */
   constraintsToJSON(allConstraints: ConstraintInstance[]) {
-    return allConstraints.filter(constraint => constraint.id != "")
+    const newConst =  allConstraints.filter(constraint => constraint.id != "")
       .map((constraint) => {
         return {
           "constraintid": constraint!.id,
@@ -89,6 +89,37 @@ export class ExploreDataStore {
           // "parameters": value!.parameters.map(this.parameterToJSON)
         };
       });
+    newConst.push({
+      "constraintid": "not_connected_op",
+      "parameters": [
+        {
+          "operation_0004": [
+            "peptideprophet1"
+          ]
+        },
+        {
+          "operation_0004": [
+            "peptideprophet1"
+          ]
+        }
+      ]
+    });
+    newConst.push({
+      "constraintid": "not_connected_op",
+      "parameters": [
+        {
+          "operation_0004": [
+            "operation_0335"
+          ]
+        },
+        {
+          "operation_0004": [
+            "operation_0335"
+          ]
+        }
+      ]
+    });
+    return newConst;
   }
 
   configToJSON(config: WorkflowConfig): any {
