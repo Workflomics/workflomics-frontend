@@ -6,11 +6,25 @@ import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
 import { useNavigate } from 'react-router-dom';
 import './HorizontalScroll.css'; 
+import { ReactSVG } from 'react-svg';
+import { PanZoom } from 'react-easy-panzoom';
+import WorkflowVisualization from './WorkflowVisualization';
+import { useState } from 'react';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
   const { exploreDataStore } = useStore();
   const workflowSolutions = exploreDataStore.workflowSolutions;
+  const [tooltipData, setTooltipData] = useState<any>(null);
+
+  const showTooltip = (event: React.MouseEvent, data:any) => {
+    const text = (event.target as Element).innerHTML;
+    setTooltipData(event.type === 'mouseout' || !text ? null : {
+      text: text,
+      top: event.pageY + 16,
+      left: event.pageX + 16});
+  }
+
 
   const handleSelected = (solution: WorkflowSolution, event: React.ChangeEvent<HTMLInputElement>) => {
     runInAction(() => {
@@ -110,12 +124,23 @@ const GenerationResults: React.FC<any> = observer((props) => {
                     .map((solution: WorkflowSolution, index: number) => (
                   <div key={index} className="border-2 border-red-200 rounded-xl overflow-hidden p-2 shadow-lg">
                     <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
-                    { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                    { (solution.image != null) && 
+                      <WorkflowVisualization svg={'/workflow.svg'} showTooltip={showTooltip}/>
+                    }
                   </div>
                 ))}
             </div>
           </div>
         </div>
+
+        {/* Tooltip */}
+        <div className="tooltip" style={{
+            top: tooltipData ? `${tooltipData.top}px` : 0,
+            left: tooltipData ? `${tooltipData.left}px` : 0,
+            visibility: tooltipData ? 'visible' : 'hidden'}}>
+            { tooltipData ? tooltipData.text : ''}
+        </div>
+
       </div>
     </div>
   );
