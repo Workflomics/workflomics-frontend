@@ -104,19 +104,19 @@ const GenerationResults: React.FC<any> = observer((props) => {
         
         {/* Selected solutions */}
         <div className="horizontal-scroll-container">
-      <div className="horizontal-scroll-content">
-        <div className="flex justify-center gap-8">
-            { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
-                .map((solution: WorkflowSolution, index: number) => (
-              <div key={index} className="border-2 border-red-200 rounded-xl overflow-hidden p-2 shadow-lg">
-                <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
-                { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
-              </div>
-            ))}
-          </div>
+          <div className="horizontal-scroll-content">
+            <div className="flex justify-center gap-8">
+                { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
+                    .map((solution: WorkflowSolution, index: number) => (
+                  <div key={index} className="border-2 border-red-200 rounded-xl overflow-hidden p-2 shadow-lg">
+                    <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
+                    { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
-        </div>
+      </div>
     </div>
   );
 });
