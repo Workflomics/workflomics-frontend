@@ -1,26 +1,18 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
-export interface Constraint {
+/**
+ * A constraint as it is stored in the backend.
+ */
+export interface ConstraintTemplate {
   id: string
   label: string
   parameters: { [key: string]: string }[]
 };
 
-function renameKey<T extends Record<string, any>>(obj: T, oldKey: string, newKey: keyof T): T {
-  if (oldKey === newKey) {
-    return obj;
-  }
-  const { [oldKey]: value, ...rest } = obj;
-  return { [newKey]: value, ...rest } as T;
-}
-
-function renameKeysInList<T extends Record<string, any>>(list: T[], oldKey: string, newKey: keyof T): T[] {
-  return list.map(item => renameKey(item, oldKey, newKey));
-}
 
 export class ConstraintStore {
 
-  availableConstraints: Constraint[] = [];
+  availableConstraints: ConstraintTemplate[] = [];
   isLoading: boolean = false;
   error: string = "";
 
@@ -36,7 +28,7 @@ export class ConstraintStore {
     //     .replace("/tree/", "/") + "/config.json";
     // "https://github.com/sanctuuary/APE_UseCases/tree/master/MassSpectometry"
     // "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/MassSpectometry/config.json"
-    
+
     const response = await fetch(`/ape/get_constraints?config_path=${config_path}`);
     const result = await response.json();
     runInAction(() => {
@@ -45,9 +37,7 @@ export class ConstraintStore {
         this.error = result.error;
       }
       else {
-        let mappedResult = renameKeysInList<Constraint>(result, "constraintID", "id");
-        mappedResult = renameKeysInList<Constraint>(mappedResult, "description", "label");
-        this.availableConstraints = mappedResult;
+        this.availableConstraints = result;
       }
     });
   }

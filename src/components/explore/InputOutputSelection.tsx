@@ -2,29 +2,45 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
 import { runInAction } from 'mobx';
+import taxStore, { ApeTaxTuple } from '../../stores/TaxStore';
 
-const InputsOutputSelection: React.FC<any> = observer(({value, dataTaxs}) => {
+interface InputsOutputSelectionProps {
+  parameterTuple: ApeTaxTuple;
+  dataTaxonomy: ApeTaxTuple;
+}
 
-  const onTypeChange = (node: TreeNode) => {
+const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ parameterTuple, dataTaxonomy }) => {
+
+  const onTypeChange = (root: string, node: TreeNode) => {
     runInAction(() => {
-      value[0] = {id: node.id, label: node.label}
-    });
-  };
-
-  const onFormatChange = (node: TreeNode) => {
-    runInAction(() => {
-      value[1] = {id: node.id, label: node.label}
+      parameterTuple[root] = node;
     });
   };
 
   return (
     <div>
-      {dataTaxs.length > 0 && <TreeSelectionBox nodes={dataTaxs[0].subsets} value={value[0]}
-        onChange={(node: TreeNode) => onTypeChange(node)} placeholder="Type" />}
-      {dataTaxs.length > 0 && <TreeSelectionBox nodes={dataTaxs[1].subsets} value={value[1]}
-        onChange={(node: TreeNode) => onFormatChange(node)} placeholder="Format" />}
+      {
+        Object.values(dataTaxonomy).map((paramClass) => {
+          // try {
+          const temp = parameterTuple;
+          return (
+            <TreeSelectionBox
+              key={paramClass.id}
+              nodes={paramClass.subsets}
+              value={parameterTuple ? parameterTuple[paramClass.id] : taxStore.getEmptyTaxParameter(taxStore.availableDataTax)}
+              root={paramClass.id}
+              onChange={(node: TreeNode) => onTypeChange(paramClass.id, node)}
+              placeholder={paramClass.label}
+            />
+          );
+          // } catch (error) {
+          //   console.error("Error occurred:", error);
+          //   return null; // or some placeholder component
+          // }
+        })}
     </div>
   );
+
 });
 
 export { InputsOutputSelection };

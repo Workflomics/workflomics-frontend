@@ -4,8 +4,11 @@ import { ExplorationProgress } from './ExplorationProgress';
 import { useStore } from '../../store';
 import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
+import { useNavigate } from 'react-router-dom';
+import './HorizontalScroll.css'; 
 
 const GenerationResults: React.FC<any> = observer((props) => {
+  const navigate = useNavigate();
   const { exploreDataStore } = useStore();
   const workflowSolutions = exploreDataStore.workflowSolutions;
 
@@ -35,14 +38,36 @@ const GenerationResults: React.FC<any> = observer((props) => {
     });
   }
 
+  const downloadInputFile = (run_id: string) => {
+    fetch(`/ape/get_cwl_input?run_id=${run_id}`)
+    .then(response => response.text())
+    .then(data => {
+      const blob = new Blob([data], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "input.yml";
+      link.click();
+      URL.revokeObjectURL(url);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+
+  const compareSelected = () => {
+    runInAction(() => {
+      const selectedWorkflows: WorkflowSolution[] = workflowSolutions.filter(
+        (solution: WorkflowSolution) => solution.isSelected);
+      exploreDataStore.selectedWorkflowSolutions = selectedWorkflows;
+      navigate('/benchmark/visualize');
+    });
+  }
+
   return (
     <div>
       <ExplorationProgress index={4} />
       <div className="m-20">
-
-        {/* Status messages */}
-        { exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div> }
-        { exploreDataStore.generationError && <div className="alert alert-error">An error occurred while generating the workflows: {exploreDataStore.generationError.toString()}</div> }
 
         {/* Results */}
         <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
@@ -53,6 +78,8 @@ const GenerationResults: React.FC<any> = observer((props) => {
                 <th>Name</th>
                 <th>Workflow length</th>
                 <th>Action</th>
+                {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button></th>}
+                {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => compareSelected()}>Compare<br />selected</button></th>}
               </tr>
             </thead>
             <tbody>
@@ -69,16 +96,26 @@ const GenerationResults: React.FC<any> = observer((props) => {
           </table>
         </div>
 
+         {/* Status messages */}
+         {exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div>}
+        { !exploreDataStore.isGenerating && !exploreDataStore.generationError && workflowSolutions.length == 0 && <div className="alert alert-warning"> No solutions were found for given specification. Try a different a specification (e.g., change  maximum workflow length, expected inputs and/or outputs, or remove some constraints). </div> }
+        { exploreDataStore.generationError && <div className="alert alert-error">An error occurred while generating the workflows: {exploreDataStore.generationError.toString()}</div> }
+
+        
         {/* Selected solutions */}
-        <div className="flex justify-center gap-8">
-            { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
-                .map((solution: WorkflowSolution, index: number) => (
-              <div key={index} className="border-2 border-red-200 rounded-xl overflow-hidden p-2 shadow-lg">
-                <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
-                { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
-              </div>
-            ))}
+        <div className="horizontal-scroll-container">
+          <div className="horizontal-scroll-content">
+            <div className="flex justify-center gap-8">
+                { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
+                    .map((solution: WorkflowSolution, index: number) => (
+                  <div key={index} className="border-2 border-red-200 rounded-xl overflow-hidden p-2 shadow-lg">
+                    <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
+                    { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                  </div>
+                ))}
+            </div>
           </div>
+        </div>
       </div>
     </div>
   );

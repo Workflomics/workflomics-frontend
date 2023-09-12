@@ -10,6 +10,7 @@ import { InputsOutputs } from './components/explore/InputsOutputs';
 import { WorkflowConstraints } from './components/explore/WorkflowConstraints';
 import { GenerationConfig } from './components/explore/GenerationConfig';
 import { GenerationResults } from './components/explore/GenerationResults';
+import { VisualizeBenchmark } from './components/benchmark/VisualizeBenchmarks';
 
 const router = createBrowserRouter([
   {
@@ -27,7 +28,13 @@ const router = createBrowserRouter([
           { path: "inputs-outputs", element: <InputsOutputs /> },
           { path: "constraints", element: <WorkflowConstraints /> },
           { path: "configuration", element: <GenerationConfig /> },
-          { path: "results", element: <GenerationResults />}
+          { path: "results", element: <GenerationResults /> }
+        ]
+      },
+      {
+        path: "benchmark",
+        children: [
+          { path: "visualize", element: <VisualizeBenchmark /> }
         ]
       }
     ]

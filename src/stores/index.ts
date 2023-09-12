@@ -1,23 +1,21 @@
 import domainStore, { DomainStore } from './DomainStore';
-import dataTaxStore, { DataTaxStore } from './DataTaxStore';
 import exploreDataStore, { ExploreDataStore } from './ExploreDataStore';
 import constraintStore, { ConstraintStore } from './ConstraintStore';
-import toolTaxStore, { ToolTaxStore } from './ToolTaxStore';
+import taxStore, { TaxStore } from './TaxStore';
 
 export type RootStore = {
   domainStore: DomainStore;
-  dataTaxStore: DataTaxStore;
-  exploreDataStore: ExploreDataStore;
+  taxStore: TaxStore;
   constraintStore: ConstraintStore;
-  toolTaxStore: ToolTaxStore;
+  exploreDataStore: ExploreDataStore;
+
 }
 
 const rootStore: RootStore = {
   domainStore,
-  dataTaxStore,
-  exploreDataStore,
+  taxStore,
   constraintStore,
-  toolTaxStore
+  exploreDataStore
 };
 
 export default rootStore;

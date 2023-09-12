@@ -1,13 +1,28 @@
 import { makeAutoObservable } from "mobx";
-import { ConstraintInstance, TypeFormatTuple, WorkflowConfig, WorkflowSolution } from "./WorkflowTypes";
+import { ConstraintInstance, WorkflowConfig, WorkflowSolution, isTaxParameterComplete as isTaxParameterComplete } from "./WorkflowTypes";
 import { makePersistable } from "mobx-persist-store";
+import { ApeTaxTuple } from "./TaxStore";
 
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
-    inputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple ],
-    outputs: [ [{id:"",label:""}, {id:"",label:""}] as TypeFormatTuple],
-    constraints: [ {constraint: {id:"",label:""}} as ConstraintInstance ],
+    inputs: [
+      {
+        "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006", subsets: [] },
+        "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915", subsets: [] },
+      },
+      {
+        "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006", subsets: [] },
+        "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915", subsets: [] },
+      }
+    ],
+    outputs: [
+      {
+        "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006", subsets: [] },
+        "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915", subsets: [] },
+      }
+    ],
+    constraints: [{id: "", label: "", parameters: []} as ConstraintInstance],
     minSteps: 3,
     maxSteps: 4,
     timeout: 120,
@@ -20,36 +35,103 @@ export class ExploreDataStore {
 
   workflowConfig: WorkflowConfig = emptyWorkflowConfig();
   workflowSolutions: WorkflowSolution[] = [];
+  selectedWorkflowSolutions: WorkflowSolution[] = [];
   isGenerating: boolean = false;
   generationError: string = "";
 
   constructor() {
     makeAutoObservable(this, {}, { deep: true });
-    makePersistable(this, { 
+    makePersistable(this, {
       name: "ExploreDataStore",
       properties: ["workflowConfig", "workflowSolutions"],
       storage: window.localStorage
     });
   }
 
-  inputsOutputsToJSON(values: TypeFormatTuple[], dataRoot: string, formatRoot: string) {
-    return values.filter(value => value[0] !== undefined && value[1] !== undefined && value[0]!.id !== "" && value[1]!.id !== "")
-      .map((value) => {
+  /**
+   * Returns a JSON representation of a list of inputs or outputs that can be used in a workflow config.
+   * @param inputsOutputs list of inputs or outputs
+   * @returns JSON representation of the inputs or outputs
+   */
+  inputsOutputsToJSON(inputsOutputs: ApeTaxTuple[]) {
+    return inputsOutputs.filter(parameter => isTaxParameterComplete(parameter))
+      .map(this.parameterToJSON);
+  }
+
+  /**
+   * Returns a JSON representation of a TaxParameter that can be used in a workflow config.
+   * @param param taxonomy parameter
+   * @returns JSON representation of the parameter
+   */
+  parameterToJSON(param: ApeTaxTuple) {
+    return Object.entries(param).reduce(
+      (obj, [key, data]) => { return { ...obj, [key]: [data.id] } }, {}
+    );
+  }
+
+
+  /**
+   * Returns a JSON representation of a list of constraints that can be used in a workflow config.
+   * @param allConstraints list of constraints
+   * @returns JSON representation of the constraints
+   */
+  constraintsToJSON(allConstraints: ConstraintInstance[]) {
+    const newConst =  allConstraints.filter(constraint => constraint.id != "")
+      .map((constraint) => {
         return {
-          [dataRoot]: [value[0]!.id.replace("http://edamontology.org/", "")],
-          [formatRoot]: [value[1]!.id.replace("http://edamontology.org/", "")]
+          "constraintid": constraint!.id,
+          "parameters": constraint!.parameters.map(this.parameterToJSON
+          //TODO: how to pass the parameters?
+            // param => Object.entries(param).reduce(
+            //   (obj, [key, data]) => { return { ...obj, [key]: data.id} }, {}
+            // )
+          )
+          // "parameters": value!.parameters.map(this.parameterToJSON)
         };
+      });
+    newConst.push({
+      "constraintid": "not_connected_op",
+      "parameters": [
+        {
+          "operation_0004": [
+            "peptideprophet1"
+          ]
+        },
+        {
+          "operation_0004": [
+            "peptideprophet1"
+          ]
+        }
+      ]
     });
+    newConst.push({
+      "constraintid": "not_connected_op",
+      "parameters": [
+        {
+          "operation_0004": [
+            "operation_0335"
+          ]
+        },
+        {
+          "operation_0004": [
+            "operation_0335"
+          ]
+        }
+      ]
+    });
+    return newConst;
   }
 
   configToJSON(config: WorkflowConfig): any {
-    const dataRoot: string = "data_0006";
-    const formatRoot: string = "format_1915";
+    // These should be dynamically generated from the domain configuration file
+    const dataRoot: string = "http://edamontology.org/data_0006";
+    const formatRoot: string = "http://edamontology.org/format_1915";
     const toolsRoot: string = "operation_0004";
 
-    const inputs = this.inputsOutputsToJSON(config.inputs, dataRoot, formatRoot);
-    const outputs = this.inputsOutputsToJSON(config.outputs, dataRoot, formatRoot);
-    
+    const inputs = this.inputsOutputsToJSON(config.inputs);
+    const outputs = this.inputsOutputsToJSON(config.outputs);
+    const constraints = this.constraintsToJSON(config.constraints);
+
     //TODO: figure out how much of this to hardcode
     const obj: any = {
       "ontology_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/edam.owl",
@@ -60,9 +142,7 @@ export class ExploreDataStore {
       ],
       "tool_annotations_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/bio.tools.json",
       "strict_tool_annotations": "true",
-      "constraints_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/constraints.json",
       "timeout_sec": config.timeout,
-      "solutions_dir_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/",
       "solution_length": {
         "min": config.minSteps,
         "max": config.maxSteps
@@ -72,10 +152,11 @@ export class ExploreDataStore {
       "number_of_generated_graphs": config.solutionCount,
       "debug_mode": "false",
       "use_workflow_input": "all",
-      "use_all_generated_data": "all",
+      "use_all_generated_data": "one",
       "tool_seq_repeat": "false",
       "inputs": inputs,
-      "outputs": outputs
+      "outputs": outputs,
+      "constraints": constraints
     };
     return obj;
   }
@@ -93,36 +174,36 @@ export class ExploreDataStore {
       },
       body: JSON.stringify(configJson),
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Request failed: ${response.status} ${response.statusText}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log("Success:", data);
-      this.workflowSolutions = data;
-      this.isGenerating = false;
-    })
-    .catch(error => {
-      console.log("Error:", error);
-      this.generationError = error;
-      this.isGenerating = false;
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log("Success:", data);
+        this.workflowSolutions = data;
+        this.isGenerating = false;
+      })
+      .catch(error => {
+        console.log("Error:", error);
+        this.generationError = error;
+        this.isGenerating = false;
+      });
   }
 
   loadImage(solution: WorkflowSolution) {
     const { run_id, figure_name } = solution;
     fetch(`/ape/get_image?run_id=${run_id}&file_name=${figure_name}`)
-    .then(response => response.blob())
-    .then(blob => {
-      const url = URL.createObjectURL(blob);
-      solution.image = url;
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      // Handle error, display fallback image, or show error message
-    });
+      .then(response => response.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        solution.image = url;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle error, display fallback image, or show error message
+      });
   }
 }
 
