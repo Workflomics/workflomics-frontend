@@ -81,25 +81,37 @@ const InputsOutputs: React.FC<any> = observer((props) => {
 
           {/* Inputs */}
           <div className="flex items-center space-x-4">
-            <span className="text-3xl flex-grow-0 w-32">Inputs</span>
+            <div className="tooltip tooltip-right" data-tip="Specify data type and format of each input as concrete as possible.">
+              <span className="text-3xl flex-grow-0 w-32">Inputs</span>
+            </div>
             <div className="flex flex-grow items-center">
               {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
                 return (<InputsOutputSelection key={index} parameterTuple={input} dataTaxonomy={allDataTax} />)
               })}
-              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
-              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeInput()}>-</button>
+              <div className="tooltip tooltip-bottom" data-tip="Add an additional input file.">
+                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
+              </div>
+              <div className="tooltip tooltip-bottom" data-tip="Remove the last input file.">
+                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeInput()}>-</button>
+              </div>
             </div>
           </div>
 
           {/* Outputs */}
           <div className="flex items-center space-x-4">
-            <span className="text-3xl flex-grow-0 w-32">Outputs</span>
+            <div className="tooltip tooltip-right" data-tip="Specify data type and format of each output as concrete as possible.">
+              <span className="text-3xl flex-grow-0 w-32">Outputs</span>
+            </div>
             <div className="flex flex-grow items-center">
               {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
                 return (<InputsOutputSelection key={index} parameterTuple={output} dataTaxonomy={allDataTax} />)
               })}
-              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
-              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeOutput()}>-</button>
+              <div className="tooltip tooltip-bottom" data-tip="Add an additional output file.">
+                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
+              </div>
+              <div className="tooltip tooltip-bottom" data-tip="Remove the last output file.">
+                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeOutput()}>-</button>
+                </div>
             </div>
           </div>
 
@@ -107,13 +119,17 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
             <span className="text-3xl flex-grow-0 w-32"></span>
             <div className="flex flex-grow items-center">
-              <button className="btn m-1" onClick={() => useDemoData()}>Use demo data</button>
+            <div className="tooltip" data-tip="Fill in the form with the inputs and outputs used in our demo example.">
+                <button className="btn m-1" onClick={() => useDemoData()}>Use demo data</button>
+            </div>
             </div>
           </div>
 
           {/* Next button */}
           <div className="flex flex-row-reverse p-10">
-            <Link to="/explore/constraints"><button className="btn btn-primary">Next</button></Link>
+          <div className="tooltip tooltip-left" data-tip="Go to the next step.">
+              <Link to="/explore/constraints"><button className="btn btn-primary">Next</button></Link>
+              </div>
           </div>
         </div>
       </div>

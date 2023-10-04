@@ -73,7 +73,9 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
           { !constraintStore.isLoading && !taxStore.isLoading && !constraintStore.error && !taxStore.error && 
             constraintStore.availableConstraints.length > 0 && Object.entries(allToolsTax).length > 0 &&
             <div className="flex items-center space-x-4">
-              <span className="text-3xl flex-grow-0 w-40">Constraints</span>
+              <div className="tooltip tooltip-right" data-tip="Provide information about data formats, types and operations to guide the workflow generation.">
+                <span className="text-3xl flex-grow-0 w-40">Constraints</span>
+                </div>
               <div className="flex flex-grow items-center">
                 {
                   workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
@@ -93,16 +95,24 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                     </div>);
                   })
                 }
+                <div className="tooltip tooltip-bottom" data-tip="Add an additional constraint to the specification.">
                 <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addConstraint()}>+</button>
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeConstraint()}>-</button>
+              </div>
+              <div className="tooltip tooltip-bottom" data-tip="Remove the last specified constraint.">
+              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeConstraint()}>-</button>
+                </div>
               </div >
             </div >
           }
 
           {/* Prev/next buttons */}
           < div className="flex justify-between p-10" >
-            <Link to="/explore/inputs-outputs"><button className="btn btn-primary">Previous</button></Link>
-            <Link to="/explore/configuration"><button className="btn btn-primary">Next</button></Link>
+          <div className="tooltip tooltip-right" data-tip="Go to the previous step.">
+              <Link to="/explore/inputs-outputs"><button className="btn btn-primary">Previous</button></Link>
+              </div>
+              <div className="tooltip tooltip-left" data-tip="Go to the next step.">
+              <Link to="/explore/configuration"><button className="btn btn-primary">Next</button></Link>
+              </div>
           </div >
 
         </div >
