@@ -6,9 +6,8 @@ import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
 import { useNavigate } from 'react-router-dom';
 import './HorizontalScroll.css'; 
-import { ReactSVG } from 'react-svg';
-import { PanZoom } from 'react-easy-panzoom';
 import WorkflowVisualization from './WorkflowVisualization';
+import WorkflowVisTooltip, { TooltipData } from './WorkflowVisTooltip';
 import { useState } from 'react';
 
 const GenerationResults: React.FC<any> = observer((props) => {
@@ -19,12 +18,11 @@ const GenerationResults: React.FC<any> = observer((props) => {
 
   const showTooltip = (event: React.MouseEvent, data:any) => {
     const text = (event.target as Element).innerHTML;
-    setTooltipData(event.type === 'mouseout' || !text ? null : {
+    setTooltipData((event.type === 'mouseout' || !text) ? null : {
       text: text,
       top: event.pageY + 16,
-      left: event.pageX + 16});
+      left: event.pageX + 16} as TooltipData);
   }
-
 
   const handleSelected = (solution: WorkflowSolution, event: React.ChangeEvent<HTMLInputElement>) => {
     runInAction(() => {
@@ -134,12 +132,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
         </div>
 
         {/* Tooltip */}
-        <div className="tooltip" style={{
-            top: tooltipData ? `${tooltipData.top}px` : 0,
-            left: tooltipData ? `${tooltipData.left}px` : 0,
-            visibility: tooltipData ? 'visible' : 'hidden'}}>
-            { tooltipData ? tooltipData.text : ''}
-        </div>
+        <WorkflowVisTooltip tooltipData={tooltipData} />
 
       </div>
     </div>
