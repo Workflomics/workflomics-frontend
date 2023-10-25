@@ -6,6 +6,7 @@ import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
 import { useNavigate } from 'react-router-dom';
 import './HorizontalScroll.css'; 
+import { TechBenchmarkValue, TechBenchmarks } from '../../stores/BenchmarkTypes';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
@@ -17,6 +18,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
       solution.isSelected = event.target.checked;
       if (solution.image === undefined) {
         exploreDataStore.loadImage(solution);
+      }
+      if (solution.benchmarkData === undefined) {
+        exploreDataStore.loadBenchmarkData(solution);
       }
     });
   };
@@ -108,10 +112,32 @@ const GenerationResults: React.FC<any> = observer((props) => {
             <div className="flex justify-center gap-8">
                 { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
                     .map((solution: WorkflowSolution, index: number) => (
-                  <div key={index} className="border-2 border-red-200 rounded-xl overflow-hidden p-2 shadow-lg">
-                    <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
-                    { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
-                  </div>
+                      <div key={index} className="flip-card">
+                        <div className="border-2 border-red-200 rounded-xl p-2 shadow-lg flip-card-inner">
+                          <div className="flip-card-front">
+                            <div><span>Solution: { solution.name }</span></div>
+                            { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                          </div>
+                          <div className="flip-card-back items-center justify-center h-screen">
+                            <h1>Technical benchmarks</h1>
+                            <hr />
+                            <table className="mx-auto">
+                              <tbody>
+                                <tr>
+                                  <td style={{ textAlign: 'left' }}>Workflow length</td>
+                                  <td style={{ textAlign: 'right' }}>{ solution.workflow_length }</td>
+                                </tr>
+                                {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
+                                  <tr key={benchmark.benchmark_title}>
+                                    <td style={{ textAlign: 'left' }}>{benchmark.benchmark_title}</td>
+                                    <td style={{ textAlign: 'right' }}>{benchmark.value}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
                 ))}
             </div>
           </div>

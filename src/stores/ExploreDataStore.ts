@@ -167,7 +167,7 @@ export class ExploreDataStore {
 
     this.isGenerating = true;
     this.workflowSolutions = [];
-    fetch(`/ape/run_synthesis?config_path=${domainConfig?.repo_url}`, {
+    fetch(`/ape/run_synthesis_and_bench?config_path=${domainConfig?.repo_url}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -199,6 +199,19 @@ export class ExploreDataStore {
       .then(blob => {
         const url = URL.createObjectURL(blob);
         solution.image = url;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle error, display fallback image, or show error message
+      });
+  }
+
+  loadBenchmarkData(solution: WorkflowSolution) {
+    const { run_id, benchmark_file } = solution;
+    fetch(`/ape/get_bench?run_id=${run_id}&file_name=${benchmark_file}`)
+      .then(response => response.json())
+      .then(data => {
+        solution.benchmarkData = data;
       })
       .catch(error => {
         console.error('Error:', error);
