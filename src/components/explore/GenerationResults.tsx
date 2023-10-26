@@ -12,6 +12,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
   const { exploreDataStore } = useStore();
   const workflowSolutions = exploreDataStore.workflowSolutions;
+  const [doShowTechBenchmarks, setShowTechBenchmarks] = React.useState(false);
 
   const handleSelected = (solution: WorkflowSolution, event: React.ChangeEvent<HTMLInputElement>) => {
     runInAction(() => {
@@ -73,75 +74,80 @@ const GenerationResults: React.FC<any> = observer((props) => {
       <ExplorationProgress index={4} />
       <div className="m-20">
 
-        {/* Results */}
-        <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
-          <table className="table w-4/5">
-            <thead>
-              <tr>
-                <th>Select</th>
-                <th>Name</th>
-                <th>Workflow length</th>
-                <th>Action</th>
-                {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button></th>}
-                {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => compareSelected()}>Compare<br />selected</button></th>}
-              </tr>
-            </thead>
-            <tbody>
-            { workflowSolutions.map((solution: WorkflowSolution, index: number) => (
-              <tr key={index}>
-                <td><input type="checkbox" className="h-6 w-6" defaultChecked={solution.isSelected} 
-                    onChange={(event) => { handleSelected(solution, event) }}/></td>
-                <td>{ solution.name }</td>
-                <td>{ `${solution.workflow_length}` }</td>
-                <td><button className="btn btn-primary" onClick={() => downloadFile(solution.run_id, solution.cwl_name)}>Download CWL</button></td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </div>
-
-         {/* Status messages */}
-         {exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div>}
-        { !exploreDataStore.isGenerating && !exploreDataStore.generationError && workflowSolutions.length == 0 && <div className="alert alert-warning"> No solutions were found for given specification. Try a different a specification (e.g., change  maximum workflow length, expected inputs and/or outputs, or remove some constraints). </div> }
+        {/* Status messages */}
+        { exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div> }
+        { !exploreDataStore.isGenerating && !exploreDataStore.generationError && workflowSolutions.length === 0 && <div className="alert alert-warning"> No solutions were found for given specification. Try a different a specification (e.g., change  maximum workflow length, expected inputs and/or outputs, or remove some constraints). </div> }
         { exploreDataStore.generationError && <div className="alert alert-error">An error occurred while generating the workflows: {exploreDataStore.generationError.toString()}</div> }
 
+        {/* Main content */}
+        { !exploreDataStore.isGenerating && !exploreDataStore.generationError && workflowSolutions.length > 0 && 
+        (<div className="flex justify-center gap-8">
+
+          {/* List of solutions */}
+          <div className="text-left space-y-4 m-8 space-x-1">
+
+            <div className="flex gap-2">
+              <input type="checkbox" className="toggle" checked={doShowTechBenchmarks} 
+                onChange={event => setShowTechBenchmarks(event.target.checked)} />
+              <span>Show benchmarks</span>
+            </div>
+
+            <ul>
+              { workflowSolutions.map((solution: WorkflowSolution, index: number) => (
+                <li key={index}>
+                  <div className="flex items-center space-x-2">
+                    <input type="checkbox" className="h-6 w-6 m-2" defaultChecked={solution.isSelected} 
+                      onChange={(event) => { handleSelected(solution, event) }}/>
+                    <span className="whitespace-nowrap">{ `${solution.name} (${solution.workflow_length})` }</span>
+                    <button className="text-blue-500 hover:underline" onClick={() => downloadFile(solution.run_id, solution.cwl_name)}>CWL</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button>
+            <button className="btn btn-primary" onClick={() => compareSelected()}>Compare<br />selected</button>
+          </div>
         
-        {/* Selected solutions */}
-        <div className="horizontal-scroll-container">
-          <div className="horizontal-scroll-content">
-            <div className="flex justify-center gap-8">
-                { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
-                    .map((solution: WorkflowSolution, index: number) => (
-                      <div key={index} className="flip-card">
-                        <div className="border-2 border-red-200 rounded-xl p-2 shadow-lg flip-card-inner">
-                          <div className="flip-card-front">
-                            <div><span>Solution: { solution.name }</span></div>
-                            { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
-                          </div>
-                          <div className="flip-card-back items-center justify-center h-screen">
-                            <h1>Technical benchmarks</h1>
-                            <hr />
-                            <table className="mx-auto">
-                              <tbody>
-                                <tr>
-                                  <td style={{ textAlign: 'left' }}>Workflow length</td>
-                                  <td style={{ textAlign: 'right' }}>{ solution.workflow_length }</td>
-                                </tr>
-                                {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
-                                  <tr key={benchmark.benchmark_title}>
-                                    <td style={{ textAlign: 'left' }}>{benchmark.benchmark_title}</td>
-                                    <td style={{ textAlign: 'right' }}>{benchmark.value}</td>
+          {/* Cards for selected solutions */}
+          <div className="horizontal-scroll-container">
+            <div className="horizontal-scroll-content">
+              <div className="flex justify-center gap-8">
+                  { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
+                      .map((solution: WorkflowSolution, index: number) => (
+                        <div key={index} className="flip-card">
+                          <div className={`border-2 border-red-200 rounded-xl p-2 shadow-lg flip-card-inner ${doShowTechBenchmarks ? 'is-flipped' : ''}`}>
+                            <div className="flip-card-front">
+                              <div><span>Solution: { solution.name }</span></div>
+                              { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                            </div>
+                            <div className="flip-card-back items-center justify-center h-screen">
+                              <div><span>Solution: { solution.name }</span></div>
+                              <h1>Technical benchmarks</h1>
+                              <hr />
+                              <table className="mx-auto">
+                                <tbody>
+                                  <tr>
+                                    <td style={{ textAlign: 'left' }}>Workflow length</td>
+                                    <td style={{ textAlign: 'right' }}>{ solution.workflow_length }</td>
                                   </tr>
-                                ))}
-                              </tbody>
-                            </table>
+                                  {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
+                                    <tr key={benchmark.benchmark_title}>
+                                      <td style={{ textAlign: 'left' }}>{benchmark.benchmark_title}</td>
+                                      <td style={{ textAlign: 'right' }}>{benchmark.value}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                ))}
+                  ))}
+              </div>
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

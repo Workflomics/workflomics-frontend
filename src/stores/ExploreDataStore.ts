@@ -183,6 +183,11 @@ export class ExploreDataStore {
       .then(data => {
         console.log("Success:", data);
         this.workflowSolutions = data;
+        this.workflowSolutions.forEach(solution => {
+          solution.isSelected = true;
+          this.loadImage(solution);
+          this.loadBenchmarkData(solution);
+        });
         this.isGenerating = false;
       })
       .catch(error => {

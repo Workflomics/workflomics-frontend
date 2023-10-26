@@ -27,8 +27,8 @@
   transform-style: preserve-3d;
 }
 
-/* Do an horizontal flip when you move the mouse over the flip box container */
-.flip-card:hover .flip-card-inner {
+/* Flip the card */
+.is-flipped {
   transform: rotateY(180deg);
 }
 
@@ -41,11 +41,7 @@
   backface-visibility: hidden;
 }
 
-/* Style the front side */
-.flip-card-front {
-}
-
-/* Style the back side */
+/* Put the content of the back side on the back side */
 .flip-card-back {
   transform: rotateY(180deg);
 }

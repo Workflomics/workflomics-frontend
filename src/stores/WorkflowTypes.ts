@@ -37,6 +37,6 @@ export type WorkflowSolution = {
   figure_name: string,
   benchmark_file: string,
   isSelected: boolean,
-  image: string | undefined
+  image: string | undefined,
   benchmarkData: TechBenchmarks | undefined
 }
