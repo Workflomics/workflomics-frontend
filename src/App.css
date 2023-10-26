@@ -45,3 +45,26 @@
 .flip-card-back {
   transform: rotateY(180deg);
 }
+
+.star-rating {
+  display: inline-block;
+  font-size: 0; /* Remove whitespace between inline-block elements */
+}
+
+.circle-filled {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #7bd310; /* Filled circle color */
+  border-radius: 50%;
+  margin-right: 5px; /* Spacing between circles */
+}
+
+.circle-empty {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #7bd310; /* Border color to represent an empty circle */
+  border-radius: 50%;
+  margin-right: 5px; /* Spacing between circles */
+}

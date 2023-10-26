@@ -69,6 +69,19 @@ const GenerationResults: React.FC<any> = observer((props) => {
     });
   }
 
+  //TODO: make into component and dispel hackiness
+  const getStars = (value: string) => {
+    if (value.length === 3 && value[1] === "/") {
+      const val = parseInt(value[0]);
+      const maxVal = parseInt(value[2]);
+      return (<div className="star-rating">
+        {[...Array(val)].map((e, i) => <span key={i} className="circle-filled">O</span>)}
+        {[...Array(maxVal-val)].map((e, i) => <span key={i} className="circle-empty">x</span>)}
+      </div>);
+    }
+    return null;
+  };
+
   return (
     <div>
       <ExplorationProgress index={4} />
@@ -129,12 +142,12 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                 <tbody>
                                   <tr>
                                     <td style={{ textAlign: 'left' }}>Workflow length</td>
-                                    <td style={{ textAlign: 'right' }}>{ solution.workflow_length }</td>
+                                    <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{ solution.workflow_length }</div></td>
                                   </tr>
                                   {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
                                     <tr key={benchmark.benchmark_title}>
                                       <td style={{ textAlign: 'left' }}>{benchmark.benchmark_title}</td>
-                                      <td style={{ textAlign: 'right' }}>{benchmark.value}</td>
+                                      <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{benchmark.value} {typeof benchmark.value === 'string' ? getStars(benchmark.value) : ''}</div></td>
                                     </tr>
                                   ))}
                                 </tbody>
