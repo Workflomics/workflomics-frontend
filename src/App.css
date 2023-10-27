@@ -9,3 +9,62 @@
 .table :where(th, td) {
   white-space: normal;  /* override value set by tailwind (nowrap)... */ 
 }
+
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.flip-card {
+  width: 350px;
+  height: 500px;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Flip the card */
+.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Put the content of the back side on the back side */
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+.star-rating {
+  display: inline-block;
+  font-size: 0; /* Remove whitespace between inline-block elements */
+}
+
+.circle-filled {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #7bd310; /* Filled circle color */
+  border-radius: 50%;
+  margin-right: 5px; /* Spacing between circles */
+}
+
+.circle-empty {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #7bd310; /* Border color to represent an empty circle */
+  border-radius: 50%;
+  margin-right: 5px; /* Spacing between circles */
+}

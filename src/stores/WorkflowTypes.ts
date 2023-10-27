@@ -1,3 +1,4 @@
+import { TechBenchmarks } from "./BenchmarkTypes";
 import { Domain } from "./DomainStore";
 import { ApeTaxTuple } from "./TaxStore";
 
@@ -34,6 +35,8 @@ export type WorkflowSolution = {
   workflow_length: number,
   name: string,
   figure_name: string,
+  benchmark_file: string,
   isSelected: boolean,
-  image: string | undefined
+  image: string | undefined,
+  benchmarkData: TechBenchmarks | undefined
 }

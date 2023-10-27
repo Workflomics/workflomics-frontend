@@ -1,6 +1,20 @@
 
 import { WorkflowSolution } from './WorkflowTypes';
 
+
+export type TechBenchmarkValue = {
+  benchmark_title: string,
+  benchmark_long_title: string,
+  benchmark_description: string,
+  value: string | number | boolean,
+  desirability_value: number,
+}
+
+export type TechBenchmarks = {
+  workflow_name: string,
+  benchmarks: TechBenchmarkValue[]
+}
+
 export enum BenchmarkType {
   NUMERIC,
   BOOLEAN,
@@ -32,16 +46,20 @@ const sampleWorkflows: WorkflowSolution[] = [{
   workflow_length: 3,
   name: "workflow_1",
   figure_name: "image.png",
+  benchmark_file: "benchmark_1.json",
   isSelected: true,
-  image: undefined
+  image: undefined,
+  benchmarkData: undefined
 },{
   cwl_name: "workflow2.cwl",
   run_id: '2',
   workflow_length: 4,
   name: "workflow_2",
   figure_name: "image_2.png",
+  benchmark_file: "benchmark_2.json",
   isSelected: true,
-  image: undefined
+  image: undefined,
+  benchmarkData: undefined
 }];
 
 const sampleBenchmarks: Benchmark[] = [{

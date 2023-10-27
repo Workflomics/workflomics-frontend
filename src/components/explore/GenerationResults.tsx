@@ -6,17 +6,22 @@ import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
 import { useNavigate } from 'react-router-dom';
 import './HorizontalScroll.css'; 
+import { TechBenchmarkValue, TechBenchmarks } from '../../stores/BenchmarkTypes';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
   const { exploreDataStore } = useStore();
   const workflowSolutions = exploreDataStore.workflowSolutions;
+  const [doShowTechBenchmarks, setShowTechBenchmarks] = React.useState(false);
 
   const handleSelected = (solution: WorkflowSolution, event: React.ChangeEvent<HTMLInputElement>) => {
     runInAction(() => {
       solution.isSelected = event.target.checked;
       if (solution.image === undefined) {
         exploreDataStore.loadImage(solution);
+      }
+      if (solution.benchmarkData === undefined) {
+        exploreDataStore.loadBenchmarkData(solution);
       }
     });
   };
@@ -64,58 +69,98 @@ const GenerationResults: React.FC<any> = observer((props) => {
     });
   }
 
+  //TODO: make into component and dispel hackiness
+  const getStars = (value: string) => {
+    if (value.length === 3 && value[1] === "/") {
+      const val = parseInt(value[0]);
+      const maxVal = parseInt(value[2]);
+      return (<div className="star-rating">
+        {[...Array(val)].map((e, i) => <span key={i} className="circle-filled">O</span>)}
+        {[...Array(maxVal-val)].map((e, i) => <span key={i} className="circle-empty">x</span>)}
+      </div>);
+    }
+    return null;
+  };
+
   return (
     <div>
       <ExplorationProgress index={4} />
       <div className="m-20">
 
-        {/* Results */}
-        <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
-          <table className="table w-4/5">
-            <thead>
-              <tr>
-                <th>Select</th>
-                <th>Name</th>
-                <th>Workflow length</th>
-                <th>Action</th>
-                {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button></th>}
-                {workflowSolutions.length > 0 && <th><button className="btn btn-primary" onClick={() => compareSelected()}>Compare<br />selected</button></th>}
-              </tr>
-            </thead>
-            <tbody>
-            { workflowSolutions.map((solution: WorkflowSolution, index: number) => (
-              <tr key={index}>
-                <td><input type="checkbox" className="h-6 w-6" defaultChecked={solution.isSelected} 
-                    onChange={(event) => { handleSelected(solution, event) }}/></td>
-                <td>{ solution.name }</td>
-                <td>{ `${solution.workflow_length}` }</td>
-                <td><button className="btn btn-primary" onClick={() => downloadFile(solution.run_id, solution.cwl_name)}>Download CWL</button></td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </div>
-
-         {/* Status messages */}
-         {exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div>}
-        { !exploreDataStore.isGenerating && !exploreDataStore.generationError && workflowSolutions.length == 0 && <div className="alert alert-warning"> No solutions were found for given specification. Try a different a specification (e.g., change  maximum workflow length, expected inputs and/or outputs, or remove some constraints). </div> }
+        {/* Status messages */}
+        { exploreDataStore.isGenerating && <div className="alert alert-info">Generating workflows...</div> }
+        { !exploreDataStore.isGenerating && !exploreDataStore.generationError && workflowSolutions.length === 0 && <div className="alert alert-warning"> No solutions were found for given specification. Try a different a specification (e.g., change  maximum workflow length, expected inputs and/or outputs, or remove some constraints). </div> }
         { exploreDataStore.generationError && <div className="alert alert-error">An error occurred while generating the workflows: {exploreDataStore.generationError.toString()}</div> }
 
-        
-        {/* Selected solutions */}
-        <div className="horizontal-scroll-container">
-          <div className="horizontal-scroll-content">
-            <div className="flex justify-center gap-8">
-                { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
-                    .map((solution: WorkflowSolution, index: number) => (
-                  <div key={index} className="border-2 border-red-200 rounded-xl overflow-hidden p-2 shadow-lg">
-                    <div className="m-4 text-xl"><span>Solution: { solution.name }</span></div>
-                    { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+        {/* Main content */}
+        { !exploreDataStore.isGenerating && !exploreDataStore.generationError && workflowSolutions.length > 0 && 
+        (<div className="flex justify-center gap-8">
+
+          {/* List of solutions */}
+          <div className="text-left space-y-4 m-8 space-x-1">
+
+            <div className="flex gap-2">
+              <input type="checkbox" className="toggle" checked={doShowTechBenchmarks} 
+                onChange={event => setShowTechBenchmarks(event.target.checked)} />
+              <span>Show benchmarks</span>
+            </div>
+
+            <ul>
+              { workflowSolutions.map((solution: WorkflowSolution, index: number) => (
+                <li key={index}>
+                  <div className="flex items-center space-x-2">
+                    <input type="checkbox" className="h-6 w-6 m-2" defaultChecked={solution.isSelected} 
+                      onChange={(event) => { handleSelected(solution, event) }}/>
+                    <span className="whitespace-nowrap">{ `${solution.name} (${solution.workflow_length})` }</span>
+                    <button className="text-blue-500 hover:underline" onClick={() => downloadFile(solution.run_id, solution.cwl_name)}>CWL</button>
                   </div>
-                ))}
+                </li>
+              ))}
+            </ul>
+
+            <button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button>
+            <button className="btn btn-primary" onClick={() => compareSelected()}>Compare<br />selected</button>
+          </div>
+        
+          {/* Cards for selected solutions */}
+          <div className="horizontal-scroll-container">
+            <div className="horizontal-scroll-content">
+              <div className="flex justify-center gap-8">
+                  { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
+                      .map((solution: WorkflowSolution, index: number) => (
+                        <div key={index} className="flip-card">
+                          <div className={`border-2 border-red-200 rounded-xl p-2 shadow-lg flip-card-inner ${doShowTechBenchmarks ? 'is-flipped' : ''}`}>
+                            <div className="flip-card-front">
+                              <div><span>Solution: { solution.name }</span></div>
+                              { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                            </div>
+                            <div className="flip-card-back items-center justify-center h-screen">
+                              <div><span>Solution: { solution.name }</span></div>
+                              <h1>Technical benchmarks</h1>
+                              <hr />
+                              <table className="mx-auto">
+                                <tbody>
+                                  <tr>
+                                    <td style={{ textAlign: 'left' }}>Workflow length</td>
+                                    <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{ solution.workflow_length }</div></td>
+                                  </tr>
+                                  {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
+                                    <tr key={benchmark.benchmark_title}>
+                                      <td style={{ textAlign: 'left' }}>{benchmark.benchmark_title}</td>
+                                      <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{benchmark.value} {typeof benchmark.value === 'string' ? getStars(benchmark.value) : ''}</div></td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                  ))}
+              </div>
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
