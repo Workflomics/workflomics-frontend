@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: Workflomics v0.1.0: Bioinformatics Workflow Generation and Benchmarking
+title: Workflomics: Bioinformatics Workflow Generation and Benchmarking
 message: >-
   If you use this software, please cite it using the
   metadata from this file.
