@@ -1,5 +1,6 @@
 # Workflomics: A Workflow Benchmarking Platform (front end)
 
+[![DOI](https://zenodo.org/badge/594054560.svg)](https://zenodo.org/doi/10.5281/zenodo.10047136)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
