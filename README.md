@@ -10,7 +10,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 For now, it is assumed you already have a Postgres database and Postgrest API set up and running. See `docker-compose.yml` for an example configuration, and the `.sql` scripts in the `database` folder to load the tables and content. In addition, the [REST APE](https://github.com/sanctuuary/restape) jar (requires local build) and the corresponding docker [file](https://github.com/sanctuuary/restape/blob/main/Dockerfile) have to be available under ./RestAPE path while running docker-compose. 
 
-
 For development, a simple proxy server is run (through `setupProxy.js`, which is picked up by create-react-app). Configure the endpoints in a `.env` file in the project directory:
 
 ```bash
@@ -18,49 +17,49 @@ API_PROXY_TARGET=http://localhost:3333
 APE_PROXY_TARGET=http://localhost:4444
 ```
 
-## Available Scripts
+Install the required modules for the front-end:
 
-In the project directory, you can run:
+```
+npm install
+```
 
-### `npm install .`
+To start the front-end, simply run
 
-Installs all required dependencies.
+```
+npm start
+```
 
-### `npm start`
+## Deployment
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Back-end services
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Copy `docker-compose.yml` to the server and in the same directory, create `.env`. In this file, configure accordingly:
 
-### `npm test`
+```
+POSTGRES_PASSWORD=<password>
+WF_DATA_DIR=<data directory>
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+At the moment, ports are hard-coded in the docker-compose.yml.
 
-### `npm run build`
+To start the database, API to the database and RestAPE, run the following:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+docker-compose up -d
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Nginx
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The front-end can be statically served, but requires a reverse proxy. For this, you could use nginx. A sample config is in the nginx folder, this is usually placed at `/etc/nginx/sites-available/workflomics.org.conf`. Make sure it is pointing to the proper back-end services and that there is a symlink to the config in `sites-enabled`. Nginx also statically serves the website as specified in the config.
 
-### `npm run eject`
+### Building and deploying the front-end
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Make sure you are on the proper branch and have pulled any changes you want included. Build an optimized version of the application:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```
+npm run build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This will build the application in the `build` directory. It can be statically served, for instance using nginx.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+For instance, using nginx, simply copy the contents of the `build/` directory to `/var/www/workflomics.org/`.
