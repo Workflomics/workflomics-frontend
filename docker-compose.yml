@@ -24,6 +24,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - "${WF_DATA_DIR}/postgres_data:/var/lib/postgresql/data"
+      - ./database:/docker-entrypoint-initdb.d
 
   restape:
     build:
