@@ -24,11 +24,10 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - "${WF_DATA_DIR}/postgres_data:/var/lib/postgresql/data"
+      - ./database:/docker-entrypoint-initdb.d
 
   restape:
-    build:
-      context: ./RestAPE
-    image: rest-ape
+    image: ghcr.io/sanctuuary/restape:latest
     restart: always
     ports:
       - "8080:8080"
