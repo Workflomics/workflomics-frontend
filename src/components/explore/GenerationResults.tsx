@@ -75,11 +75,33 @@ const GenerationResults: React.FC<any> = observer((props) => {
       const val = parseInt(value[0]);
       const maxVal = parseInt(value[2]);
       return (<div className="star-rating">
-        {[...Array(val)].map((e, i) => <span key={i} className="circle-filled">O</span>)}
-        {[...Array(maxVal-val)].map((e, i) => <span key={i} className="circle-empty">x</span>)}
+        {[...Array(val)].map((e, i) => [<span key={i} className="circle-filled"></span>])}
+        {[...Array(maxVal-val)].map((e, i) => <span key={i} className="circle-empty"></span>)}
       </div>);
     }
     return null;
+  };
+  const getRating = (benchmark: TechBenchmarkValue) => {
+    if (typeof benchmark.workflow === 'undefined') {
+      if (typeof benchmark.value === 'string') {
+        return <div className="flex gap-4 m-1 items-center">{benchmark.value} {getStars(benchmark.value)}</div>;
+      }
+      console.error("Unexpected benchmark.value type", typeof benchmark.value, benchmark);
+      return null;
+    } else {
+      const maxVal = benchmark.workflow.length;
+      const val = benchmark.workflow.reduce((acc, cur) => acc + cur.desirability_value, 0).toString();
+      const rating = `${val}/${maxVal}`
+
+      return (<div className="flex gap-4 m-1 items-center">{rating}<div className="divided">
+                  {benchmark.workflow.map((e, i) => 
+                  [
+                    <span key={i} className={"square-" + (e.desirability_value === 1 ? 'filled' : "empty")}> </span>,
+                    i + 1 < benchmark.workflow.length ? <span className="connect-squares"></span> : null
+                  ])}
+                </div>
+              </div>);
+    }
   };
 
   return (
@@ -147,7 +169,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                   {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
                                     <tr key={benchmark.benchmark_title}>
                                       <td style={{ textAlign: 'left' }}>{benchmark.benchmark_title}</td>
-                                      <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{benchmark.value} {typeof benchmark.value === 'string' ? getStars(benchmark.value) : ''}</div></td>
+                                      <td style={{ textAlign: 'right' }}>{getRating(benchmark)}</td>
                                     </tr>
                                   ))}
                                 </tbody>

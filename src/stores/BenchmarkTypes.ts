@@ -8,6 +8,7 @@ export type TechBenchmarkValue = {
   benchmark_description: string,
   value: string | number | boolean,
   desirability_value: number,
+  workflow: BenchmarkValue[],
 }
 
 export type TechBenchmarks = {
@@ -28,8 +29,9 @@ export type Benchmark = {
 }
 
 export type BenchmarkValue = {
+  description: string,
   value: string | number | boolean,
-  desirabilityValue: number,  // A number between 0 and 1 that will be used to calculate the color
+  desirability_value: number,  // A number between 0 and 1 that will be used to calculate the color
 }
 
 export interface BenchmarkTable {
@@ -83,16 +85,16 @@ const sampleBenchmarks: Benchmark[] = [{
 
 const sampleBenchmarkTable: BenchmarkTable = {
   [sampleWorkflows[0].run_id]: { 
-    [sampleBenchmarks[0].id]: {value: 3, desirabilityValue: 0.3},
-    [sampleBenchmarks[1].id]: {value: 3, desirabilityValue: 1.0},
-    [sampleBenchmarks[2].id]: {value: 42, desirabilityValue: 0.42},
-    [sampleBenchmarks[3].id]: {value: 87, desirabilityValue: 1.0}
+    [sampleBenchmarks[0].id]: {description: "Sample desc 1", value: 3, desirability_value: 0.3},
+    [sampleBenchmarks[1].id]: {description: "Sample desc 2", value: 3, desirability_value: 1.0},
+    [sampleBenchmarks[2].id]: {description: "Sample desc 3", value: 42, desirability_value: 0.42},
+    [sampleBenchmarks[3].id]: {description: "Sample desc 4", value: 87, desirability_value: 1.0}
   },
   [sampleWorkflows[1].run_id]: {
-    [sampleBenchmarks[0].id]: {value: 8, desirabilityValue: 0.8},
-    [sampleBenchmarks[1].id]: {value: 4, desirabilityValue: 0.5},
-    [sampleBenchmarks[2].id]: {value: 0, desirabilityValue: 0.0},
-    [sampleBenchmarks[3].id]: {value: 50, desirabilityValue: 0.5}
+    [sampleBenchmarks[0].id]: {description: "Sample desc 5", value: 8, desirability_value: 0.8},
+    [sampleBenchmarks[1].id]: {description: "Sample desc 6", value: 4, desirability_value: 0.5},
+    [sampleBenchmarks[2].id]: {description: "Sample desc 7", value: 0, desirability_value: 0.0},
+    [sampleBenchmarks[3].id]: {description: "Sample desc 8", value: 50, desirability_value: 0.5}
   }
 };
 
