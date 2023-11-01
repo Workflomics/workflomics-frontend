@@ -1,12 +1,22 @@
 # Workflomics: A Workflow Benchmarking Platform (front end)
 
+[![DOI](https://zenodo.org/badge/594054560.svg)](https://zenodo.org/doi/10.5281/zenodo.10047136)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+## Project goal
 
+The Workflomics platform aims to address the challenge faced by life science researchers who work with increasingly large and complex datasets and struggle to create optimal workflows for their data analysis problems.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The platform facilitates a "Great Bake Off" of computational workflows in bioinformatics by integrating bioinformatics tools and metadata with technologies for automated workflow exploration and benchmarking. This enables a systematic and rigorous approach to the development of cutting-edge workflows, specifically in the field of proteomics, to increase scientific quality, robustness, reproducibility, FAIRness, and maintainability.
+
+The platform currently focuses on the proteomics domain. We aim to extend the platform to additional domains, e.g., metabolomics, genomics.
+
+Visit the live demo:
+http://workflomics.org/
 
 ## Development
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 For now, it is assumed you already have a Postgres database and Postgrest API set up and running. See `docker-compose.yml` for an example configuration, and the `.sql` scripts in the `database` folder to load the tables and content. In addition, the [REST APE](https://github.com/sanctuuary/restape) jar (requires local build) and the corresponding docker [file](https://github.com/sanctuuary/restape/blob/main/Dockerfile) have to be available under ./RestAPE path while running docker-compose. 
 
