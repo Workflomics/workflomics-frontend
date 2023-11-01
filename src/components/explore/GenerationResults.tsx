@@ -143,7 +143,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
               { workflowSolutions.map((solution: WorkflowSolution, index: number) => (
                 <li key={index}>
                   <div className="flex items-center space-x-2">
-                    <input type="checkbox" className="h-6 w-6 m-2" defaultChecked={solution.isSelected} checked={solution.isSelected}
+                    <input type="checkbox" className="h-6 w-6 m-2" checked={solution.isSelected}
                       onChange={(event) => { handleSelected(solution, event.target.checked) }}/>
                     <span className="whitespace-nowrap">{ `${solution.name} (${solution.workflow_length})` }</span>
                     <button className="text-blue-500 hover:underline" onClick={() => downloadFile(solution.run_id, solution.cwl_name)}>CWL</button>
