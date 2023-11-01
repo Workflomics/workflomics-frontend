@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+title: Workflomics: Bioinformatics Workflow Generation and Benchmarking
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Vedran
+    family-names: Kasalica
+    email: v.kasalica@esciencecenter.nl
+    affiliation: Netherlands eScience Center
+    orcid: 'https://orcid.org/0000-0002-0097-1056'
+  - family-names: Peter
+    given-names: Kok
+    email: p.kok@esciencecenter.nl
+    affiliation: Netherlands eScience Center
+    orcid: https://orcid.org/0000-0002-6630-7326
+  - family-names: Nauman
+    given-names: Ahmed
+    email: n.ahmed@esciencecenter.nl
+    affiliation: Netherlands eScience Center
+    orcid: https://orcid.org/0000-0003-3559-9941
+  - family-names: Anna-Lena
+    given-names: Lamprecht
+    email: vanna-lena.lamprecht@uni-potsdam.de
+    affiliation: University of Potsdam
+    orcid: https://orcid.org/0000-0003-1953-5606
+  - family-names: Magnus
+    given-names: Palmblad
+    email: n.m.palmblad@lumc.nl
+    affiliation: Leiden University Medical Center
+    orcid: https://orcid.org/0000-0002-5865-8994
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.10047136
+repository-code: 'https://github.com/workflomics/workflomics-frontend'
+url: 'https://github.com/workflomics/workflomics-frontend'
+abstract: >-
+  The Workflomics platform aims to address the challenge faced by life science researchers who work with increasingly large and complex datasets and struggle to create optimal workflows for their data analysis problems.
+
+The platform facilitates a "Great Bake Off" of computational workflows in bioinformatics by integrating bioinformatics tools and metadata with technologies for automated workflow exploration and benchmarking. This enables a systematic and rigorous approach to the development of cutting-edge workflows, specifically in the field of proteomics, to increase scientific quality, robustness, reproducibility, FAIRness, and maintainability.
+
+The platform currently focuses on the proteomics domain. We aim to extend the platform to additional domains, e.g., metabolomics, genomics.
+keywords:
+  - bioinformatics
+  - workflow benchmarking
+license: Apache-2.0
+commit: 38a0a7e7930a6a63afc95f454d0f9a4bc854b878
+version: 0.1.0
+date-released: 2023-10-27
