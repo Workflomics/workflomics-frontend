@@ -28,10 +28,10 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
     const availability = Math.floor(Math.random() * 100);
     const executedSteps = Math.floor(Math.random() * (workflow.workflow_length + 1));
     benchmarkValues[workflow.name] = {
-      '1': {value: workflow.workflow_length, desirabilityValue: (workflow.workflow_length / 10.0)} as BenchmarkValue,
-      '2': {value: executedSteps, desirabilityValue: (executedSteps) / workflow.workflow_length} as BenchmarkValue,
-      '3': {value: n_proteins, desirabilityValue: 0.01 * n_proteins} as BenchmarkValue,
-      '4': {value: availability, desirabilityValue: 0.01 * availability} as BenchmarkValue
+      '1': {description: "Sample desc 1", value: workflow.workflow_length, desirability_value: (workflow.workflow_length / 10.0)} as BenchmarkValue,
+      '2': {description: "Sample desc 2", value: executedSteps, desirability_value: (executedSteps) / workflow.workflow_length} as BenchmarkValue,
+      '3': {description: "Sample desc 3", value: n_proteins, desirability_value: 0.01 * n_proteins} as BenchmarkValue,
+      '4': {description: "Sample desc 4", value: availability, desirability_value: 0.01 * availability} as BenchmarkValue
     };
   });
 
@@ -52,7 +52,7 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
               { benchmarks.map(benchmark => {
                 const key = `${workflow.name}-${benchmark.id}`;
                 const bmValue: BenchmarkValue = benchmarkValues[workflow.name][benchmark.id];
-                const color = mapValueToColor(bmValue.desirabilityValue);
+                const color = mapValueToColor(bmValue.desirability_value);
                 return (<td key={key} style={{backgroundColor: color}}>{bmValue.value.toString()}</td>);
               })}
             </tr>
