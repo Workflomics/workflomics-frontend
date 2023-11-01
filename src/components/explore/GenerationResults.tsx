@@ -14,15 +14,21 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const workflowSolutions = exploreDataStore.workflowSolutions;
   const [doShowTechBenchmarks, setShowTechBenchmarks] = React.useState(false);
 
-  const handleSelected = (solution: WorkflowSolution, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelected = (solution: WorkflowSolution, checked: boolean) => {
     runInAction(() => {
-      solution.isSelected = event.target.checked;
-      if (solution.image === undefined) {
+      solution.isSelected = checked;
+      if (checked && solution.image === undefined) {
         exploreDataStore.loadImage(solution);
       }
-      if (solution.benchmarkData === undefined) {
+      if (checked && solution.benchmarkData === undefined) {
         exploreDataStore.loadBenchmarkData(solution);
       }
+    });
+  };
+
+  const toggleAll = (checked: boolean) => {
+    runInAction(() => {
+      workflowSolutions.map((solution, _) => handleSelected(solution, checked))
     });
   };
 
@@ -128,11 +134,17 @@ const GenerationResults: React.FC<any> = observer((props) => {
             </div>
 
             <ul>
+                <li style={{ borderBottom: "1px solid black" }}>
+                  <div className="flex items-center space-x-2">
+                    <input type="checkbox" className="h-6 w-6 m-2" defaultChecked={true} 
+                      onChange={(event) => { toggleAll(event.target.checked) }}/>
+                  </div>
+                </li>
               { workflowSolutions.map((solution: WorkflowSolution, index: number) => (
                 <li key={index}>
                   <div className="flex items-center space-x-2">
-                    <input type="checkbox" className="h-6 w-6 m-2" defaultChecked={solution.isSelected} 
-                      onChange={(event) => { handleSelected(solution, event) }}/>
+                    <input type="checkbox" className="h-6 w-6 m-2" defaultChecked={solution.isSelected} checked={solution.isSelected}
+                      onChange={(event) => { handleSelected(solution, event.target.checked) }}/>
                     <span className="whitespace-nowrap">{ `${solution.name} (${solution.workflow_length})` }</span>
                     <button className="text-blue-500 hover:underline" onClick={() => downloadFile(solution.run_id, solution.cwl_name)}>CWL</button>
                   </div>
