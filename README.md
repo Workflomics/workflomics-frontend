@@ -16,12 +16,12 @@ http://workflomics.org/
 
 ## Development
 
-For now, it is assumed you already have a Postgres database and Postgrest API set up and running. See `docker-compose.yml` for an example configuration, and the `.sql` scripts in the `database` folder to load the tables and content.
+For now, it is assumed you already have a Postgres database and Postgrest API set up and running. See [Deployment](#deployment) below for a docker compose configuration which starts all necessary services and initializes the database with the `.sql` scripts in the `database` folder.
 
-For development, a simple proxy server is run (through `setupProxy.js`, which is picked up by create-react-app). Configure the endpoints in a `.env` file in the project directory:
+For development, a simple proxy server is run automatically when running `npm start` (through `setupProxy.js`, which is picked up by create-react-app). Configure the endpoints in a `.env` file in the project directory:
 
 ```bash
-API_PROXY_TARGET=http://localhost:3333
+API_PROXY_TARGET=http://localhost:3000
 APE_PROXY_TARGET=http://localhost:4444
 ```
 
@@ -53,7 +53,10 @@ At the moment, ports are hard-coded in the docker-compose.yml.
 To start the database, API to the database and RestAPE, run the following:
 
 ```
-docker-compose up -d
+docker compose --env-file .env up -d
+
+# To remove the containers, run
+docker compose down
 ```
 
 ### Nginx
