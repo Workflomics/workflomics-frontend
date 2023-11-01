@@ -81,6 +81,7 @@
   width: 12px;
   height: 12px;
   border: 1px solid black; /* Border color to have the same size as the empty version */
+  border-radius: 20%;
 }
 
 .square-filled {
