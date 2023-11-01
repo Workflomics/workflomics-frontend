@@ -40,6 +40,7 @@
   -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
   background-color: white; /* On mozilla, this needs to be opaque or the front side will show on the back side */
+  overflow: auto;
 }
 
 /* Put the content of the back side on the back side */
