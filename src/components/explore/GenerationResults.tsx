@@ -96,7 +96,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
       return (<div className="flex gap-4 m-1 items-center">{rating}<div className="divided">
                   {benchmark.workflow.map((e, i) => 
                   [
-                    <span key={i} className={"square-" + (e.desirability_value === 1 ? 'filled' : "empty")}> </span>,
+                    <span key={i} className={"square " + (e.desirability_value === 1 ? "square-filled" : "")}> </span>,
                     i + 1 < benchmark.workflow.length ? <span className="connect-squares"></span> : null
                   ])}
                 </div>
