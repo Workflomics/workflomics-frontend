@@ -7,6 +7,8 @@ import { runInAction } from 'mobx';
 import { useNavigate } from 'react-router-dom';
 import './HorizontalScroll.css'; 
 import { TechBenchmarkValue, TechBenchmarks } from '../../stores/BenchmarkTypes';
+import Icon from '@mdi/react';
+import { mdiEyeOff } from '@mdi/js';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
@@ -109,6 +111,10 @@ const GenerationResults: React.FC<any> = observer((props) => {
               </div>);
     }
   };
+  const buttonHide = (solution: WorkflowSolution) => 
+    <button className="btn btn-square btn-outline" style={{ position: "absolute", top: 0, left: 0, border: "none" }} onClick={() => { handleSelected(solution, false) }}>
+      <Icon path={mdiEyeOff} size={1} />
+    </button>
 
   return (
     <div>
@@ -143,7 +149,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
               { workflowSolutions.map((solution: WorkflowSolution, index: number) => (
                 <li key={index}>
                   <div className="flex items-center space-x-2">
-                    <input type="checkbox" className="h-6 w-6 m-2" defaultChecked={solution.isSelected} checked={solution.isSelected}
+                    <input type="checkbox" className="h-6 w-6 m-2" checked={solution.isSelected}
                       onChange={(event) => { handleSelected(solution, event.target.checked) }}/>
                     <span className="whitespace-nowrap">{ `${solution.name} (${solution.workflow_length})` }</span>
                     <button className="text-blue-500 hover:underline" onClick={() => downloadFile(solution.run_id, solution.cwl_name)}>CWL</button>
@@ -165,11 +171,13 @@ const GenerationResults: React.FC<any> = observer((props) => {
                         <div key={index} className="flip-card">
                           <div className={`border-2 border-red-200 rounded-xl p-2 shadow-lg flip-card-inner ${doShowTechBenchmarks ? 'is-flipped' : ''}`}>
                             <div className="flip-card-front">
-                              <div><span>Solution: { solution.name }</span></div>
+                              {buttonHide(solution)}
+                              <div><span>{ solution.name }</span></div>
                               { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
                             </div>
                             <div className="flip-card-back items-center justify-center h-screen">
-                              <div><span>Solution: { solution.name }</span></div>
+                              {buttonHide(solution)}
+                              <div><span>{ solution.name }</span></div>
                               <h1>Technical benchmarks</h1>
                               <hr />
                               <table className="mx-auto">
