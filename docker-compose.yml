@@ -30,7 +30,7 @@ services:
     image: ghcr.io/sanctuuary/restape:latest
     restart: always
     ports:
-      - "8080:8080"
+      - "4444:4444"
 
 networks:
   default:

@@ -1,6 +1,5 @@
 INSERT INTO public."domain" (id,unique_label,repo_url,tool_annotations_file_name,ontology_file_name,docker_image_url,public) VALUES
-	 (1,'proteomics','https://github.com/sanctuuary/APE_UseCases/tree/master/MassSpectometry','bio.tools_proteomics_domain.json','edam.owl',NULL,true),
-	 (2,'metabolomics','https://github.com/sanctuuary/APE_UseCases/tree/dev/Metabolomics','tool_annotations.json','edam.owl',NULL,true);
+	 (1,'proteomics','https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/config.json','bio.tools_proteomics_domain.json','edam.owl',NULL,true),
 INSERT INTO public."permission" (id,unique_label,permission_level,description) VALUES
 	 (1,'generate_workflows',0,'User can browse public domains and generate workflows.'),
 	 (2,'control_personal_history',1,'The user can create and edit personal history.'),
@@ -19,8 +18,6 @@ INSERT INTO public.domain_topics (domain_id,topic_id) VALUES
 	 (1,1),
 	 (1,2),
 	 (1,4),
-	 (2,2),
-	 (2,3);
 INSERT INTO public."role" (id,unique_label,description) VALUES
 	 (1,'user','A user that can generate workflows, browse history of generated workflows and upload and visualise benchmarking results'),
 	 (2,'admin','User that has full access to the platform.'),

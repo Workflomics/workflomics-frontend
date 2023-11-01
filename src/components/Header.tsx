@@ -15,14 +15,14 @@ export function Header({ platform_name, user_name }: Props) {
       <div className="text-5xl font-bold">
         <Link to="/"><img src={logo} alt="loading.." className='h-20 m-5 ml-10' /></Link>
       </div>
-      <div className="grid grid-flow-col auto-cols-max mt-5">
+      {/* <div className="grid grid-flow-col auto-cols-max mt-5">
         <h2 className='m-4'>
           {user_name}
         </h2>
         <div className="h-14 w-18">
           <img alt="profile" src="/user_profile.png" className="h-full w-full object-scale-down"/>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
