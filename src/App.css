@@ -76,19 +76,15 @@
   margin-right: 5px; /* Spacing between circles */
 }
 
-.square-filled {
+.square {
   display: flex;
   width: 12px;
   height: 12px;
-  background-color: #7bd310; /* Filled square color */
   border: 1px solid black; /* Border color to have the same size as the empty version */
 }
 
-.square-empty {
-  display: flex;
-  width: 12px;
-  height: 12px;
-  border: 1px solid black; /* Border color to represent an empty square */
+.square-filled {
+  background-color: #7bd310; /* Filled square color */
 }
 
 .connect-squares {
