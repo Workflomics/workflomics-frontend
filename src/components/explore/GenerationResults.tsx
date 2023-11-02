@@ -195,12 +195,14 @@ const GenerationResults: React.FC<any> = observer((props) => {
         )}
       </div>
       <div id="solutionModal" role="dialog" onClick={()=>toggleSolutionModal(modalSolution)} className={"modal modal-bottom sm:modal-middle" + (solutionModalOpen ? " modal-open" : "")}>
-        <div className="modal-box" onClick={(e)=>e.stopPropagation()}>    
+        <div className="modal-box" style={{maxWidth: "unset"}} onClick={(e)=>e.stopPropagation()}>    
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={()=>toggleSolutionModal(modalSolution)}>✕</button>
           </form>
           <h3 className="font-bold text-lg">{modalSolution?.name}</h3>
-          <img src={modalSolution?.image} alt={modalSolution?.name} />
+          <div>
+            <img style={{margin: "auto"}} src={modalSolution?.image} alt={modalSolution?.name} />
+          </div>
           <div className="modal-action">
             <form method="dialog">
               <button className="btn" onClick={()=>toggleSolutionModal(modalSolution)}>Close</button>
