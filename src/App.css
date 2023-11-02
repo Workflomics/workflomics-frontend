@@ -39,12 +39,16 @@ body.body-modal-open {
 /* Position the front and back side */
 .flip-card-front, .flip-card-back {
   position: absolute;
-  width: 90%;
-  height: 90%;
+  left:8px;
+  right:8px;
+  height: 97%;
   -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
   background-color: white; /* On mozilla, this needs to be opaque or the front side will show on the back side */
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Put the content of the back side on the back side */

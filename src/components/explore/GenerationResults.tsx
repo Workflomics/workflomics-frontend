@@ -91,7 +91,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
     </div>
 
   const buttonHide = (solution: WorkflowSolution) => 
-    <button className="btn btn-square btn-outline" style={{ position: "absolute", top: 0, left: 0, border: "none" }} onClick={() => { handleSelected(solution, false) }}>
+    <button className="btn btn-square btn-outline" style={{ position: "absolute", top: -8, left: 0, border: "none" }} onClick={() => { handleSelected(solution, false) }}>
       <Icon path={mdiEyeOff} size={1} />
     </button>
 
@@ -158,30 +158,32 @@ const GenerationResults: React.FC<any> = observer((props) => {
                           <div className={`border-2 border-red-200 rounded-xl p-2 shadow-lg flip-card-inner ${doShowTechBenchmarks ? 'is-flipped' : ''}`}>
                             <div className="flip-card-front">
                               {buttonHide(solution)}
-                              <div><span>{ solution.name }</span></div>
+                              <h3>{ solution.name }</h3>
                               <button onClick={()=>toggleSolutionModal(solution)}>
                                 { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
                               </button>
                             </div>
-                            <div className="flip-card-back items-center justify-center h-screen">
+                            <div className="flip-card-back items-center h-screen">
                               {buttonHide(solution)}
-                              <div><span>{ solution.name }</span></div>
-                              <h1>Technical benchmarks</h1>
+                              <h3>{ solution.name }</h3>
+                              <h4>Technical benchmarks</h4>
                               <hr />
-                              <table className="mx-auto">
-                                <tbody>
-                                  <tr>
-                                    <td style={{ textAlign: 'left' }}>Workflow length</td>
-                                    <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{ solution.workflow_length }</div></td>
-                                  </tr>
-                                  {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
-                                    <tr key={benchmark.benchmark_title}>
-                                      <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.benchmark_long_title}>{benchmark.benchmark_title}</td>
-                                      <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>
+                              <div style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", overflowX: "auto" }}>
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td style={{ textAlign: 'left' }}>Workflow length</td>
+                                      <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{ solution.workflow_length }</div></td>
                                     </tr>
-                                  ))}
-                                </tbody>
-                              </table>
+                                    {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
+                                      <tr key={benchmark.benchmark_title}>
+                                        <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.benchmark_long_title}>{benchmark.benchmark_title}</td>
+                                        <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
                             </div>
                           </div>
                         </div>
