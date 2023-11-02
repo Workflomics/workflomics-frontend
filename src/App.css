@@ -6,6 +6,10 @@
   text-align: center;
 }
 
+body.body-modal-open {
+  overflow: hidden;
+}
+
 .table :where(th, td) {
   white-space: normal;  /* override value set by tailwind (nowrap)... */ 
 }
@@ -48,32 +52,9 @@
   transform: rotateY(180deg);
 }
 
-.star-rating {
-  display: inline-block;
-  font-size: 0; /* Remove whitespace between inline-block elements */
-}
-
-.divided {
+.rating {
   display: flex;
   align-items: center;
-}
-.circle-filled {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background-color: #7bd310; /* Filled circle color */
-  border-radius: 50%;
-  margin-right: 5px; /* Spacing between circles */
-  border: 1px solid #7bd310; /* Border color to have the same size as the empty version */
-}
-
-.circle-empty {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 1px solid #7bd310; /* Border color to represent an empty circle */
-  border-radius: 50%;
-  margin-right: 5px; /* Spacing between circles */
 }
 
 .square {

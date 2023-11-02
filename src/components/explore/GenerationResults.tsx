@@ -15,6 +15,8 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const { exploreDataStore } = useStore();
   const workflowSolutions = exploreDataStore.workflowSolutions;
   const [doShowTechBenchmarks, setShowTechBenchmarks] = React.useState(false);
+  const [solutionModalOpen, setSolutionModalOpen] = React.useState(false);
+  const [modalSolution, setModalSolution] = React.useState(workflowSolutions[0]);
 
   const handleSelected = (solution: WorkflowSolution, checked: boolean) => {
     runInAction(() => {
@@ -77,44 +79,28 @@ const GenerationResults: React.FC<any> = observer((props) => {
     });
   }
 
-  //TODO: make into component and dispel hackiness
-  const getStars = (value: string) => {
-    if (value.length === 3 && value[1] === "/") {
-      const val = parseInt(value[0]);
-      const maxVal = parseInt(value[2]);
-      return (<div className="star-rating">
-        {[...Array(val)].map((e, i) => [<span key={i} className="circle-filled"></span>])}
-        {[...Array(maxVal-val)].map((e, i) => <span key={i} className="circle-empty"></span>)}
-      </div>);
-    }
-    return null;
-  };
-  const getRating = (benchmark: TechBenchmarkValue) => {
-    if (typeof benchmark.workflow === 'undefined') {
-      if (typeof benchmark.value === 'string') {
-        return <div className="flex gap-4 m-1 items-center">{benchmark.value} {getStars(benchmark.value)}</div>;
-      }
-      console.error("Unexpected benchmark.value type", typeof benchmark.value, benchmark);
-      return null;
-    } else {
-      const maxVal = benchmark.workflow.length;
-      const val = benchmark.workflow.reduce((acc, cur) => acc + cur.desirability_value, 0).toString();
-      const rating = `${val}/${maxVal}`
+  const Rating = (benchmark: TechBenchmarkValue) => 
+    <div className="flex gap-4 m-1 items-center">{benchmark.value}
+      <div className="rating">
+        {benchmark.workflow.map((e, i) => 
+        [
+          <span key={i} className={"tooltip square " + (e.desirability_value === 1 ? "square-filled" : "")} data-tip={e.description}> </span>,
+          i + 1 < benchmark.workflow.length ? <span className="connect-squares"></span> : null
+        ])}
+      </div>
+    </div>
 
-      return (<div className="flex gap-4 m-1 items-center">{rating}<div className="divided">
-                  {benchmark.workflow.map((e, i) => 
-                  [
-                    <span key={i} className={"tooltip square " + (e.desirability_value === 1 ? "square-filled" : "")} data-tip={e.description}> </span>,
-                    i + 1 < benchmark.workflow.length ? <span className="connect-squares"></span> : null
-                  ])}
-                </div>
-              </div>);
-    }
-  };
   const buttonHide = (solution: WorkflowSolution) => 
     <button className="btn btn-square btn-outline" style={{ position: "absolute", top: 0, left: 0, border: "none" }} onClick={() => { handleSelected(solution, false) }}>
       <Icon path={mdiEyeOff} size={1} />
     </button>
+
+  const toggleSolutionModal = (solution: WorkflowSolution) => {
+    setModalSolution(solution);
+    const isOpen = !solutionModalOpen
+    setSolutionModalOpen(isOpen);
+    isOpen ? document.body.classList.add('body-modal-open') : document.body.classList.remove('body-modal-open');
+  }
 
   return (
     <div>
@@ -173,7 +159,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
                             <div className="flip-card-front">
                               {buttonHide(solution)}
                               <div><span>{ solution.name }</span></div>
-                              { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                              <button onClick={()=>toggleSolutionModal(solution)}>
+                                { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                              </button>
                             </div>
                             <div className="flip-card-back items-center justify-center h-screen">
                               {buttonHide(solution)}
@@ -189,7 +177,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                   {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
                                     <tr key={benchmark.benchmark_title}>
                                       <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.benchmark_long_title}>{benchmark.benchmark_title}</td>
-                                      <td style={{ textAlign: 'right' }}>{getRating(benchmark)}</td>
+                                      <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>
                                     </tr>
                                   ))}
                                 </tbody>
@@ -203,6 +191,20 @@ const GenerationResults: React.FC<any> = observer((props) => {
           </div>
         </div>
         )}
+      </div>
+      <div id="solutionModal" role="dialog" onClick={()=>toggleSolutionModal(modalSolution)} className={"modal modal-bottom sm:modal-middle" + (solutionModalOpen ? " modal-open" : "")}>
+        <div className="modal-box" onClick={(e)=>e.stopPropagation()}>    
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={()=>toggleSolutionModal(modalSolution)}>✕</button>
+          </form>
+          <h3 className="font-bold text-lg">{modalSolution?.name}</h3>
+          <img src={modalSolution?.image} alt={modalSolution?.name} />
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn" onClick={()=>toggleSolutionModal(modalSolution)}>Close</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
