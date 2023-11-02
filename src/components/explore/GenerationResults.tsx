@@ -15,6 +15,8 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const { exploreDataStore } = useStore();
   const workflowSolutions = exploreDataStore.workflowSolutions;
   const [doShowTechBenchmarks, setShowTechBenchmarks] = React.useState(false);
+  const [solutionModalOpen, setSolutionModalOpen] = React.useState(false);
+  const [modalSolution, setModalSolution] = React.useState(workflowSolutions[0]);
 
   const handleSelected = (solution: WorkflowSolution, checked: boolean) => {
     runInAction(() => {
@@ -93,6 +95,13 @@ const GenerationResults: React.FC<any> = observer((props) => {
       <Icon path={mdiEyeOff} size={1} />
     </button>
 
+  const toggleSolutionModal = (solution: WorkflowSolution) => {
+    setModalSolution(solution);
+    const isOpen = !solutionModalOpen
+    setSolutionModalOpen(isOpen);
+    isOpen ? document.body.classList.add('body-modal-open') : document.body.classList.remove('body-modal-open');
+  }
+
   return (
     <div>
       <ExplorationProgress index={4} />
@@ -150,7 +159,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
                             <div className="flip-card-front">
                               {buttonHide(solution)}
                               <div><span>{ solution.name }</span></div>
-                              { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                              <button onClick={()=>toggleSolutionModal(solution)}>
+                                { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                              </button>
                             </div>
                             <div className="flip-card-back items-center justify-center h-screen">
                               {buttonHide(solution)}
@@ -180,6 +191,20 @@ const GenerationResults: React.FC<any> = observer((props) => {
           </div>
         </div>
         )}
+      </div>
+      <div id="solutionModal" role="dialog" onClick={()=>toggleSolutionModal(modalSolution)} className={"modal modal-bottom sm:modal-middle" + (solutionModalOpen ? " modal-open" : "")}>
+        <div className="modal-box" onClick={(e)=>e.stopPropagation()}>    
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={()=>toggleSolutionModal(modalSolution)}>✕</button>
+          </form>
+          <h3 className="font-bold text-lg">{modalSolution?.name}</h3>
+          <img src={modalSolution?.image} alt={modalSolution?.name} />
+          <div className="modal-action">
+            <form method="dialog">
+              <button className="btn" onClick={()=>toggleSolutionModal(modalSolution)}>Close</button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );

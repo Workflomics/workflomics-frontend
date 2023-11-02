@@ -6,6 +6,10 @@
   text-align: center;
 }
 
+body.body-modal-open {
+  overflow: hidden;
+}
+
 .table :where(th, td) {
   white-space: normal;  /* override value set by tailwind (nowrap)... */ 
 }
