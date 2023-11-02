@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import './HorizontalScroll.css'; 
 import { TechBenchmarkValue, TechBenchmarks } from '../../stores/BenchmarkTypes';
 import Icon from '@mdi/react';
-import { mdiEyeOff } from '@mdi/js';
+import { mdiDownload, mdiEyeOff } from '@mdi/js';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
@@ -91,7 +91,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
     </div>
 
   const buttonHide = (solution: WorkflowSolution) => 
-    <button className="btn btn-square btn-outline" style={{ position: "absolute", top: -8, left: 0, border: "none" }} onClick={() => { handleSelected(solution, false) }}>
+    <button className="btn btn-square btn-outline" style={{ position: "absolute", top: 0, left: 0, border: "none" }} onClick={() => { handleSelected(solution, false) }}>
       <Icon path={mdiEyeOff} size={1} />
     </button>
 
@@ -161,6 +161,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
                               <h3>{ solution.name }</h3>
                               <button onClick={()=>toggleSolutionModal(solution)}>
                                 { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
+                                <a role='button' href={solution.image} download={solution.name + ".png"} className="btn btn-square btn-outline" style={{ position: "absolute", bottom: 0, left: 0, border: "none" }} onClick={(e) => e.stopPropagation()}>
+                                  <Icon path={mdiDownload} size={1} />
+                                </a>
                               </button>
                             </div>
                             <div className="flip-card-back items-center h-screen">
