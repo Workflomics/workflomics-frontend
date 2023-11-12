@@ -15,15 +15,15 @@ authors:
     email: p.kok@esciencecenter.nl
     affiliation: Netherlands eScience Center, Netherlands
     orcid: 'https://orcid.org/0000-0002-6630-7326'
-  - family-names: Felipe
-    given-names: Morato
-    email: felipe.morato@csc.fi
-    affiliation: CSC – IT Center for Science, Finland
   - family-names: Nauman
     given-names: Ahmed
     email: n.ahmed@esciencecenter.nl
     affiliation: Netherlands eScience Center, Netherlands
     orcid: 'https://orcid.org/0000-0003-3559-9941'
+  - family-names: Felipe
+    given-names: Morato
+    email: felipe.morato@csc.fi
+    affiliation: CSC – IT Center for Science, Finland
   - family-names: Anna-Lena
     given-names: Lamprecht
     email: anna-lena.lamprecht@uni-potsdam.de
@@ -49,6 +49,6 @@ keywords:
   - bioinformatics
   - workflow benchmarking
 license: Apache-2.0
-commit: bcf17652a192f1dd7d7201b555b03ef7d77a50eb
+commit: bb02154d29104b2667006e12d37239a3d382b75d
 version: 0.1.1
 date-released: '2023-11-12'
