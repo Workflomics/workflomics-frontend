@@ -45,6 +45,6 @@ keywords:
   - bioinformatics
   - workflow benchmarking
 license: Apache-2.0
-commit: 8ece7578b307794ba5332f71bd3170db2b616ab9
-version: 0.1.0
-date-released: '2023-10-27'
+commit: bcf17652a192f1dd7d7201b555b03ef7d77a50eb
+version: 0.1.1
+date-released: '2023-11-12'
