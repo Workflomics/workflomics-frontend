@@ -37,7 +37,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
   };
 
   const downloadFile = (run_id: string, cwl_name: string) => {
-    fetch(`/ape/get_cwl?run_id=${run_id}&file_name=${cwl_name}`)
+    fetch(`/ape/cwl?run_id=${run_id}&file_name=${cwl_name}`)
     .then(response => response.text())
     .then(data => {
       const blob = new Blob([data], { type: 'text/plain' });
@@ -54,7 +54,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
   }
 
   const downloadInputFile = (run_id: string) => {
-    fetch(`/ape/get_cwl_input?run_id=${run_id}`)
+    fetch(`/ape/cwl_input?run_id=${run_id}`)
     .then(response => response.text())
     .then(data => {
       const blob = new Blob([data], { type: 'text/plain' });
@@ -82,10 +82,10 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const Rating = (benchmark: TechBenchmarkValue) => 
     <div className="flex gap-4 m-1 items-center">{benchmark.value}
       <div className="rating">
-        {benchmark.workflow.map((e, i) => 
+        {benchmark.steps.map((e, i) => 
         [
           <span key={i} className={"tooltip square " + (e.desirability_value === 1 ? "square-filled" : "")} data-tip={e.description}> </span>,
-          i + 1 < benchmark.workflow.length ? <span className="connect-squares"></span> : null
+          i + 1 < benchmark.steps.length ? <span className="connect-squares"></span> : null
         ])}
       </div>
     </div>

@@ -50,7 +50,7 @@ export class TaxStore {
     this.isLoading = true;
     this.error = "";
 
-    const responseOperations = await fetch(`/ape/get_tools?config_path=${config_path}`);
+    const responseOperations = await fetch(`/ape/tools_taxonomy?config_path=${config_path}`);
     const resultOperations = await responseOperations.json();
     runInAction(() => {
       this.isLoading = false;
@@ -67,7 +67,7 @@ export class TaxStore {
   }
 
   async fetchDataDimensions(config_path: string) {
-    const responseData = await fetch(`/ape/get_data?config_path=${config_path}`);
+    const responseData = await fetch(`/ape/data_taxonomy?config_path=${config_path}`);
     const resultData = await responseData.json();
     runInAction(() => {
       this.isLoading = false;

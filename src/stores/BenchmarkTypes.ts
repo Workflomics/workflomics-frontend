@@ -8,7 +8,7 @@ export type TechBenchmarkValue = {
   benchmark_description: string,
   value: string | number | boolean,
   desirability_value: number,
-  workflow: BenchmarkValue[],
+  steps: BenchmarkValue[],
 }
 
 export type TechBenchmarks = {
