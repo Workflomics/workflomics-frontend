@@ -30,10 +30,12 @@ export type ConstraintInstance = {
 }
 
 export type WorkflowSolution = {
-  cwl_name: string,
   run_id: string,
   workflow_length: number,
-  name: string,
+  workflow_name: string,
+  descriptive_name: string,
+  description: string,
+  cwl_name: string,
   figure_name: string,
   benchmark_file: string,
   isSelected: boolean,

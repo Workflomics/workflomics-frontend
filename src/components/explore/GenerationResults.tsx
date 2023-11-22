@@ -18,14 +18,14 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const [solutionModalOpen, setSolutionModalOpen] = React.useState(false);
   const [modalSolution, setModalSolution] = React.useState(workflowSolutions[0]);
 
-  const handleSelected = (solution: WorkflowSolution, checked: boolean) => {
+  const handleSelected = (workflow: WorkflowSolution, checked: boolean) => {
     runInAction(() => {
-      solution.isSelected = checked;
-      if (checked && solution.image === undefined) {
-        exploreDataStore.loadImage(solution);
+      workflow.isSelected = checked;
+      if (checked && workflow.image === undefined) {
+        exploreDataStore.loadImage(workflow);
       }
-      if (checked && solution.benchmarkData === undefined) {
-        exploreDataStore.loadBenchmarkData(solution);
+      if (checked && workflow.benchmarkData === undefined) {
+        exploreDataStore.loadBenchmarkData(workflow);
       }
     });
   };
@@ -73,7 +73,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const compareSelected = () => {
     runInAction(() => {
       const selectedWorkflows: WorkflowSolution[] = workflowSolutions.filter(
-        (solution: WorkflowSolution) => solution.isSelected);
+        (workflow: WorkflowSolution) => workflow.isSelected);
       exploreDataStore.selectedWorkflowSolutions = selectedWorkflows;
       navigate('/benchmark/visualize');
     });
@@ -90,13 +90,13 @@ const GenerationResults: React.FC<any> = observer((props) => {
       </div>
     </div>
 
-  const buttonHide = (solution: WorkflowSolution) => 
-    <button className="btn btn-square btn-outline" style={{ position: "absolute", top: 0, left: 0, border: "none" }} onClick={() => { handleSelected(solution, false) }}>
+  const buttonHide = (workflow: WorkflowSolution) => 
+    <button className="btn btn-square btn-outline" style={{ position: "absolute", top: 0, left: 0, border: "none" }} onClick={() => { handleSelected(workflow, false) }}>
       <Icon path={mdiEyeOff} size={1} />
     </button>
 
-  const toggleSolutionModal = (solution: WorkflowSolution) => {
-    setModalSolution(solution);
+  const toggleSolutionModal = (workflow: WorkflowSolution) => {
+    setModalSolution(workflow);
     const isOpen = !solutionModalOpen
     setSolutionModalOpen(isOpen);
     isOpen ? document.body.classList.add('body-modal-open') : document.body.classList.remove('body-modal-open');
@@ -132,13 +132,13 @@ const GenerationResults: React.FC<any> = observer((props) => {
                       onChange={(event) => { toggleAll(event.target.checked) }}/>
                   </div>
                 </li>
-              { workflowSolutions.map((solution: WorkflowSolution, index: number) => (
+              { workflowSolutions.map((workflow: WorkflowSolution, index: number) => (
                 <li key={index}>
                   <div className="flex items-center space-x-2">
-                    <input type="checkbox" className="h-6 w-6 m-2" checked={solution.isSelected}
-                      onChange={(event) => { handleSelected(solution, event.target.checked) }}/>
-                    <span className="whitespace-nowrap">{ `${solution.name} (${solution.workflow_length})` }</span>
-                    <button className="text-blue-500 hover:underline" onClick={() => downloadFile(solution.run_id, solution.cwl_name)}>CWL</button>
+                    <input type="checkbox" className="h-6 w-6 m-2" checked={workflow.isSelected}
+                      onChange={(event) => { handleSelected(workflow, event.target.checked) }}/>
+                    <span className="whitespace-nowrap">{ `${workflow.workflow_name} (${workflow.workflow_length})` }</span>
+                    <button className="text-blue-500 hover:underline" onClick={() => downloadFile(workflow.run_id, workflow.cwl_name)}>CWL</button>
                   </div>
                 </li>
               ))}
@@ -152,23 +152,23 @@ const GenerationResults: React.FC<any> = observer((props) => {
           <div className="horizontal-scroll-container">
             <div className="horizontal-scroll-content">
               <div className="flex justify-center gap-8">
-                  { workflowSolutions.filter((solution: WorkflowSolution) => solution.isSelected)
-                      .map((solution: WorkflowSolution, index: number) => (
+                  { workflowSolutions.filter((workflow: WorkflowSolution) => workflow.isSelected)
+                      .map((workflow: WorkflowSolution, index: number) => (
                         <div key={index} className="flip-card">
                           <div className={`border-2 border-red-200 rounded-xl p-2 shadow-lg flip-card-inner ${doShowTechBenchmarks ? 'is-flipped' : ''}`}>
                             <div className="flip-card-front">
-                              {buttonHide(solution)}
-                              <h3>{ solution.name }</h3>
-                              <button onClick={()=>toggleSolutionModal(solution)}>
-                                { (solution.image != null) && <img src={solution.image} alt={solution.name} /> }
-                                <a role='button' href={solution.image} download={solution.name + ".png"} className="btn btn-square btn-outline" style={{ position: "absolute", bottom: 0, left: 0, border: "none" }} onClick={(e) => e.stopPropagation()}>
+                              {buttonHide(workflow)}
+                              <h3>{ workflow.workflow_name }</h3>
+                              <button onClick={()=>toggleSolutionModal(workflow)}>
+                                { (workflow.image != null) && <img src={workflow.image} alt={workflow.workflow_name} /> }
+                                <a type='button' href={workflow.image} download={workflow.workflow_name + ".svg"} className="btn btn-square btn-outline" style={{ position: "absolute", bottom: 0, left: 0, border: "none" }} onClick={(e) => e.stopPropagation()}>
                                   <Icon path={mdiDownload} size={1} />
                                 </a>
                               </button>
                             </div>
                             <div className="flip-card-back items-center h-screen">
-                              {buttonHide(solution)}
-                              <h3>{ solution.name }</h3>
+                              {buttonHide(workflow)}
+                              <h3>{ workflow.descriptive_name }</h3>
                               <h4>Technical benchmarks</h4>
                               <hr />
                               <div style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", overflowX: "auto" }}>
@@ -176,9 +176,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                   <tbody>
                                     <tr>
                                       <td style={{ textAlign: 'left' }}>Workflow length</td>
-                                      <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{ solution.workflow_length }</div></td>
+                                      <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{ workflow.workflow_length }</div></td>
                                     </tr>
-                                    {solution.benchmarkData !== undefined && solution.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
+                                    {workflow.benchmarkData !== undefined && workflow.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
                                       <tr key={benchmark.benchmark_title}>
                                         <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.benchmark_long_title}>{benchmark.benchmark_title}</td>
                                         <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>
@@ -202,9 +202,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={()=>toggleSolutionModal(modalSolution)}>✕</button>
           </form>
-          <h3 className="font-bold text-lg">{modalSolution?.name}</h3>
+          <h3 className="font-bold text-lg">{modalSolution?.descriptive_name}</h3>
           <div>
-            <img style={{margin: "auto"}} src={modalSolution?.image} alt={modalSolution?.name} />
+            <img style={{margin: "auto"}} src={modalSolution?.image} alt={modalSolution?.descriptive_name} />
           </div>
           <div className="modal-action">
             <form method="dialog">

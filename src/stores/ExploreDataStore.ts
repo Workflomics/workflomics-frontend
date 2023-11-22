@@ -199,7 +199,7 @@ export class ExploreDataStore {
 
   loadImage(solution: WorkflowSolution) {
     const { run_id, figure_name } = solution;
-    fetch(`/ape/image?run_id=${run_id}&file_name=${figure_name}&format=png`)
+    fetch(`/ape/image?run_id=${run_id}&file_name=${figure_name}&format=svg`)
       .then(response => response.blob())
       .then(blob => {
         const url = URL.createObjectURL(blob);
