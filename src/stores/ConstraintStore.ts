@@ -29,7 +29,7 @@ export class ConstraintStore {
     // "https://github.com/sanctuuary/APE_UseCases/tree/master/MassSpectometry"
     // "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/MassSpectometry/config.json"
 
-    const response = await fetch(`/ape/get_constraints?config_path=${config_path}`);
+    const response = await fetch(`/ape/constraints?config_path=${config_path}`);
     const result = await response.json();
     runInAction(() => {
       this.isLoading = false;

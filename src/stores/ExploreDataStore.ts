@@ -199,7 +199,7 @@ export class ExploreDataStore {
 
   loadImage(solution: WorkflowSolution) {
     const { run_id, figure_name } = solution;
-    fetch(`/ape/get_image?run_id=${run_id}&file_name=${figure_name}`)
+    fetch(`/ape/image?run_id=${run_id}&file_name=${figure_name}&format=svg`)
       .then(response => response.blob())
       .then(blob => {
         const url = URL.createObjectURL(blob);
@@ -213,7 +213,7 @@ export class ExploreDataStore {
 
   loadBenchmarkData(solution: WorkflowSolution) {
     const { run_id, benchmark_file } = solution;
-    fetch(`/ape/get_bench?run_id=${run_id}&file_name=${benchmark_file}`)
+    fetch(`/ape/design_time_benchmarks?run_id=${run_id}&file_name=${benchmark_file}`)
       .then(response => response.json())
       .then(data => {
         solution.benchmarkData = data;
