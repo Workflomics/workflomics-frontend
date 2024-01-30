@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Benchmark, BenchmarkValue, BenchmarkTable, sampleBenchmarks, TechBenchmark2, TechBenchmarkValue } from '../../stores/BenchmarkTypes';
-import { WorkflowSolution } from '../../stores/WorkflowTypes';
+import { BenchmarkValue, TechBenchmark2 } from '../../stores/BenchmarkTypes';
 import * as d3 from 'd3';
-import { useStore } from '../../store';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
-  const { exploreDataStore } = useStore();
-  const workflows: WorkflowSolution[] = exploreDataStore.selectedWorkflowSolutions;
   const [benchmarkValues, setBenchmarkValues] = React.useState<TechBenchmark2[]>([]);
 
   function mapValueToColor(value: number) {
@@ -77,7 +73,8 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
               return {
                 description: benchmark.benchmark_title,
                 value: benchmark.value,
-                desirability_value: benchmark.desirability_value
+                desirability_value: benchmark.desirability_value,
+                detailed_value: "",
               };
             });
             rows.push(tableRow(workflow.workflowName, `${workflow.workflowName}-aggregated`, topBenchmarkValues));
