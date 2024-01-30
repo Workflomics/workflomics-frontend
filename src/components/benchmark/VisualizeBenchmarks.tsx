@@ -42,12 +42,24 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
   const tableRow = (label: string, key: string, benchmarkValues: BenchmarkValue[], isWorkflow: boolean) => {
     const isExpanded: boolean = expandedRows[key];
     return (<tr key={key}>
+      {/* Expand button */}
       <td style={{padding: "8px"}}>{isWorkflow ? 
         (<button className='btn btn-primary btn-square btn-sm' onClick={() => handleExpand(key)}>{isExpanded ? '-' : '+'}</button>) : []}</td>
+
+      {/* Workflow / tool label */}
       <td style={{padding: "8px"}}>{label}</td>
+
+      {/* Benchmark values */}
       { benchmarkValues.map((bmv: BenchmarkValue, index: number) => {
         const color = mapValueToColor(bmv.desirability_value);
-        return (<td key={index} style={{textAlign: "center", padding: "8px"}}><span style={{backgroundColor: color}} className="benchmark-value">{bmv.value.toString()}</span></td>);
+        const tooltip = bmv.detailed_value;
+        return (<td key={index} style={{textAlign: "center", padding: "8px"}}>
+          <span style={{backgroundColor: color}} 
+                className={`benchmark-value ${tooltip ? 'tooltip' : ''}`}
+                {...(tooltip ? { 'data-tip': tooltip } : {})}>
+            {bmv.value.toString()}
+          </span>
+        </td>);
       })}
     </tr>);
   }
