@@ -51,10 +51,8 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
 
       {/* Upload button for json file */}
       <div className="flex justify-center">
-        <label htmlFor="file-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-          <span>Upload JSON file</span>
-          <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} />
-        </label>
+        <label htmlFor="file-upload" className="btn btn-primary">Upload JSON file</label>
+        <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} />
       </div>
 
       {/* Results table */}
