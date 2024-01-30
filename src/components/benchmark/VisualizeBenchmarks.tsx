@@ -11,9 +11,9 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
   const [benchmarkValues, setBenchmarkValues] = React.useState<TechBenchmark2[]>([]);
 
   function mapValueToColor(value: number) {
-    const colorScale = d3.scaleSequential()
+    const colorScale = d3.scaleQuantize<string>()
       .domain([0, 1])
-      .interpolator(d3.interpolateRdYlGn);
+      .range(["#ffffff", "#c0e6cb", "#7fcc99", "#28b168"]);
     const limitRange = d3.scaleLinear()
       .domain([0, 1])
       .range([0.2, 0.8]);
