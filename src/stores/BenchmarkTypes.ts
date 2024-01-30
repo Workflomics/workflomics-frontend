@@ -2,10 +2,23 @@
 import { WorkflowSolution } from './WorkflowTypes';
 
 
+export type TechBenchmark2 = {
+  workflowName: string,
+  executor: string,
+  runID: string,
+  inputs: {
+    [input_id: string]: {
+      filename: string
+    }
+  },
+  benchmarks: TechBenchmarkValue[]
+}
+
 export type TechBenchmarkValue = {
   benchmark_title: string,
   benchmark_long_title: string,
   benchmark_description: string,
+  benchmark_unit: string,
   value: string | number | boolean,
   desirability_value: number,
   steps: BenchmarkValue[],
