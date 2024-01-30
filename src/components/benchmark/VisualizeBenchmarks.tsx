@@ -36,6 +36,16 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
     }
   }
 
+  const tableRow = (label: string, key: string, benchmarkValues: BenchmarkValue[]) => {
+    return (<tr key={key}>
+      <td>{label}</td>
+      { benchmarkValues.map((bmv: BenchmarkValue, index: number) => {
+        const color = mapValueToColor(bmv.desirability_value);
+        return (<td key={index} style={{backgroundColor: color}}>{bmv.value.toString()}</td>);
+      })}
+    </tr>);
+  }
+
   return (<div>
     <div className="m-20">
 
@@ -53,32 +63,36 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
           <thead>
             <tr>
               <th></th>
-              <th>Workflow length</th>
-              <th>Executed steps</th>
-              <th>Number of proteins</th>
-              <th>Availability</th>
-
-              {/* { benchmarks.map(benchmark => (<th key={benchmark.id}>{benchmark.label}</th>)) } */}
+              { benchmarkValues[0]?.benchmarks.map((benchmark, index) => 
+                (<th key={index}>
+                  {benchmark.benchmark_title}
+                  {benchmark.benchmark_unit ? <span> ({benchmark.benchmark_unit})</span> : ''}
+                </th>))
+              }
             </tr>
           </thead>
           <tbody>
           { benchmarkValues.map(workflow => {
-            const key = workflow.workflowName;
-            // Look up the benchmark values for this workflow
-            const bmValues = benchmarkValues.find(bm => bm.workflowName === key);
-            if (!bmValues) {
-              return (<tr key={workflow.workflowName}>
-                <td>{ workflow.workflowName }</td>
-                <td>No benchmark values found</td>
-              </tr>);
+            const rows = [];
+            // First row is the aggregated values
+            const topBenchmarkValues = workflow.benchmarks.map((benchmark) => {
+              return {
+                description: benchmark.benchmark_title,
+                value: benchmark.value,
+                desirability_value: benchmark.desirability_value
+              };
+            });
+            rows.push(tableRow(workflow.workflowName, `${workflow.workflowName}-aggregated`, topBenchmarkValues));
+
+            // For every component in the workflow, collect the benchmark values (they are stored benchmark-first)
+            const workflowLength = workflow.benchmarks[0].steps.length;
+            for (let i = 0; i < workflowLength; i++) {
+              const benchmarkValues = workflow.benchmarks.map(benchmark => benchmark.steps[i]);
+              const benchmarkLabel = benchmarkValues[0].description;
+              const key = `${workflow.workflowName}-${benchmarkLabel}`;
+              rows.push(tableRow(benchmarkLabel, key, benchmarkValues));
             }
-            return (<tr key={workflow.workflowName}>
-              <td>{ workflow.workflowName }</td>
-              { bmValues.benchmarks.map((bm: TechBenchmarkValue) => {
-                const color = mapValueToColor(bm.desirability_value);
-                return (<td key={key} style={{backgroundColor: color}}>{bm.value.toString()}</td>);
-              })}
-            </tr>);
+            return <React.Fragment key={workflow.workflowName}>{rows}</React.Fragment>;
           })}
           </tbody>
         </table>
