@@ -2,9 +2,11 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { BenchmarkValue, TechBenchmark2 } from '../../stores/BenchmarkTypes';
 import * as d3 from 'd3';
+import './VisualizeBenchmarks.css';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
   const [benchmarkValues, setBenchmarkValues] = React.useState<TechBenchmark2[]>([]);
+  const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
 
   function mapValueToColor(value: number) {
     const colorScale = d3.scaleQuantize<string>()
@@ -20,24 +22,32 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Convert file to json
+      // Read and parse file
       const reader = new FileReader();
       reader.readAsText(file, "UTF-8");
       reader.onload = (evt) => {
         const content = evt.target?.result;
-        const json = JSON.parse(content as string);
-        console.log(json);
-        setBenchmarkValues(json);
+        const obj = JSON.parse(content as string);
+        setBenchmarkValues(obj);
       }
     }
   }
 
-  const tableRow = (label: string, key: string, benchmarkValues: BenchmarkValue[]) => {
+  const handleExpand = (rowKey: string) => {
+    const newState = { ...expandedRows };
+    newState[rowKey] = !newState[rowKey];
+    setExpandedRows(newState);
+  };
+
+  const tableRow = (label: string, key: string, benchmarkValues: BenchmarkValue[], isWorkflow: boolean) => {
+    const isExpanded: boolean = expandedRows[key];
     return (<tr key={key}>
-      <td>{label}</td>
+      <td style={{padding: "8px"}}>{isWorkflow ? 
+        (<button className='btn btn-primary btn-square btn-sm' onClick={() => handleExpand(key)}>{isExpanded ? '-' : '+'}</button>) : []}</td>
+      <td style={{padding: "8px"}}>{label}</td>
       { benchmarkValues.map((bmv: BenchmarkValue, index: number) => {
         const color = mapValueToColor(bmv.desirability_value);
-        return (<td key={index} style={{backgroundColor: color}}>{bmv.value.toString()}</td>);
+        return (<td key={index} style={{textAlign: "center", padding: "8px"}}><span style={{backgroundColor: color}} className="benchmark-value">{bmv.value.toString()}</span></td>);
       })}
     </tr>);
   }
@@ -57,8 +67,9 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
           <thead>
             <tr>
               <th></th>
+              <th></th>
               { benchmarkValues[0]?.benchmarks.map((benchmark, index) => 
-                (<th key={index}>
+                (<th key={index} style={{textAlign: 'center'}}>
                   {benchmark.benchmark_title}
                   {benchmark.benchmark_unit ? <span> ({benchmark.benchmark_unit})</span> : ''}
                 </th>))
@@ -77,15 +88,18 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
                 detailed_value: "",
               };
             });
-            rows.push(tableRow(workflow.workflowName, `${workflow.workflowName}-aggregated`, topBenchmarkValues));
+            const rowKey: string = `${workflow.workflowName}-aggregated`;
+            rows.push(tableRow(workflow.workflowName, rowKey, topBenchmarkValues, true));
 
-            // For every component in the workflow, collect the benchmark values (they are stored benchmark-first)
-            const workflowLength = workflow.benchmarks[0].steps.length;
-            for (let i = 0; i < workflowLength; i++) {
-              const benchmarkValues = workflow.benchmarks.map(benchmark => benchmark.steps[i]);
-              const benchmarkLabel = benchmarkValues[0].description;
-              const key = `${workflow.workflowName}-${benchmarkLabel}`;
-              rows.push(tableRow(benchmarkLabel, key, benchmarkValues));
+            if (expandedRows[rowKey]) {
+              // For every component in the workflow, collect the benchmark values (they are stored benchmark-first)
+              const workflowLength = workflow.benchmarks[0].steps.length;
+              for (let i = 0; i < workflowLength; i++) {
+                const benchmarkValues = workflow.benchmarks.map(benchmark => benchmark.steps[i]);
+                const benchmarkLabel = benchmarkValues[0].description;
+                const key = `${workflow.workflowName}-${benchmarkLabel}`;
+                rows.push(tableRow(benchmarkLabel, key, benchmarkValues, false));
+              }
             }
             return <React.Fragment key={workflow.workflowName}>{rows}</React.Fragment>;
           })}
