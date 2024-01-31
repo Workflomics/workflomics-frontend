@@ -8,15 +8,11 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
   const [benchmarkValues, setBenchmarkValues] = React.useState<BenchmarkRun[]>([]);
   const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
 
-  function mapValueToColor(value: number) {
+  const mapValueToColor = (value: number) => {
     const colorScale = d3.scaleQuantize<string>()
-      .domain([0, 1])
-      .range(["#ffffff", "#c0e6cb", "#7fcc99", "#28b168"]);
-    const limitRange = d3.scaleLinear()
-      .domain([0, 1])
-      .range([0.2, 0.8]);
-    const color = colorScale(limitRange(value));
-    return color;
+      .domain([-1, 1])
+      .range(["#fc9d5a", "#ffb582", "#ffceab", "#ffe6d5", "#ffffff", "#d7f3d1", "#aee5a3", "#81d876", "#48c946"]);
+    return colorScale(value);
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
