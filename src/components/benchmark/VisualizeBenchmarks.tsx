@@ -37,19 +37,20 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
 
   const tableRow = (label: string, key: string, benchmarkValues: BenchmarkValue[], isWorkflow: boolean) => {
     const isExpanded: boolean = expandedRows[key];
+    const bgColor = isWorkflow ? 'beige' : 'white';
     return (<tr key={key}>
       {/* Expand button */}
-      <td style={{padding: "8px"}}>{isWorkflow ? 
+      <td style={{padding: "8px", backgroundColor: bgColor}}>{isWorkflow ? 
         (<button className='btn btn-primary btn-square btn-sm' onClick={() => handleExpand(key)}>{isExpanded ? '-' : '+'}</button>) : []}</td>
 
       {/* Workflow / tool label */}
-      <td style={{padding: "8px"}}>{label}</td>
+      <td style={{padding: "8px", backgroundColor: bgColor}}>{label}</td>
 
       {/* Benchmark values */}
       { benchmarkValues.map((bmv: BenchmarkValue, index: number) => {
         const color = mapValueToColor(bmv.desirability);
         const tooltip = bmv.tooltip;
-        return (<td key={index} style={{textAlign: "center", padding: "8px"}}>
+        return (<td key={index} style={{textAlign: "center", padding: "8px", backgroundColor: bgColor}}>
           <span style={{backgroundColor: color}} 
                 className={`benchmark-value ${tooltip ? 'tooltip' : ''}`}
                 {...(tooltip ? { 'data-tip': tooltip } : {})}>
@@ -87,6 +88,7 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
           <tbody>
           { benchmarkValues.map(workflow => {
             const rows = [];
+
             // First row is the aggregated values
             const aggregateBenchmarkValues = workflow.benchmarks.map((benchmark) => {
               return {
