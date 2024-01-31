@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { BenchmarkValue, TechBenchmark2 } from '../../stores/BenchmarkTypes';
+import { BenchmarkValue, BenchmarkRun } from '../../stores/BenchmarkTypes';
 import * as d3 from 'd3';
 import './VisualizeBenchmarks.css';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
-  const [benchmarkValues, setBenchmarkValues] = React.useState<TechBenchmark2[]>([]);
+  const [benchmarkValues, setBenchmarkValues] = React.useState<BenchmarkRun[]>([]);
   const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
 
   function mapValueToColor(value: number) {
@@ -51,8 +51,8 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
 
       {/* Benchmark values */}
       { benchmarkValues.map((bmv: BenchmarkValue, index: number) => {
-        const color = mapValueToColor(bmv.desirability_value);
-        const tooltip = bmv.detailed_value;
+        const color = mapValueToColor(bmv.desirability);
+        const tooltip = bmv.tooltip;
         return (<td key={index} style={{textAlign: "center", padding: "8px"}}>
           <span style={{backgroundColor: color}} 
                 className={`benchmark-value ${tooltip ? 'tooltip' : ''}`}
@@ -82,8 +82,8 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
               <th></th>
               { benchmarkValues[0]?.benchmarks.map((benchmark, index) => 
                 (<th key={index} style={{textAlign: 'center'}}>
-                  {benchmark.benchmark_title}
-                  {benchmark.benchmark_unit ? <span> ({benchmark.benchmark_unit})</span> : ''}
+                  {benchmark.title}
+                  {benchmark.unit ? <span> ({benchmark.unit})</span> : ''}
                 </th>))
               }
             </tr>
@@ -92,23 +92,22 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
           { benchmarkValues.map(workflow => {
             const rows = [];
             // First row is the aggregated values
-            const topBenchmarkValues = workflow.benchmarks.map((benchmark) => {
+            const aggregateBenchmarkValues = workflow.benchmarks.map((benchmark) => {
               return {
-                description: benchmark.benchmark_title,
-                value: benchmark.value,
-                desirability_value: benchmark.desirability_value,
-                detailed_value: "",
+                label: benchmark.title,
+                value: benchmark.aggregate_value.value,
+                desirability: benchmark.aggregate_value.desirability,
               };
             });
             const rowKey: string = `${workflow.workflowName}-aggregated`;
-            rows.push(tableRow(workflow.workflowName, rowKey, topBenchmarkValues, true));
+            rows.push(tableRow(workflow.workflowName, rowKey, aggregateBenchmarkValues, true));
 
             if (expandedRows[rowKey]) {
               // For every component in the workflow, collect the benchmark values (they are stored benchmark-first)
               const workflowLength = workflow.benchmarks[0].steps.length;
               for (let i = 0; i < workflowLength; i++) {
                 const benchmarkValues = workflow.benchmarks.map(benchmark => benchmark.steps[i]);
-                const benchmarkLabel = benchmarkValues[0].description;
+                const benchmarkLabel = benchmarkValues[0].label as string;
                 const key = `${workflow.workflowName}-${benchmarkLabel}`;
                 rows.push(tableRow(benchmarkLabel, key, benchmarkValues, false));
               }

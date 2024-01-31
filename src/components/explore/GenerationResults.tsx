@@ -6,7 +6,7 @@ import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
 import { useNavigate } from 'react-router-dom';
 import './HorizontalScroll.css'; 
-import { TechBenchmarkValue, TechBenchmarks } from '../../stores/BenchmarkTypes';
+import { WorkflowBenchmark } from '../../stores/BenchmarkTypes';
 import Icon from '@mdi/react';
 import { mdiDownload, mdiEyeOff } from '@mdi/js';
 
@@ -79,12 +79,12 @@ const GenerationResults: React.FC<any> = observer((props) => {
     });
   }
 
-  const Rating = (benchmark: TechBenchmarkValue) => 
-    <div className="flex gap-4 m-1 items-center">{benchmark.value}
+  const Rating = (benchmark: WorkflowBenchmark) => 
+    <div className="flex gap-4 m-1 items-center">{benchmark.aggregate_value.value}
       <div className="rating">
         {benchmark.steps.map((e, i) => 
         [
-          <span key={i} className={"tooltip square " + (e.desirability_value === 1 ? "square-filled" : "")} data-tip={e.description}> </span>,
+          <span key={i} className={"tooltip square " + (e.desirability === 1 ? "square-filled" : "")} data-tip={e.tooltip}> </span>,
           i + 1 < benchmark.steps.length ? <span className="connect-squares"></span> : null
         ])}
       </div>
@@ -178,9 +178,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                       <td style={{ textAlign: 'left' }}>Workflow length</td>
                                       <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{ workflow.workflow_length }</div></td>
                                     </tr>
-                                    {workflow.benchmarkData !== undefined && workflow.benchmarkData.benchmarks.map((benchmark: TechBenchmarkValue) => (
-                                      <tr key={benchmark.benchmark_title}>
-                                        <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.benchmark_long_title}>{benchmark.benchmark_title}</td>
+                                    {workflow.benchmarkData !== undefined && workflow.benchmarkData.benchmarks.map((benchmark: WorkflowBenchmark) => (
+                                      <tr key={benchmark.title}>
+                                        <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.long_title}>{benchmark.title}</td>
                                         <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>
                                       </tr>
                                     ))}

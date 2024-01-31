@@ -1,5 +1,5 @@
 
-export type TechBenchmark2 = {
+export type BenchmarkRun = {
   workflowName: string,
   executor: string,
   runID: string,
@@ -8,46 +8,26 @@ export type TechBenchmark2 = {
       filename: string
     }
   },
-  benchmarks: TechBenchmarkValue[]
+  benchmarks: WorkflowBenchmark[]
 }
 
-export type TechBenchmarkValue = {
-  benchmark_title: string,
-  benchmark_long_title: string,
-  benchmark_description: string,
-  benchmark_unit: string,
-  value: string | number | boolean,
-  desirability_value: number,
+export type WorkflowBenchmark = {
+  title: string,
+  long_title: string,
+  description: string,
+  unit: string,
+  aggregate_value: BenchmarkValue,
   steps: BenchmarkValue[],
 }
 
-export type TechBenchmarks = {
-  workflow_name: string,
-  benchmarks: TechBenchmarkValue[]
-}
-
-export enum BenchmarkType {
-  NUMERIC,
-  BOOLEAN,
-  STRING,
-}
-
-export type Benchmark = {
-  id: string,
-  label: string,
-  type: BenchmarkType, // not sure if this adds much
-}
-
 export type BenchmarkValue = {
-  description: string,
+  label?: string,
   value: string | number | boolean,
-  desirability_value: number,  // A number between 0 and 1 that will be used to calculate the color
-  detailed_value: string | undefined, // A string that will be displayed in the tooltip
+  desirability: number,  // A number between -1 and 1 that will be used to calculate the color
+  tooltip?: string,
 }
 
-export interface BenchmarkTable {
-  [workflow_id: string]: {
-    [benchmark_id: string]: BenchmarkValue
-  }
-};
-
+export type DesigntimeBenchmarks = {
+  workflow_name: string,
+  benchmarks: WorkflowBenchmark[]
+}
