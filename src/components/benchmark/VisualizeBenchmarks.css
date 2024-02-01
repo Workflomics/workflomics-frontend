@@ -1,0 +1,11 @@
+
+.benchmark-value {
+  margin: 5px;
+  padding: 6px 24px;
+  border-radius: 10px;
+}
+
+/* TODO: does this have any effect? */
+td {
+  padding: 8px;
+}

@@ -1,4 +1,4 @@
-import { TechBenchmarks } from "./BenchmarkTypes";
+import { DesigntimeBenchmarks } from "./BenchmarkTypes";
 import { Domain } from "./DomainStore";
 import { ApeTaxTuple } from "./TaxStore";
 
@@ -40,5 +40,5 @@ export type WorkflowSolution = {
   benchmark_file: string,
   isSelected: boolean,
   image: string | undefined,
-  benchmarkData: TechBenchmarks | undefined
+  benchmarkData: DesigntimeBenchmarks | undefined
 }
