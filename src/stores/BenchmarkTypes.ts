@@ -13,7 +13,6 @@ export type BenchmarkRun = {
 
 export type WorkflowBenchmark = {
   title: string,
-  long_title: string,
   description: string,
   unit: string,
   aggregate_value: BenchmarkValue,
