@@ -84,7 +84,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
       <div className="rating">
         {benchmark.steps.map((e, i) => 
         [
-          <span key={i} className={"tooltip square " + (e.desirability === 1 ? "square-filled" : "")} data-tip={e.tooltip}> </span>,
+          <span key={i} className={"tooltip square " + (e.desirability === 1 ? "square-filled" : "")} data-tip={e.label}> </span>,
           i + 1 < benchmark.steps.length ? <span className="connect-squares"></span> : null
         ])}
       </div>
@@ -180,7 +180,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                     </tr>
                                     {workflow.benchmarkData !== undefined && workflow.benchmarkData.benchmarks.map((benchmark: WorkflowBenchmark) => (
                                       <tr key={benchmark.title}>
-                                        <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.long_title}>{benchmark.title}</td>
+                                        <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.description}>{benchmark.title}</td>
                                         <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>
                                       </tr>
                                     ))}
