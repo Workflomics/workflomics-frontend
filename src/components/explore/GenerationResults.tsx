@@ -9,7 +9,7 @@ import './HorizontalScroll.css';
 import { WorkflowBenchmark } from '../../stores/BenchmarkTypes';
 import Icon from '@mdi/react';
 import { mdiDownload, mdiEyeOff } from '@mdi/js';
-import * as d3 from 'd3';
+import { mapValueToColor } from '../../utils';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
@@ -18,13 +18,6 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const [doShowTechBenchmarks, setShowTechBenchmarks] = React.useState(false);
   const [solutionModalOpen, setSolutionModalOpen] = React.useState(false);
   const [modalSolution, setModalSolution] = React.useState(workflowSolutions[0]);
-
-  const mapValueToColor = (value: number) => {
-    const colorScale = d3.scaleQuantize<string>()
-      .domain([-1, 1])
-      .range(["#fc9d5a", "#ffb582", "#ffceab", "#ffe6d5", "#ffffff", "#d7f3d1", "#aee5a3", "#81d876", "#48c946"]);
-    return colorScale(value);
-  }
 
   const handleSelected = (workflow: WorkflowSolution, checked: boolean) => {
     runInAction(() => {
