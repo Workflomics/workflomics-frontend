@@ -69,10 +69,6 @@ body.body-modal-open {
   border-radius: 20%;
 }
 
-.square-filled {
-  background-color: #7bd310; /* Filled square color */
-}
-
 .connect-squares {
   flex-grow: 1;
   width: 7px;

@@ -9,6 +9,7 @@ import './HorizontalScroll.css';
 import { WorkflowBenchmark } from '../../stores/BenchmarkTypes';
 import Icon from '@mdi/react';
 import { mdiDownload, mdiEyeOff } from '@mdi/js';
+import { mapValueToColor } from '../../utils';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
@@ -82,9 +83,11 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const Rating = (benchmark: WorkflowBenchmark) => 
     <div className="flex gap-4 m-1 items-center">{benchmark.aggregate_value.value}
       <div className="rating">
-        {benchmark.steps.map((e, i) => 
+        {benchmark.steps.map((step, i) => 
         [
-          <span key={i} className={"tooltip square " + (e.desirability === 1 ? "square-filled" : "")} data-tip={e.label}> </span>,
+          <span key={i} className={"tooltip square"}
+                data-tip={step.label}
+                style={{backgroundColor: mapValueToColor(step.desirability)}}> </span>,
           i + 1 < benchmark.steps.length ? <span className="connect-squares"></span> : null
         ])}
       </div>
@@ -169,7 +172,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                             <div className="flip-card-back items-center h-screen">
                               {buttonHide(workflow)}
                               <h3>{ workflow.descriptive_name }</h3>
-                              <h4>Technical benchmarks</h4>
+                              <h4>Design-time benchmarks</h4>
                               <hr />
                               <div style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", overflowX: "auto" }}>
                                 <table>

@@ -1,19 +1,12 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { BenchmarkValue, BenchmarkRun } from '../../stores/BenchmarkTypes';
-import * as d3 from 'd3';
+import { mapValueToColor } from '../../utils';
 import './VisualizeBenchmarks.css';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
   const [benchmarkValues, setBenchmarkValues] = React.useState<BenchmarkRun[]>([]);
   const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
-
-  const mapValueToColor = (value: number) => {
-    const colorScale = d3.scaleQuantize<string>()
-      .domain([-1, 1])
-      .range(["#fc9d5a", "#ffb582", "#ffceab", "#ffe6d5", "#ffffff", "#d7f3d1", "#aee5a3", "#81d876", "#48c946"]);
-    return colorScale(value);
-  }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
