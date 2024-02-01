@@ -9,6 +9,7 @@ import './HorizontalScroll.css';
 import { TechBenchmarkValue, TechBenchmarks } from '../../stores/BenchmarkTypes';
 import Icon from '@mdi/react';
 import { mdiDownload, mdiEyeOff } from '@mdi/js';
+import * as d3 from 'd3';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
@@ -17,6 +18,13 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const [doShowTechBenchmarks, setShowTechBenchmarks] = React.useState(false);
   const [solutionModalOpen, setSolutionModalOpen] = React.useState(false);
   const [modalSolution, setModalSolution] = React.useState(workflowSolutions[0]);
+
+  const mapValueToColor = (value: number) => {
+    const colorScale = d3.scaleQuantize<string>()
+      .domain([-1, 1])
+      .range(["#fc9d5a", "#ffb582", "#ffceab", "#ffe6d5", "#ffffff", "#d7f3d1", "#aee5a3", "#81d876", "#48c946"]);
+    return colorScale(value);
+  }
 
   const handleSelected = (workflow: WorkflowSolution, checked: boolean) => {
     runInAction(() => {
@@ -82,9 +90,11 @@ const GenerationResults: React.FC<any> = observer((props) => {
   const Rating = (benchmark: TechBenchmarkValue) => 
     <div className="flex gap-4 m-1 items-center">{benchmark.value}
       <div className="rating">
-        {benchmark.steps.map((e, i) => 
+        {benchmark.steps.map((step, i) => 
         [
-          <span key={i} className={"tooltip square " + (e.desirability_value === 1 ? "square-filled" : "")} data-tip={e.description}> </span>,
+          <span key={i} className={"tooltip square"}
+                data-tip={step.description}
+                style={{backgroundColor: mapValueToColor(step.desirability_value)}}> </span>,
           i + 1 < benchmark.steps.length ? <span className="connect-squares"></span> : null
         ])}
       </div>
@@ -169,7 +179,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                             <div className="flip-card-back items-center h-screen">
                               {buttonHide(workflow)}
                               <h3>{ workflow.descriptive_name }</h3>
-                              <h4>Technical benchmarks</h4>
+                              <h4>Design-time benchmarks</h4>
                               <hr />
                               <div style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", overflowX: "auto" }}>
                                 <table>
