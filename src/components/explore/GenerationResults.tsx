@@ -175,8 +175,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                 <table>
                                   <tbody>
                                     <tr>
-                                      <td style={{ textAlign: 'left' }}>Workflow length</td>
-                                      <td style={{ textAlign: 'right' }}><div className="flex gap-4 m-1 items-center">{ workflow.workflow_length }</div></td>
+                                      <td className="tooltip">Workflow length</td>
+                                      <td><div className="flex gap-4 m-1 items-center">{ workflow.workflow_length }</div></td>
+                                      <td></td>
                                     </tr>
                                     {workflow.benchmarkData !== undefined && workflow.benchmarkData.benchmarks.map((benchmark: WorkflowBenchmark) => (
                                       <tr key={benchmark.title}>
