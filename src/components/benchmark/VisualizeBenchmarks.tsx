@@ -1,62 +1,117 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { Benchmark, BenchmarkValue, BenchmarkTable, sampleBenchmarks } from '../../stores/BenchmarkTypes';
-import { WorkflowSolution } from '../../stores/WorkflowTypes';
+import { BenchmarkValue, BenchmarkRun } from '../../stores/BenchmarkTypes';
 import * as d3 from 'd3';
-import { useStore } from '../../store';
+import './VisualizeBenchmarks.css';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
-  const { exploreDataStore } = useStore();
-  const workflows: WorkflowSolution[] = exploreDataStore.selectedWorkflowSolutions;
-  const benchmarks: Benchmark[] = sampleBenchmarks;
+  const [benchmarkValues, setBenchmarkValues] = React.useState<BenchmarkRun[]>([]);
+  const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
 
-  function mapValueToColor(value: number) {
-    const colorScale = d3.scaleSequential()
-      .domain([0, 1])
-      .interpolator(d3.interpolateRdYlGn);
-    const limitRange = d3.scaleLinear()
-      .domain([0, 1])
-      .range([0.2, 0.8]);
-    const color = colorScale(limitRange(value));
-    return color;
+  const mapValueToColor = (value: number) => {
+    const colorScale = d3.scaleQuantize<string>()
+      .domain([-1, 1])
+      .range(["#fc9d5a", "#ffb582", "#ffceab", "#ffe6d5", "#ffffff", "#d7f3d1", "#aee5a3", "#81d876", "#48c946"]);
+    return colorScale(value);
   }
 
-  // Generate random benchmark values
-  const benchmarkValues: BenchmarkTable = {};
-  workflows.forEach((workflow: WorkflowSolution, index: number) => {
-    const n_proteins = Math.floor(Math.random() * 100);
-    const availability = Math.floor(Math.random() * 100);
-    const executedSteps = Math.floor(Math.random() * (workflow.workflow_length + 1));
-    benchmarkValues[workflow.descriptive_name] = {
-      '1': {description: "Sample desc 1", value: workflow.workflow_length, desirability_value: (workflow.workflow_length / 10.0)} as BenchmarkValue,
-      '2': {description: "Sample desc 2", value: executedSteps, desirability_value: (executedSteps) / workflow.workflow_length} as BenchmarkValue,
-      '3': {description: "Sample desc 3", value: n_proteins, desirability_value: 0.01 * n_proteins} as BenchmarkValue,
-      '4': {description: "Sample desc 4", value: availability, desirability_value: 0.01 * availability} as BenchmarkValue
-    };
-  });
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Read and parse file
+      const reader = new FileReader();
+      reader.readAsText(file, "UTF-8");
+      reader.onload = (evt) => {
+        const content = evt.target?.result;
+        const obj = JSON.parse(content as string);
+        setBenchmarkValues(obj);
+      }
+    }
+  }
+
+  const handleExpand = (rowKey: string) => {
+    const newState = { ...expandedRows };
+    newState[rowKey] = !newState[rowKey];
+    setExpandedRows(newState);
+  };
+
+  const tableRow = (label: string, key: string, benchmarkValues: BenchmarkValue[], isWorkflow: boolean) => {
+    const isExpanded: boolean = expandedRows[key];
+    const bgColor = isWorkflow ? 'beige' : 'white';
+    return (<tr key={key}>
+      {/* Expand button */}
+      <td style={{padding: "8px", backgroundColor: bgColor}}>{isWorkflow ? 
+        (<button className='btn btn-primary btn-square btn-sm' onClick={() => handleExpand(key)}>{isExpanded ? '-' : '+'}</button>) : []}</td>
+
+      {/* Workflow / tool label */}
+      <td style={{padding: "8px", backgroundColor: bgColor}}>{label}</td>
+
+      {/* Benchmark values */}
+      { benchmarkValues.map((bmv: BenchmarkValue, index: number) => {
+        const color = mapValueToColor(bmv.desirability);
+        const tooltip = bmv.tooltip;
+        return (<td key={index} style={{textAlign: "center", padding: "8px", backgroundColor: bgColor}}>
+          <span style={{backgroundColor: color}} 
+                className={`benchmark-value ${tooltip ? 'tooltip' : ''}`}
+                {...(tooltip ? { 'data-tip': tooltip } : {})}>
+            {bmv.value.toString()}
+          </span>
+        </td>);
+      })}
+    </tr>);
+  }
 
   return (<div>
     <div className="m-20">
+
+      {/* Upload button for json file */}
+      <div className="flex justify-center">
+        <label htmlFor="file-upload" className="btn btn-primary">Upload JSON file</label>
+        <input id="file-upload" name="file-upload" type="file" className="sr-only" onChange={handleFileChange} />
+      </div>
+
+      {/* Results table */}
       <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
         <table className="table w-4/5">
           <thead>
             <tr>
               <th></th>
-              { benchmarks.map(benchmark => (<th key={benchmark.id}>{benchmark.label}</th>)) }
+              <th></th>
+              { benchmarkValues[0]?.benchmarks.map((benchmark, index) => 
+                (<th key={index} style={{textAlign: 'center'}}>
+                  {benchmark.title}
+                  {benchmark.unit ? <span> ({benchmark.unit})</span> : ''}
+                </th>))
+              }
             </tr>
           </thead>
           <tbody>
-          { workflows.map(workflow => (
-            <tr key={workflow.descriptive_name}>
-              <td>{ workflow.descriptive_name }</td>
-              { benchmarks.map(benchmark => {
-                const key = `${workflow.descriptive_name}-${benchmark.id}`;
-                const bmValue: BenchmarkValue = benchmarkValues[workflow.descriptive_name][benchmark.id];
-                const color = mapValueToColor(bmValue.desirability_value);
-                return (<td key={key} style={{backgroundColor: color}}>{bmValue.value.toString()}</td>);
-              })}
-            </tr>
-          ))}
+          { benchmarkValues.map(workflow => {
+            const rows = [];
+
+            // First row is the aggregated values
+            const aggregateBenchmarkValues = workflow.benchmarks.map((benchmark) => {
+              return {
+                label: benchmark.title,
+                value: benchmark.aggregate_value.value,
+                desirability: benchmark.aggregate_value.desirability,
+              };
+            });
+            const rowKey: string = `${workflow.workflowName}-aggregated`;
+            rows.push(tableRow(workflow.workflowName, rowKey, aggregateBenchmarkValues, true));
+
+            if (expandedRows[rowKey]) {
+              // For every component in the workflow, collect the benchmark values (they are stored benchmark-first)
+              const workflowLength = workflow.benchmarks[0].steps.length;
+              for (let i = 0; i < workflowLength; i++) {
+                const benchmarkValues = workflow.benchmarks.map(benchmark => benchmark.steps[i]);
+                const benchmarkLabel = benchmarkValues[0].label as string;
+                const key = `${workflow.workflowName}-${benchmarkLabel}`;
+                rows.push(tableRow(benchmarkLabel, key, benchmarkValues, false));
+              }
+            }
+            return <React.Fragment key={workflow.workflowName}>{rows}</React.Fragment>;
+          })}
           </tbody>
         </table>
       </div>
