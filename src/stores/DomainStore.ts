@@ -26,7 +26,7 @@ export class DomainStore {
   }
 
   async fetchData() {
-    const response = await fetch(`/api/domain?select=*,topic_of_research(id,unique_label)`);
+    const response = await fetch('/api/domain?select=*,topic_of_research(id,unique_label)');
     const domains = await response.json();
     runInAction(() => {
       this.availableDomains = domains;

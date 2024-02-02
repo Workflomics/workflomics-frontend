@@ -78,7 +78,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
       run_id: selectedWorkflows[0].run_id,
       workflows: selectedWorkflows.map((workflow: WorkflowSolution) => workflow.cwl_name)
     }
-    fetch(`/ape/cwl_zip`, {
+    fetch('/ape/cwl_zip', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
