@@ -38,7 +38,17 @@ const GenerationResults: React.FC<any> = observer((props) => {
   };
 
   const downloadFile = (run_id: string, cwl_name: string) => {
-    fetch(`/ape/cwl?run_id=${run_id}&file_name=${cwl_name}`)
+    const request = {
+      run_id: run_id,
+      file_name: cwl_name
+    }
+    fetch('/ape/cwl', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request)
+    })
     .then(response => response.text())
     .then(data => {
       const blob = new Blob([data], { type: 'text/plain' });
