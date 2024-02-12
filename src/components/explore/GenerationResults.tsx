@@ -50,7 +50,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
       URL.revokeObjectURL(url);
     })
     .catch(error => {
-      console.error('Error:', error);
+      console.error('There has been a problem with accessing a cwl file from the REST APE service:', error);
     });
   }
 
@@ -67,7 +67,36 @@ const GenerationResults: React.FC<any> = observer((props) => {
       URL.revokeObjectURL(url);
     })
     .catch(error => {
-      console.error('Error:', error);
+      console.error('There has been a problem with accessing cwl input file from the REST APE service:', error);
+    });
+  }
+
+  const downloadSelectedWorkflows = () => {
+    const selectedWorkflows: WorkflowSolution[] = workflowSolutions.filter(
+      (workflow: WorkflowSolution) => workflow.isSelected);
+    if (selectedWorkflows.length === 0) return;
+    const request = {
+      run_id: selectedWorkflows[0].run_id,
+      workflows: selectedWorkflows.map((workflow: WorkflowSolution) => workflow.cwl_name)
+    }
+    fetch('/ape/cwl_zip', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request)
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "workflows.zip";
+      link.click();
+      URL.revokeObjectURL(url);
+    })
+    .catch(error => {
+      console.error('There has been a problem with fetching zipped cwl files from the REST APE service:', error);
     });
   }
 
@@ -148,6 +177,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
             </ul>
 
             <button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button>
+            <button className="btn btn-primary" onClick={() => downloadSelectedWorkflows()}>Download selected</button>
             <button className="btn btn-primary" onClick={() => compareSelected()}>Compare<br />selected</button>
           </div>
         

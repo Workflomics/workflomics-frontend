@@ -167,7 +167,7 @@ export class ExploreDataStore {
 
     this.isGenerating = true;
     this.workflowSolutions = [];
-    fetch(`/ape/run_synthesis_and_bench?config_path=${domainConfig?.repo_url}`, {
+    fetch(`/ape/run_synthesis_and_bench`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -199,7 +199,18 @@ export class ExploreDataStore {
 
   loadImage(solution: WorkflowSolution) {
     const { run_id, figure_name } = solution;
-    fetch(`/ape/image?run_id=${run_id}&file_name=${figure_name}&format=svg`)
+    const request = {
+      run_id: run_id,
+      format: "svg",
+      file_name: figure_name
+    }
+    fetch('/ape/image', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request)
+    })
       .then(response => response.blob())
       .then(blob => {
         const url = URL.createObjectURL(blob);
