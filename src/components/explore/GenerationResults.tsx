@@ -242,10 +242,19 @@ const GenerationResults: React.FC<any> = observer((props) => {
               </div>
             </div>
 
-          <div className="flex justify-left gap-2 mt-8">
-              <button className="btn btn-primary" onClick={() => downloadSelectedWorkflows()}>Download <br/> selected</button>
-              <button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br/>CWL input file</button>
-              <button className="btn btn-primary" onClick={() => compareSelected()}>Compare executed<br/> workflows</button>
+            <div className="flex justify-between gap-2 mt-8">
+              <div className="flex justify-left gap-2">
+                <div className="tooltip tooltip-right" data-tip="Download a zip file containing the selected CWLs and instructions how to run them.">
+                  <button className="btn btn-primary" onClick={() => downloadSelectedWorkflows()}>Download <br /> selected</button>
+                </div>
+                <div className="tooltip tooltip-right" data-tip="Download the CWL input file.">
+                  <button className="btn btn-primary" onClick={() => downloadInputFile(workflowSolutions[0].run_id)}>Download <br />CWL input file</button>
+                </div>
+                </div>
+                <div className="tooltip tooltip-left" data-tip="Go to the page to upload the run-time benchmarks.">
+                  <button className="btn btn-primary" onClick={() => compareSelected()}>Upload benchmarked<br /> workflows</button>
+                </div>
+              
             </div>
           </div>
 
