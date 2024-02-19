@@ -9,3 +9,7 @@
     display: flex; /* This makes the content flex horizontally */
     white-space: nowrap; /* Prevents content from wrapping */
   }
+
+  .custom-toggle {
+    background-color: black; /* Black background */
+  }

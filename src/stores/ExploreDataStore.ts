@@ -94,12 +94,12 @@ export class ExploreDataStore {
       "parameters": [
         {
           "operation_0004": [
-            "peptideprophet1"
+            "PeptideProphet"
           ]
         },
         {
           "operation_0004": [
-            "peptideprophet1"
+            "PeptideProphet"
           ]
         }
       ]

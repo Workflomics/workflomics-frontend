@@ -10,7 +10,7 @@ const Home: FC = () => {
     <div>
       <div className="flex space-x-7 p-11">
         <HomeBox label="Generate workflow" descr="Generation of workflows" imgUrl={generate_img} buttonText="Explore" isEnabled={true} component="/explore/domain" />
-        <HomeBox label="Benchmark workflows" descr="Evaluate the quality of your workflows" imgUrl={benchmark_img} buttonText="Benchmark" isEnabled={true} component="/test" />
+        <HomeBox label="Benchmark workflows" descr="Evaluate the quality of your workflows" imgUrl={benchmark_img} buttonText="Benchmark" isEnabled={true} component="/benchmark/visualize" />
         <HomeBox label="My workflows" descr="Explore discovered and uploaded workflows" imgUrl={history_img} buttonText="Workflows" isEnabled={true} component="/" />
       </div>
     </div>
