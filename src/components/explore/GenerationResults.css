@@ -1,4 +1,4 @@
-/* HorizontalScroll.css */
+/* HorizontalScroll elements */
 
 .horizontal-scroll-container {
     width: 100%;
@@ -8,4 +8,9 @@
   .horizontal-scroll-content {
     display: flex; /* This makes the content flex horizontally */
     white-space: nowrap; /* Prevents content from wrapping */
+  }
+
+  /* Formatting workflow card elements */
+  .custom-toggle {
+    background-color: black; /* Black background */
   }
