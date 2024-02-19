@@ -120,7 +120,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
   }
 
   const Rating = (benchmark: WorkflowBenchmark) =>
-    <div className="flex gap-4 m-1 items-center">{benchmark.aggregate_value.value}
+    <div className="flex gap-4 m-1 items-center">
       <div className="rating">
         {benchmark.steps.map((step, i) =>
           [
@@ -221,13 +221,14 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                   <tbody>
                                     <tr>
                                       <td className="tooltip">Workflow length</td>
-                                      <td><div className="flex gap-4 items-center">{workflow?.workflow_length}</div></td>
+                                      <td>{workflow?.workflow_length}</td>
                                       <td></td>
                                     </tr>
                                     {workflow?.benchmarkData?.benchmarks.map((benchmark: WorkflowBenchmark) => (
                                       <tr key={benchmark.title}>
-                                        <td style={{ textAlign: 'left' }} className="tooltip tooltip-right" data-tip={benchmark.description}>{benchmark.title}</td>
-                                        <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>
+                                        <td className="tooltip tooltip-right" data-tip={benchmark.description}>{benchmark.title}</td>
+                                        <td>{benchmark.aggregate_value.value}</td>
+                                        <td>{Rating(benchmark)}</td>
                                       </tr>
                                     ))}
                                   </tbody>
