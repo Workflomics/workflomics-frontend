@@ -5,7 +5,7 @@ import { useStore } from '../../store';
 import { WorkflowSolution } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
 import { useNavigate } from 'react-router-dom';
-import './HorizontalScroll.css';
+import './GenerationResults.css';
 import { WorkflowBenchmark } from '../../stores/BenchmarkTypes';
 import Icon from '@mdi/react';
 import { mdiDownload, mdiEyeOff } from '@mdi/js';
@@ -181,7 +181,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                       <div className="flex items-center space-x-2">
                         <input type="checkbox" className="h-6 w-6 m-2" checked={workflow.isSelected}
                           onChange={(event) => { handleSelected(workflow, event.target.checked) }} />
-                        <span className="whitespace-nowrap">{`${workflow.workflow_name} (${workflow.workflow_length})`}</span>
+                        <span className="whitespace-nowrap">{`${workflow.workflow_name} | Steps: ${workflow.workflow_length} | `}</span>
                         <button className="text-blue-500 hover:underline" onClick={() => downloadFile(workflow.run_id, workflow.cwl_name)}>CWL</button>
                       </div>
                     </li>
@@ -221,10 +221,10 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                   <tbody>
                                     <tr>
                                       <td className="tooltip">Workflow length</td>
-                                      <td><div className="flex gap-4 m-1 items-center">{workflow.workflow_length}</div></td>
+                                      <td><div className="flex gap-4 items-center">{workflow?.workflow_length}</div></td>
                                       <td></td>
                                     </tr>
-                                    {workflow.benchmarkData !== undefined && workflow.benchmarkData.benchmarks.map((benchmark: WorkflowBenchmark) => (
+                                    {workflow?.benchmarkData?.benchmarks.map((benchmark: WorkflowBenchmark) => (
                                       <tr key={benchmark.title}>
                                         <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.description}>{benchmark.title}</td>
                                         <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>

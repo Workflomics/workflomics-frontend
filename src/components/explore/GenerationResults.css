@@ -1,4 +1,4 @@
-/* HorizontalScroll.css */
+/* HorizontalScroll elements */
 
 .horizontal-scroll-container {
     width: 100%;
@@ -10,6 +10,7 @@
     white-space: nowrap; /* Prevents content from wrapping */
   }
 
+  /* Formatting workflow card elements */
   .custom-toggle {
     background-color: black; /* Black background */
   }
