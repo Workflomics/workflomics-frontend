@@ -80,10 +80,9 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           {taxStore.error && <div className="alert alert-error">Data taxonomy could not be retrieved ({taxStore.error})</div>}
 
           {/* Inputs */}
-          <div className="flex items-center space-x-4">
-            <div className="tooltip tooltip-right" data-tip="Specify data type and format of each input as concrete as possible.">
+          <div className="flex items-center space-x-4 tooltip tooltip-right"
+                data-tip="Specify data type and format of each input as concrete as possible.">
               <span className="text-3xl flex-grow-0 w-32">Inputs</span>
-            </div>
             <div className="flex flex-grow items-center">
               {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
                 return (<InputsOutputSelection key={index} parameterTuple={input} dataTaxonomy={allDataTax} />)
@@ -98,10 +97,9 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           </div>
 
           {/* Outputs */}
-          <div className="flex items-center space-x-4">
-            <div className="tooltip tooltip-right" data-tip="Specify data type and format of each output as concrete as possible.">
+          <div className="flex items-center space-x-4 tooltip tooltip-right"
+                data-tip="Specify data type and format of each output as concrete as possible.">
               <span className="text-3xl flex-grow-0 w-32">Outputs</span>
-            </div>
             <div className="flex flex-grow items-center">
               {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
                 return (<InputsOutputSelection key={index} parameterTuple={output} dataTaxonomy={allDataTax} />)

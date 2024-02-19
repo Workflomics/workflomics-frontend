@@ -29,10 +29,9 @@ const GenerationConfig: React.FC<any> = observer((props) => {
               <h2 className="text-3xl w-80 m-4">Configuration</h2>
               </div>
             <div className="flex flex-col m-4">
-              <div className="flex items-center m-2">
-              <div className="tooltip tooltip-bottom" data-tip="Specify minimal number of operations you expect in the desired workflow.">
+              <div className="flex items-center m-2 tooltip tooltip-bottom"
+                    data-tip="Specify minimal number of operations you expect in the desired workflow.">
                   <label className="w-80 text-lg">Min # of steps</label>
-                  </div>
                 <input
                   type="number"
                   className="input input-bordered w-full max-w-xs"
@@ -40,10 +39,9 @@ const GenerationConfig: React.FC<any> = observer((props) => {
                   onChange={(event) => (workflowConfig.minSteps = parseInt(event.target.value))}
                 />
               </div>
-                <div className="flex items-center m-2">
-                <div className="tooltip tooltip-bottom" data-tip="Specify maximum number of operations you expect in the desired workflow.">
+                <div className="flex items-center m-2 tooltip tooltip-bottom"
+                    data-tip="Specify maximum number of operations you expect in the desired workflow.">
                   <label className="w-80 text-lg">Max # of steps</label>
-                  </div>
                 <input
                   type="number"
                   className="input input-bordered w-full max-w-xs"
@@ -51,10 +49,9 @@ const GenerationConfig: React.FC<any> = observer((props) => {
                   onChange={(event) => (workflowConfig.maxSteps = parseInt(event.target.value))}
                 />
               </div>
-                  <div className="flex items-center m-2">
-                  <div className="tooltip tooltip-bottom" data-tip="The maximum run time for the workflow generation. A reasonable value is 60 seconds for workflow tasks of average complexity.">
+                  <div className="flex items-center m-2 tooltip tooltip-bottom"
+                    data-tip="The maximum run time for the workflow generation. A reasonable value is 60 seconds for workflow tasks of average complexity.">
                   <label className="w-80 text-lg">Timeout (seconds)</label>
-                  </div>
                 <input
                   type="number"
                   className="input input-bordered w-full max-w-xs"
@@ -62,10 +59,9 @@ const GenerationConfig: React.FC<any> = observer((props) => {
                   onChange={(event) => (workflowConfig.timeout = parseInt(event.target.value))}
                 />
               </div>
-                    <div className="flex items-center m-2">
-                    <div className="tooltip tooltip-bottom" data-tip="Specify desired number of workflows that satisfy the specification.">
+                    <div className="flex items-center m-2 tooltip tooltip-bottom"
+                      data-tip="Specify desired number of workflows that satisfy the specification.">
                   <label className="w-80 text-lg">Number of solutions (max)</label>
-                  </div>
                 <input
                   type="number"
                   className="input input-bordered w-full max-w-xs"
