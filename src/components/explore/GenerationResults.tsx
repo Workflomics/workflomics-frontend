@@ -226,7 +226,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                     </tr>
                                     {workflow?.benchmarkData?.benchmarks.map((benchmark: WorkflowBenchmark) => (
                                       <tr key={benchmark.title}>
-                                        <td style={{ textAlign: 'left' }} className="tooltip" data-tip={benchmark.description}>{benchmark.title}</td>
+                                        <td style={{ textAlign: 'left' }} className="tooltip tooltip-right" data-tip={benchmark.description}>{benchmark.title}</td>
                                         <td style={{ textAlign: 'right' }}>{Rating(benchmark)}</td>
                                       </tr>
                                     ))}
