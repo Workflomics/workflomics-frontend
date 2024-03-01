@@ -2,10 +2,9 @@
 
 To ensure the highest standards of code quality and maintainability, we ask all contributors to adhere to the following guidelines when contributing to Workflomics:
 
-### TypeScript and JavaScript Standards
+### TypeScript Standards
 
 - Follow the [TypeScript coding guidelines](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines) for TypeScript code.
-- For JavaScript, adhere to [Airbnb's JavaScript Style Guide](https://github.com/airbnb/javascript).
 - Use `eslint` and `prettier` for linting and formatting your code. Ensure your code passes all lint checks before submitting a pull request.
 
 ### React Best Practices
@@ -17,12 +16,11 @@ To ensure the highest standards of code quality and maintainability, we ask all 
 
 ### Node.js and Express Best Practices
 
-- Organize your server code by functionality (e.g., `routes/`, `controllers/`, `models/`, `services/`) to keep it modular and easy to navigate.
 - Use async/await for asynchronous code for better readability and error handling.
 - Validate and sanitize input data to prevent security vulnerabilities.
 - Handle errors properly and send meaningful error responses to the client.
 
-### Testing
+### Testing (still in progress)
 
 - Write unit tests for all new code and changes to existing code. We use Jest as our testing framework.
 - Aim for a high test coverage to ensure code quality and prevent regressions.
