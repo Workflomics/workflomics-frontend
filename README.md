@@ -1,8 +1,13 @@
 # Workflomics: A Workflow Benchmarking Platform (front end)
 
-[![Documentation Status](https://readthedocs.org/projects/workflomics/badge/?version=latest)](https://workflomics.readthedocs.io/en/latest/?badge=latest)
-[![DOI](https://zenodo.org/badge/594054560.svg)](https://zenodo.org/doi/10.5281/zenodo.10047136)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+| Badges                   |                                                                                                                              |
+|:------------------------:|------------------------------------------------------------------------------------------------------------------------------|
+| **Packages and Releases** |  [![Latest release](https://img.shields.io/github/release/workflomics/workflomics-frontend.svg)](https://github.com/sanctuuary/APE/releases/latest) [![Static Badge](https://img.shields.io/badge/RSD-Workflomics-workflomics)](https://research-software-directory.org/software/workflomics) |
+| **Documentation Status** | [![Documentation Status](https://readthedocs.org/projects/workflomics/badge/?version=latest)](https://workflomics.readthedocs.io/en/latest/?badge=latest) |
+| **DOI**                  | [![DOI](https://zenodo.org/badge/594054560.svg)](https://zenodo.org/doi/10.5281/zenodo.10047136)                             |
+| **License**              | ![GitHub](https://img.shields.io/github/license/workflomics/workflomics-frontend)                                           |
+
 
 ## Project goal
 
