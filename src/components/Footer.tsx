@@ -1,9 +1,7 @@
 import * as React from 'react';
 
-interface Props {
-}
 
-export function Footer({ }: Props) {
+export function Footer() {
   return (
     <div>
       <footer className="footer px-10 py-4 border-t bg-base-200 text-base-content border-base-300">

@@ -22,7 +22,6 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
       {
         Object.values(dataTaxonomy).map((paramClass) => {
           // try {
-          const temp = parameterTuple;
           return (
             <TreeSelectionBox
               key={paramClass.id}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface Props {
   /** Title of the menu option. */

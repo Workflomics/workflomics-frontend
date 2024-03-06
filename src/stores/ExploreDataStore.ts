@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { ConstraintInstance, WorkflowConfig, WorkflowSolution, isTaxParameterComplete as isTaxParameterComplete } from "./WorkflowTypes";
+import { ConstraintInstance, WorkflowConfig, WorkflowSolution, isTaxParameterComplete } from "./WorkflowTypes";
 import { makePersistable } from "mobx-persist-store";
 import { ApeTaxTuple } from "./TaxStore";
 
@@ -76,7 +76,7 @@ export class ExploreDataStore {
    * @returns JSON representation of the constraints
    */
   constraintsToJSON(allConstraints: ConstraintInstance[]) {
-    const newConst =  allConstraints.filter(constraint => constraint.id != "")
+    const newConst =  allConstraints.filter(constraint => constraint.id !== "")
       .map((constraint) => {
         return {
           "constraintid": constraint!.id,
@@ -162,7 +162,6 @@ export class ExploreDataStore {
   }
 
   runSynthesis(config: WorkflowConfig) {
-    const domainConfig = config.domain;
     const configJson: any = this.configToJSON(config);
 
     this.isGenerating = true;
