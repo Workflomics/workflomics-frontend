@@ -4,6 +4,7 @@
 | Badges                   |                                                                                                                              |
 |:------------------------:|------------------------------------------------------------------------------------------------------------------------------|
 | **Packages and Releases** |  [![Latest release](https://img.shields.io/github/release/workflomics/workflomics-frontend.svg)](https://github.com/sanctuuary/APE/releases/latest) [![Static Badge](https://img.shields.io/badge/RSD-Workflomics-workflomics)](https://research-software-directory.org/software/workflomics) |
+| **Build Status** | [![Build Frontend](https://github.com/Workflomics/workflomics-frontend/actions/workflows/build-frontend.yaml/badge.svg)](https://github.com/Workflomics/workflomics-frontend/actions/workflows/build-frontend.yaml) |
 | **Documentation Status** | [![Documentation Status](https://readthedocs.org/projects/workflomics/badge/?version=latest)](https://workflomics.readthedocs.io/en/latest/?badge=latest) |
 | **DOI**                  | [![DOI](https://zenodo.org/badge/594054560.svg)](https://zenodo.org/doi/10.5281/zenodo.10047136)                             |
 | **License**              | ![GitHub](https://img.shields.io/github/license/workflomics/workflomics-frontend)                                           |
