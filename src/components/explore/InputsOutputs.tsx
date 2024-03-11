@@ -6,7 +6,7 @@ import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
 import { runInAction } from 'mobx';
-import { ApeTaxTuple, TaxonomyClass } from '../../stores/TaxStore';
+import { ApeTaxTuple } from '../../stores/TaxStore';
 
 
 const InputsOutputs: React.FC<any> = observer((props) => {

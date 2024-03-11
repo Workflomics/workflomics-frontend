@@ -18,7 +18,6 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
   );
   let { taxStore } = useStore();
   const allToolsTax: ApeTaxTuple = taxStore.availableToolTax;
-  const allDataTax: ApeTaxTuple = taxStore.availableDataTax;
 
   React.useEffect(() => {
     if (workflowConfig.domain !== undefined) {
