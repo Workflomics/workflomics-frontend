@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/Workflomics/.github/main/WORKFLOMICS_logo_small.jpg" alt="logo" width=60%/>
+<img src="https://github.com/Workflomics/.github/blob/main/WORKFLOMICS_logo.png" alt="logo" width=60%/>
 
 # Workflomics: A Workflow Benchmarking Platform
 
