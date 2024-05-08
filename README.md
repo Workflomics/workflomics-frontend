@@ -23,6 +23,14 @@ The platform currently focuses on the proteomics domain. We aim to extend the pl
 Visit the live demo:
 http://workflomics.org/
 
+## Architecture
+
+The Workflomics web interface is part of a larger infrastructure that includes a Postgres database, a Postgrest API, a RESTful APE service, etc. The architecture is presented in the figure below:
+
+<div align="left">
+  <img src="https://github.com/Workflomics/.github/blob/main/draw.io/architecture_simplified.png" alt="architecture_workflomics" width="60%">
+</div>
+
 ## Development
 
 For now, it is assumed you already have a Postgres database and Postgrest API set up and running. See [Deployment](#deployment) below for a docker compose configuration which starts all necessary services and initializes the database with the `.sql` scripts in the `database` folder.
@@ -45,14 +53,6 @@ To start the front-end, simply run
 ```
 npm start
 ```
-
-## Architecture
-
-The Workflomics web interface is part of a larger infrastructure that includes a Postgres database, a Postgrest API, a RESTful APE service, etc. The architecture is presented in the figure below:
-
-<div align="left">
-  <img src="https://github.com/Workflomics/.github/blob/main/draw.io/architecture_simplified.png" alt="architecture_workflomics" width="60%">
-</div>
 
 ## Deployment
 
