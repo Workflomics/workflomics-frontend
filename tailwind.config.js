@@ -11,7 +11,7 @@ module.exports = {
     themes: [
       {
         "flomics-theme": {
-          primary: "#d70c0c",
+          primary: "#ce4136",
           secondary: "#f6d860",
           accent: "#cd373a",
           neutral: "#3d4451",

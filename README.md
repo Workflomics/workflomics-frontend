@@ -1,6 +1,6 @@
-<img src="https://raw.githubusercontent.com/Workflomics/.github/main/WORKFLOMICS_logo_small.jpg" alt="logo" width=60%/>
+<img src="https://github.com/Workflomics/.github/blob/main/WORKFLOMICS_logo.png" alt="logo" width=60%/>
 
-# Workflomics: A Workflow Benchmarking Platform
+# Workflomics: A Workflow Benchmarking Web Platform
 
 
 | Badges                   |                                                                                                                              |
@@ -22,6 +22,14 @@ The platform currently focuses on the proteomics domain. We aim to extend the pl
 
 Visit the live demo:
 http://workflomics.org/
+
+## Architecture
+
+The Workflomics web interface is part of a larger infrastructure that includes a Postgres database, a Postgrest API, a RESTful APE service, etc. The architecture is presented in the figure below:
+
+<div align="left">
+  <img src="https://github.com/Workflomics/.github/blob/main/draw.io/architecture_simplified.png" alt="architecture_workflomics" width="60%">
+</div>
 
 ## Development
 
