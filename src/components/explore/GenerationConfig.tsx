@@ -61,7 +61,7 @@ const GenerationConfig: React.FC<any> = observer((props) => {
               </div>
                     <div className="flex items-center m-2 tooltip tooltip-bottom"
                       data-tip="Specify desired number of workflows that satisfy the specification.">
-                  <label className="w-80 text-lg">Number of solutions (max)</label>
+                  <label className="w-80 text-lg">Number of workflows (max)</label>
                 <input
                   type="number"
                   className="input input-bordered w-full max-w-xs"
