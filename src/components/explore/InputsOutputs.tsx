@@ -59,8 +59,8 @@ const InputsOutputs: React.FC<any> = observer((props) => {
       ]
       workflowConfig.outputs = [
         {
-          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006", subsets: [] },
-          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915", subsets: [] },
+          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_3753", label: "Over-representation data", root: "http://edamontology.org/data_0006", subsets: [] },
+          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3464", label: "JSON", root: "http://edamontology.org/format_1915", subsets: [] },
         }
       ];
     });
@@ -80,8 +80,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           {taxStore.error && <div className="alert alert-error">Data taxonomy could not be retrieved ({taxStore.error})</div>}
 
           {/* Inputs */}
-          <div className="flex items-center space-x-4 tooltip tooltip-right"
-                data-tip="Specify data type and format of each input as concrete as possible.">
+          <div className="flex items-center space-x-4">
               <span className="text-3xl flex-grow-0 w-32">Inputs</span>
             <div className="flex flex-grow items-center">
               {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
@@ -97,8 +96,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           </div>
 
           {/* Outputs */}
-          <div className="flex items-center space-x-4 tooltip tooltip-right"
-                data-tip="Specify data type and format of each output as concrete as possible.">
+          <div className="flex items-center space-x-4">
               <span className="text-3xl flex-grow-0 w-32">Outputs</span>
             <div className="flex flex-grow items-center">
               {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
@@ -118,7 +116,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
             <span className="text-3xl flex-grow-0 w-32"></span>
             <div className="flex flex-grow items-center">
             <div className="tooltip" data-tip="Fill in the form with the inputs and outputs used in our demo example.">
-                <button className="btn m-1" onClick={() => useDemoData()}>Use demo data</button>
+                <button className="btn m-1" onClick={() => useDemoData()}>Load example</button>
             </div>
             </div>
           </div>

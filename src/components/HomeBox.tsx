@@ -28,6 +28,7 @@ export function HomeBox({ label, descr, buttonText, imgUrl, isEnabled, component
       <div className="card-body items-center text-center">
         <h2 className="card-title">{label}</h2>
         <p>{descr}</p>
+        <hr />
         <div className="card-actions">
           <Link className="btn btn-primary" to={component}>{buttonText}</Link>
         </div>

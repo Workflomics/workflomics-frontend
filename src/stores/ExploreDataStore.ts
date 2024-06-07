@@ -18,8 +18,8 @@ const emptyWorkflowConfig = () => {
     ],
     outputs: [
       {
-        "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0006", label: "Data", root: "http://edamontology.org/data_0006", subsets: [] },
-        "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3747", label: "protXML", root: "http://edamontology.org/format_1915", subsets: [] },
+        "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_3753", label: "Over-representation data", root: "http://edamontology.org/data_0006", subsets: [] },
+        "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3464", label: "JSON", root: "http://edamontology.org/format_1915", subsets: [] },
       }
     ],
     constraints: [{id: "", label: "", parameters: []} as ConstraintInstance],

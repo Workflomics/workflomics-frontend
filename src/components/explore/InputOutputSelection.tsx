@@ -18,7 +18,8 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
   };
 
   return (
-    <div>
+    <div className="tooltip tooltip-bottom"
+    data-tip="Specify data type and format as concrete as possible.">
       {
         Object.values(dataTaxonomy).map((paramClass) => {
           // try {
