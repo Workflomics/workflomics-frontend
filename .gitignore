@@ -25,3 +25,5 @@ yarn-error.log*
 .env
 .vscode
 
+# Build files
+web.zip
