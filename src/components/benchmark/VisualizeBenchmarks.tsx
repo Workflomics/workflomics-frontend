@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { BenchmarkValue, BenchmarkRun } from '../../stores/BenchmarkTypes';
-import { mapValueToColor } from '../../utils';
+import { mapDesirabilityToColor } from '../../utils';
 import './VisualizeBenchmarks.css';
 
 const VisualizeBenchmark: React.FC<any> = observer((props) => {
@@ -41,7 +41,7 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
 
       {/* Benchmark values */}
       { benchmarkValues.map((bmv: BenchmarkValue, index: number) => {
-        const color = mapValueToColor(bmv.desirability);
+        const color = mapDesirabilityToColor(bmv.desirability);
         const tooltip = bmv.tooltip;
         return (<td key={index} style={{textAlign: "center", padding: "8px", backgroundColor: bgColor}}>
           <span style={{backgroundColor: color}} 

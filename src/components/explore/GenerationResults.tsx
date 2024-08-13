@@ -9,7 +9,7 @@ import './GenerationResults.css';
 import { WorkflowBenchmark } from '../../stores/BenchmarkTypes';
 import Icon from '@mdi/react';
 import { mdiDownload, mdiEyeOff } from '@mdi/js';
-import { mapValueToColor } from '../../utils';
+import { mapDesirabilityToColor, mapValueToBackground } from '../../utils';
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
@@ -126,7 +126,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
           [
             <span key={i} className={"tooltip square"}
               data-tip={step.label}
-              style={{ backgroundColor: mapValueToColor(step.desirability) }}> </span>,
+              style={{ backgroundColor: mapDesirabilityToColor(step.desirability), backgroundImage: mapValueToBackground(step.label) }}> </span>,
             i + 1 < benchmark.steps.length ? <span className="connect-squares"></span> : null
           ])}
       </div>
