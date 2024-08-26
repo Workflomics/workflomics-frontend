@@ -4,10 +4,20 @@
     width: 100%;
     overflow-x: auto;
   }
-  
+
   .horizontal-scroll-content {
     display: flex; /* This makes the content flex horizontally */
     white-space: nowrap; /* Prevents content from wrapping */
+  }
+
+  .vertical-scroll-container {
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .vertical-scroll-content {
+    display: flex; /* This makes the content flex vertically */
+    flex-direction: column; /* This makes the content flex vertically */
   }
 
   /* Formatting workflow card elements */
