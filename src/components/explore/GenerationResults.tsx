@@ -208,75 +208,71 @@ const GenerationResults: React.FC<any> = observer((props) => {
           !exploreDataStore.generationError &&
           workflowSolutions.length > 0 && (
             <div className="gap-8">
-              <div className="flex justify-center gap-8">
+              <div className="flex justify-center gap-8" style={{height: '540px'}}>
                 {/* List of solutions */}
-                <div className="vertical-scroll-container">
-                  <div className="vertical-scroll-content">
-                    <div className="text-left space-y-4 m-8 space-x-1">
-                      <div className="flex gap-2">
-                        <span>
-                          <b>Figures</b>
-                        </span>
+                <div className="text-left space-y-4 space-x-1 overflow-auto" style={{width: '35vw'}}>
+                  <div className="flex gap-2">
+                    <span>
+                      <b>Figures</b>
+                    </span>
+                    <input
+                      type="checkbox"
+                      className="toggle custom-toggle"
+                      checked={doShowTechBenchmarks}
+                      onChange={(event) =>
+                        setShowTechBenchmarks(event.target.checked)
+                      }
+                    />
+                    <span>
+                      <b>Benchmarks</b>
+                    </span>
+                  </div>
+
+                  <ul>
+                    <li style={{ borderBottom: "1px solid black" }}>
+                      <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
-                          className="toggle custom-toggle"
-                          checked={doShowTechBenchmarks}
-                          onChange={(event) =>
-                            setShowTechBenchmarks(event.target.checked)
-                          }
+                          className="h-6 w-6 m-2"
+                          defaultChecked={true}
+                          onChange={(event) => {
+                            toggleAll(event.target.checked);
+                          }}
                         />
-                        <span>
-                          <b>Benchmarks</b>
-                        </span>
                       </div>
-
-                      <ul>
-                        <li style={{ borderBottom: "1px solid black" }}>
+                    </li>
+                    {workflowSolutions.map(
+                      (workflow: WorkflowSolution, index: number) => (
+                        <li key={index}>
                           <div className="flex items-center space-x-2">
                             <input
                               type="checkbox"
                               className="h-6 w-6 m-2"
-                              defaultChecked={true}
+                              checked={workflow.isSelected}
                               onChange={(event) => {
-                                toggleAll(event.target.checked);
+                                handleSelected(
+                                  workflow,
+                                  event.target.checked
+                                );
                               }}
                             />
+                            <span className="whitespace-nowrap">{`${workflow.workflow_name} | Steps: ${workflow.workflow_length} | `}</span>
+                            <button
+                              className="text-blue-500 hover:underline"
+                              onClick={() =>
+                                downloadFile(
+                                  workflow.run_id,
+                                  workflow.cwl_name
+                                )
+                              }
+                            >
+                              CWL
+                            </button>
                           </div>
                         </li>
-                        {workflowSolutions.map(
-                          (workflow: WorkflowSolution, index: number) => (
-                            <li key={index}>
-                              <div className="flex items-center space-x-2">
-                                <input
-                                  type="checkbox"
-                                  className="h-6 w-6 m-2"
-                                  checked={workflow.isSelected}
-                                  onChange={(event) => {
-                                    handleSelected(
-                                      workflow,
-                                      event.target.checked
-                                    );
-                                  }}
-                                />
-                                <span className="whitespace-nowrap">{`${workflow.workflow_name} | Steps: ${workflow.workflow_length} | `}</span>
-                                <button
-                                  className="text-blue-500 hover:underline"
-                                  onClick={() =>
-                                    downloadFile(
-                                      workflow.run_id,
-                                      workflow.cwl_name
-                                    )
-                                  }
-                                >
-                                  CWL
-                                </button>
-                              </div>
-                            </li>
-                          )
-                        )}
-                      </ul>
-                    </div>
-                  </div>
+                      )
+                    )}
+                  </ul>
                 </div>
 
                 {/* Cards for selected solutions */}
