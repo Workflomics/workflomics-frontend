@@ -4,7 +4,7 @@
     width: 100%;
     overflow-x: auto;
   }
-  
+
   .horizontal-scroll-content {
     display: flex; /* This makes the content flex horizontally */
     white-space: nowrap; /* Prevents content from wrapping */
