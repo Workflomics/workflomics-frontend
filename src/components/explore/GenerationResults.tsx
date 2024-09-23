@@ -239,6 +239,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                             toggleAll(event.target.checked);
                           }}
                         />
+                        <span className="whitespace-nowrap"> Select all</span>
                       </div>
                   </li>
                     {workflowSolutions.map(
