@@ -208,9 +208,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
           !exploreDataStore.generationError &&
           workflowSolutions.length > 0 && (
             <div className="gap-8">
-              <div className="flex justify-center gap-8" style={{height: '540px'}}>
+              <div className="flex justify-center gap-8">
                 {/* List of solutions */}
-                <div className="text-left space-y-4 space-x-1 overflow-auto" style={{width: '35vw'}}>
+                <div className="text-left space-y-4 space-x-1" style={{width: '35vw'}}>
                   <div className="flex gap-2">
                     <span>
                       <b>Figures</b>
@@ -227,7 +227,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                       <b>Benchmarks</b>
                     </span>
                   </div>
-
+                  <div className=" justify-center gap-8  overflow-auto" style={{height: '450px'}}>
                   <ul>
                     <li style={{ borderBottom: "1px solid black" }}>
                       <div className="flex items-center space-x-2">
@@ -240,7 +240,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                           }}
                         />
                       </div>
-                    </li>
+                  </li>
                     {workflowSolutions.map(
                       (workflow: WorkflowSolution, index: number) => (
                         <li key={index}>
@@ -273,6 +273,7 @@ const GenerationResults: React.FC<any> = observer((props) => {
                       )
                     )}
                   </ul>
+                  </div>
                 </div>
 
                 {/* Cards for selected solutions */}
