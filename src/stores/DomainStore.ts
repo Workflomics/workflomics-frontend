@@ -5,9 +5,6 @@ export interface Domain {
   unique_label: string;
   description: string;
   repo_url: string;
-  tool_annotations_file_name: string;
-  ontology_file_name: string;
-  docker_image_url: string;
   public: boolean;
   topic_of_research: TopicOfResearch[];
 }

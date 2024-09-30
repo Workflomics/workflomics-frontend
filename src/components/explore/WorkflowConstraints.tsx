@@ -14,7 +14,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
   let { constraintStore } = useStore();
   const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraints.filter(
-    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m"
+    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m" || constraint.id === "connected_op"
   );
   let { taxStore } = useStore();
   const allToolsTax: ApeTaxTuple = taxStore.availableToolTax;
@@ -46,9 +46,9 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     });
   };
 
-  const onParameterChange = (constraintIndex: number, node: TreeNode, root: string) => {
+  const onParameterChange = (constraintIndex: number, node: TreeNode, root: string, opNumber: number) => {
     runInAction(() => {
-      const parameterTuple: ApeTaxTuple = workflowConfig.constraints[constraintIndex].parameters[0];
+      const parameterTuple: ApeTaxTuple = workflowConfig.constraints[constraintIndex].parameters[opNumber];
       parameterTuple[root] = node;
     });
   };
@@ -89,8 +89,16 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                         value={constraint.parameters.length > 0 ? constraint.parameters[0][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
                         nodes={allToolsTax[root].subsets}
                         root={root}
-                        onChange={(node: TreeNode) => onParameterChange(index, node, root)}
-                        placeholder="Operation" />}
+                        onChange={(node: TreeNode) => onParameterChange(index, node, root, 0)}
+                          placeholder="Operation" />}
+                      {constraint.id !== "" && constraint.parameters.length === 2 && 
+                      <TreeSelectionBox 
+                        value={constraint.parameters.length > 0 ? constraint.parameters[1][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
+                        nodes={allToolsTax[root].subsets}
+                        root={root}
+                        onChange={(node: TreeNode) => onParameterChange(index, node, root, 1)}
+                        placeholder="Operation" />
+                        }
                     </div>);
                   })
                 }
