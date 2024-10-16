@@ -42,14 +42,21 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   const onConstraintTypeChange = (constraintIndex: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[constraintIndex] = node as unknown as ConstraintInstance;
+      console.log("Constraint type change", constraintIndex, node.label);
+      const template: ConstraintTemplate = node as unknown as ConstraintTemplate;
+      const parameters: ApeTaxTuple[] = template.parameters.map((parameter) => {
+        //TODO: not only support tools
+        return taxStore.getEmptyTaxParameter(taxStore.availableToolTax);
+      });
+      workflowConfig.constraints[constraintIndex] = { id: template.id, label: template.label, parameters: parameters };
     });
   };
 
-  const onParameterChange = (constraintIndex: number, node: TreeNode, root: string) => {
+  const onParameterChange = (constraintIndex: number, parameterIndex: number, node: TreeNode, root: string) => {
     runInAction(() => {
-      const parameterTuple: ApeTaxTuple = workflowConfig.constraints[constraintIndex].parameters[0];
-      parameterTuple[root] = node;
+      console.log("Parameter change", constraintIndex, node.label, root);
+      const constraintInstance: ConstraintInstance = workflowConfig.constraints[constraintIndex];
+      constraintInstance.parameters[parameterIndex][root] = node;
     });
   };
 
@@ -89,7 +96,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                         value={constraint.parameters.length > 0 ? constraint.parameters[0][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
                         nodes={allToolsTax[root].subsets}
                         root={root}
-                        onChange={(node: TreeNode) => onParameterChange(index, node, root)}
+                        onChange={(node: TreeNode) => onParameterChange(index, 0, node, root)}
                         placeholder="Operation" />}
                     </div>);
                   })

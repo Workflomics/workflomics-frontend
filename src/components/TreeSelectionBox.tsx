@@ -72,13 +72,13 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
     setIsDropDownOpen(false);
   };
 
-  const currentText = !isDropDownOpen && value && value.id !== "" ? value.label : filter;
+  const currentText = !isDropDownOpen && value && value.id !== "" && value.id !== undefined ? value.label : filter;
 
   const renderSubNodes = (nodes: any) => {
     return (
       <ul className="dropdown-content p-1 w-80">
         {nodes.map((node: TreeNode) => (
-          (<li className="pl-6" key={node.label}>
+          (<li className="pl-6" key={node.id}>
             {node.filteredSubsets && node.filteredSubsets.length > 0 ?
               // Node with children
               (<details>
