@@ -14,7 +14,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
   let { constraintStore } = useStore();
   const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraints.filter(
-    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m" || constraint.id === "connected_op"
+    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m" || constraint.id === "connected_op" || constraint.id === "not_connected_op"
   );
   let { taxStore } = useStore();
   const allToolsTax: ApeTaxTuple = taxStore.availableToolTax;
