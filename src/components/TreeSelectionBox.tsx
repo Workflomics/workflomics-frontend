@@ -27,9 +27,10 @@ interface TreeSelectionBoxProps {
   root: string;
   onChange: (node: any) => void;
   placeholder: string;
+  style?: React.CSSProperties;
 }
 
-const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root, onChange, placeholder }) => {
+const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root, onChange, placeholder, style }) => {
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const [filter, setFilter] = React.useState<string>("");
   const [filteredNodes, setFilteredNodes] = React.useState<Array<TreeNode>>([]);
@@ -96,7 +97,7 @@ const TreeSelectionBox: React.FC<TreeSelectionBoxProps> = ({ nodes, value, root,
   }
 
   return (
-    <div className="relative" onBlur={handleBlur}>
+    <div className="relative" onBlur={handleBlur} style={style}>
       {/* Textbox that displays value, allows filter */}
       <input type="text" value={currentText} onChange={handleSearch}
         onFocus={() => handleFocus()}

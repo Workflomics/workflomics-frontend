@@ -89,7 +89,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                     return (<div key={index}>
                       <TreeSelectionBox value={constraint} root={""}
                         nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
-                        placeholder="Type of constraint" />
+                        placeholder="Type of constraint" style={{ fontWeight: 'bold' }} />
 
                       {constraint.id !== "" && constraint.parameters.length > 0 && 
                       <TreeSelectionBox 
