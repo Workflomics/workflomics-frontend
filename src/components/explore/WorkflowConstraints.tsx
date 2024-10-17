@@ -82,7 +82,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
               <div className="tooltip tooltip-right" data-tip="Provide information about data formats, types and operations to guide the workflow generation.">
                 <span className="text-3xl flex-grow-0 w-40">Constraints</span>
                 </div>
-              <div className="flex flex-grow items-center">
+              <div className="flex flex-grow">
                 {
                   workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
                     const root = "http://edamontology.org/operation_0004";
