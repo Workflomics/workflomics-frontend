@@ -14,7 +14,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
   let { constraintStore } = useStore();
   const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraints.filter(
-    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m"
+    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m" || constraint.id === "connected_op" || constraint.id === "not_connected_op"
   );
   let { taxStore } = useStore();
   const allToolsTax: ApeTaxTuple = taxStore.availableToolTax;
@@ -98,6 +98,14 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                         root={root}
                         onChange={(node: TreeNode) => onParameterChange(index, 0, node, root)}
                         placeholder="Operation" />}
+                      {constraint.id !== "" && constraint.parameters.length === 2 && 
+                      <TreeSelectionBox 
+                        value={constraint.parameters.length > 0 ? constraint.parameters[1][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
+                        nodes={allToolsTax[root].subsets}
+                        root={root}
+                        onChange={(node: TreeNode) => onParameterChange(index, 1, node, root)}
+                        placeholder="Operation" />
+                        }
                     </div>);
                   })
                 }
