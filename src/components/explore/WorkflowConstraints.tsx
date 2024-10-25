@@ -14,7 +14,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
   const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
   let { constraintStore } = useStore();
   const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraints.filter(
-    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m"
+    (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m" || constraint.id === "connected_op" || constraint.id === "not_connected_op"
   );
   let { taxStore } = useStore();
   const allToolsTax: ApeTaxTuple = taxStore.availableToolTax;
@@ -42,14 +42,21 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   const onConstraintTypeChange = (constraintIndex: number, node: TreeNode) => {
     runInAction(() => {
-      workflowConfig.constraints[constraintIndex] = node as unknown as ConstraintInstance;
+      console.log("Constraint type change", constraintIndex, node.label);
+      const template: ConstraintTemplate = node as unknown as ConstraintTemplate;
+      const parameters: ApeTaxTuple[] = template.parameters.map((parameter) => {
+        //TODO: not only support tools
+        return taxStore.getEmptyTaxParameter(taxStore.availableToolTax);
+      });
+      workflowConfig.constraints[constraintIndex] = { id: template.id, label: template.label, parameters: parameters };
     });
   };
 
-  const onParameterChange = (constraintIndex: number, node: TreeNode, root: string) => {
+  const onParameterChange = (constraintIndex: number, parameterIndex: number, node: TreeNode, root: string) => {
     runInAction(() => {
-      const parameterTuple: ApeTaxTuple = workflowConfig.constraints[constraintIndex].parameters[0];
-      parameterTuple[root] = node;
+      console.log("Parameter change", constraintIndex, node.label, root);
+      const constraintInstance: ConstraintInstance = workflowConfig.constraints[constraintIndex];
+      constraintInstance.parameters[parameterIndex][root] = node;
     });
   };
 
@@ -75,22 +82,30 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
               <div className="tooltip tooltip-right" data-tip="Provide information about data formats, types and operations to guide the workflow generation.">
                 <span className="text-3xl flex-grow-0 w-40">Constraints</span>
                 </div>
-              <div className="flex flex-grow items-center">
+              <div className="flex flex-grow">
                 {
                   workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
                     const root = "http://edamontology.org/operation_0004";
                     return (<div key={index}>
                       <TreeSelectionBox value={constraint} root={""}
                         nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
-                        placeholder="Type of constraint" />
+                        placeholder="Type of constraint" style={{ fontWeight: 'bold' }} />
 
                       {constraint.id !== "" && constraint.parameters.length > 0 && 
                       <TreeSelectionBox 
                         value={constraint.parameters.length > 0 ? constraint.parameters[0][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
                         nodes={allToolsTax[root].subsets}
                         root={root}
-                        onChange={(node: TreeNode) => onParameterChange(index, node, root)}
+                        onChange={(node: TreeNode) => onParameterChange(index, 0, node, root)}
                         placeholder="Operation" />}
+                      {constraint.id !== "" && constraint.parameters.length === 2 && 
+                      <TreeSelectionBox 
+                        value={constraint.parameters.length > 0 ? constraint.parameters[1][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
+                        nodes={allToolsTax[root].subsets}
+                        root={root}
+                        onChange={(node: TreeNode) => onParameterChange(index, 1, node, root)}
+                        placeholder="Operation" />
+                        }
                     </div>);
                   })
                 }

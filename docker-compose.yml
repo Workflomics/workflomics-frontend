@@ -30,7 +30,13 @@ services:
     image: ghcr.io/sanctuuary/restape:latest
     restart: always
     ports:
-      - "4444:4444"
+      - "8080:4444"
+  
+  pubmetric:
+    image: ghcr.io/workflomics/pubmetric:pr-43
+    restart: always
+    ports:
+      - "8000:8000"
 
 networks:
   default:

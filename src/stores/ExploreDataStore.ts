@@ -119,6 +119,21 @@ export class ExploreDataStore {
         }
       ]
     });
+    newConst.push({
+      "constraintid": "connected_op",
+      "parameters": [
+        {
+          "operation_0004": [
+            "PeptideProphet"
+          ]
+        },
+        {
+          "operation_0004": [
+            "ProteinProphet"
+          ]
+        }
+      ]
+    });
     return newConst;
   }
 
@@ -134,13 +149,13 @@ export class ExploreDataStore {
 
     //TODO: figure out how much of this to hardcode
     const obj: any = {
-      "ontology_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/edam.owl",
+      "ontology_path": "https://raw.githubusercontent.com/Workflomics/tools-and-domains/main/domains/edam.owl",
       "ontologyPrefixIRI": "http://edamontology.org/",
       "toolsTaxonomyRoot": toolsRoot,
       "dataDimensionsTaxonomyRoots": [
         dataRoot, formatRoot
       ],
-      "tool_annotations_path": "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/WombatP_tools/bio.tools.json",
+      "tool_annotations_path": "https://raw.githubusercontent.com/Workflomics/tools-and-domains/main/domains/proteomics/tools.json",
       "strict_tool_annotations": "true",
       "timeout_sec": config.timeout,
       "solution_length": {
