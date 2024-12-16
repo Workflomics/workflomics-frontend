@@ -65,7 +65,7 @@ const VisualizeBenchmark: React.FC<any> = observer((props) => {
 
       {/* Results table */}
       <div className="overflow-x-auto text-left space-y-6 m-8 flex justify-center">
-        <table className="table w-4/5">
+        <table className="table w-4/5 benchmark-results">
           <thead>
             <tr>
               <th></th>
