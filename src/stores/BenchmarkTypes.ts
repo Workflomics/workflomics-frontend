@@ -15,6 +15,7 @@ export type WorkflowBenchmark = {
   title: string,
   description: string,
   unit: string,
+  category: string | undefined,
   aggregate_value: BenchmarkValue,
   steps: BenchmarkValue[],
 }

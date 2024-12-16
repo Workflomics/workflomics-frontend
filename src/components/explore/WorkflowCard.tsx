@@ -53,6 +53,23 @@ const WorkflowCard: React.FC<WorkflowCardProps> = observer((props) => {
     </div>
   );
 
+  // Group benchmarks by category
+  const benchmarks: WorkflowBenchmark[] = workflow?.benchmarkData?.benchmarks as WorkflowBenchmark[];
+  let groupedBenchmarks: WorkflowBenchmark[][];
+
+  if (benchmarks === undefined) {
+    groupedBenchmarks = [];
+  }
+  else {
+    // Get unique categories
+    const categories = Array.from(new Set(benchmarks.map((b) => b.category)));
+
+    // Group benchmarks by category
+    groupedBenchmarks = categories.map((category) =>
+      benchmarks.filter((b) => b.category === category)
+    );
+  }
+
   return (
     <div className="flip-card">
     <div
@@ -97,7 +114,7 @@ const WorkflowCard: React.FC<WorkflowCardProps> = observer((props) => {
         {buttonHide(workflow)}
         <h3>{workflow.workflow_name}</h3>
         <br />
-        <h4>
+        <h4 style={{paddingBottom: "12px"}}>
           <b>Design-time benchmarks</b>
         </h4>
         <hr />
@@ -119,22 +136,36 @@ const WorkflowCard: React.FC<WorkflowCardProps> = observer((props) => {
                 <td>{workflow?.workflow_length}</td>
                 <td></td>
               </tr>
-              {workflow?.benchmarkData?.benchmarks.map(
-                (benchmark: WorkflowBenchmark) => (
-                  <tr key={benchmark.title}>
-                    <td
-                      className="tooltip tooltip-right"
-                      data-tip={benchmark.description}
-                    >
-                      {benchmark.title}
+              {groupedBenchmarks.map((benchmarks: WorkflowBenchmark[], index: number) => (
+                <React.Fragment key={index}>
+                  {/* Render the category row, with fancy lines on the side */}
+                  <tr className="relative">
+                    <td colSpan={3} className="py-2">
+                      <div className="flex items-center">
+                        <div className="flex-1 h-px bg-black"></div>
+                        <span className="px-4 relative z-10">
+                          <b>{benchmarks[0]?.category || "Unknown Category"}</b>
+                        </span>
+                        <div className="flex-1 h-px bg-black"></div>
+                      </div>
                     </td>
-                    <td>
-                      {benchmark.aggregate_value.value}
-                    </td>
-                    <td>{Rating(benchmark)}</td>
                   </tr>
-                )
-              )}
+
+                  {/* Render each benchmark row */}
+                  {benchmarks.map((benchmark: WorkflowBenchmark) => (
+                    <tr key={benchmark.title}>
+                      <td
+                        className="tooltip tooltip-right"
+                        data-tip={benchmark.description || "No description available"}
+                      >
+                        {benchmark.title}
+                      </td>
+                      <td>{benchmark.aggregate_value?.value || "N/A"}</td>
+                      <td>{Rating(benchmark)}</td>
+                    </tr>
+                  ))}
+                </React.Fragment>
+              ))}
             </tbody>
           </table>
         </div>
