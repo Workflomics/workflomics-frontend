@@ -5,7 +5,6 @@
   border-radius: 10px;
 }
 
-/* TODO: does this have any effect? */
-td {
+table.benchmark-results td {
   padding: 8px;
 }
