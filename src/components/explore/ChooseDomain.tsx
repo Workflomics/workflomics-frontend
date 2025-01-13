@@ -33,6 +33,7 @@ const ChooseDomain: React.FC<any> = observer((props) => {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Executable</th>
               <th>Description</th>
               <th>Topics</th>
               <th>Action</th>
@@ -41,7 +42,8 @@ const ChooseDomain: React.FC<any> = observer((props) => {
           <tbody>
           { domains.map(domain => (
             <tr key={domain.id}>
-              <td>{ domain.unique_label }</td>
+              <td>{domain.unique_label}</td>
+              <td>{ domain.executable ? '✅' : '❌' }</td>
               <td>{ domain.description }</td>
               <td>{ domain.topic_of_research.map((topic, index) => 
                   (<span key={index} className="badge">{topic.unique_label}</span>)) }</td>

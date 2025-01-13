@@ -7,6 +7,7 @@ export interface Domain {
   repo_url: string;
   public: boolean;
   topic_of_research: TopicOfResearch[];
+  executable: boolean;
 }
 
 export interface TopicOfResearch {
