@@ -5,9 +5,11 @@ import { Link } from 'react-router-dom';
 import { ConstraintInstance, WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { ConstraintTemplate } from '../../stores/ConstraintStore';
-import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
+import OntologyTreeSelect from '../OntologyTreeSelect';
 import { runInAction } from 'mobx';
-import { ApeTaxTuple } from '../../stores/TaxStore';
+import { ApeTaxTuple, TaxonomyClass } from '../../stores/TaxStore';
+import { mdiClose } from '@mdi/js';
+import Icon from '@mdi/react';
 
 const WorkflowConstraints: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
@@ -34,16 +36,20 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     });
   };
 
-  const removeConstraint = () => {
+  const removeConstraint = (index: number) => {
     runInAction(() => {
-      workflowConfig.constraints.pop();
+      workflowConfig.constraints.splice(index, 1);
     });
   };
 
-  const onConstraintTypeChange = (constraintIndex: number, node: TreeNode) => {
+  const onConstraintTypeChange = (constraintIndex: number, constraintID: string) => {
     runInAction(() => {
-      console.log("Constraint type change", constraintIndex, node.label);
-      const template: ConstraintTemplate = node as unknown as ConstraintTemplate;
+      const constraint = allConstraints.find((constraint) => constraint.id === constraintID);
+      if (constraint === undefined) {
+        return;
+      }
+      console.log("Constraint type change", constraintIndex, constraint.label);
+      const template: ConstraintTemplate = constraint as unknown as ConstraintTemplate;
       const parameters: ApeTaxTuple[] = template.parameters.map((parameter) => {
         //TODO: not only support tools
         return taxStore.getEmptyTaxParameter(taxStore.availableToolTax);
@@ -52,11 +58,14 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     });
   };
 
-  const onParameterChange = (constraintIndex: number, parameterIndex: number, node: TreeNode, root: string) => {
+  const onParameterChange = (constraintIndex: number, parameterIndex: number, value: TaxonomyClass | null, root: string) => {
+    if (value === null) {
+      return;
+    }
     runInAction(() => {
-      console.log("Parameter change", constraintIndex, node.label, root);
+      console.log("Parameter change", constraintIndex, value.label, root);
       const constraintInstance: ConstraintInstance = workflowConfig.constraints[constraintIndex];
-      constraintInstance.parameters[parameterIndex][root] = node;
+      constraintInstance.parameters[parameterIndex][root] = value;
     });
   };
 
@@ -81,39 +90,46 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
             <div className="flex items-center space-x-4">
               <div className="tooltip tooltip-right" data-tip="Provide information about data formats, types and operations to guide the workflow generation.">
                 <span className="text-3xl flex-grow-0 w-40">Constraints</span>
-                </div>
-              <div className="flex flex-grow">
+              </div>
+              <div className="flex flex-grow flex-row space-x-4">
                 {
-                  workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
+                  workflowConfig.constraints.map((constraint: ConstraintInstance, constraintIndex: number) => {
                     const root = "http://edamontology.org/operation_0004";
-                    return (<div key={index}>
-                      <TreeSelectionBox value={constraint} root={""}
-                        nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
-                        placeholder="Type of constraint" style={{ fontWeight: 'bold' }} />
+                    return (<div key={constraintIndex}
+                                className="remove-button-container flex flex-col space-y-2 relative">
+                      <button
+                        className="remove-button btn btn-square btn-outline btn-sm"
+                        style={{ position: "absolute", top: "-4px", right: "-10px", zIndex: 10, border: "none"}}
+                        onClick={() => { removeConstraint(constraintIndex); }} >
+                          <Icon path={mdiClose} size={1} />
+                      </button>
+                      <select className="select select-bordered w-full max-w-xs"
+                              style={{ fontWeight: 'bold' }}
+                              value={constraint.id}
+                              onChange={(e) => onConstraintTypeChange(constraintIndex, e.target.value)}>
+                        <option disabled selected>Select the constraint type</option>
+                        { allConstraints.map((constraint: ConstraintTemplate) => {
+                          return <option 
+                            key={constraint.id}
+                            value={constraint.id}>{constraint.label}</option>;
+                        })}
+                      </select>
 
-                      {constraint.id !== "" && constraint.parameters.length > 0 && 
-                      <TreeSelectionBox 
-                        value={constraint.parameters.length > 0 ? constraint.parameters[0][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
-                        nodes={allToolsTax[root].subsets}
-                        root={root}
-                        onChange={(node: TreeNode) => onParameterChange(index, 0, node, root)}
-                        placeholder="Operation" />}
-                      {constraint.id !== "" && constraint.parameters.length === 2 && 
-                      <TreeSelectionBox 
-                        value={constraint.parameters.length > 0 ? constraint.parameters[1][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
-                        nodes={allToolsTax[root].subsets}
-                        root={root}
-                        onChange={(node: TreeNode) => onParameterChange(index, 1, node, root)}
-                        placeholder="Operation" />
-                        }
+                      { constraint.id !== "" && constraint.parameters.map((parameter: ApeTaxTuple, parameterIndex: number) => {
+                          return (<OntologyTreeSelect
+                            key={parameterIndex}
+                            ontology={allToolsTax[root]}
+                            value={parameter[root]}
+                            setValue={(value: TaxonomyClass | null) => onParameterChange(constraintIndex, parameterIndex, value, root)}
+                            placeholder="Operation" />);
+                      })}
+
                     </div>);
                   })
                 }
+                {/* "Add constraint" button */}
                 <div className="tooltip tooltip-bottom" data-tip="Add an additional constraint to the specification.">
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addConstraint()}>+</button>
-              </div>
-              <div className="tooltip tooltip-bottom" data-tip="Remove the last specified constraint.">
-              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeConstraint()}>-</button>
+                  <button className="btn m-1 w-12 h-12 text-lg mt-6" onClick={() => addConstraint()}>+</button>
                 </div>
               </div >
             </div >
