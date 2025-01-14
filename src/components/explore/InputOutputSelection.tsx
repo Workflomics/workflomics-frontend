@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
-import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
 import { runInAction } from 'mobx';
-import taxStore, { ApeTaxTuple } from '../../stores/TaxStore';
+import taxStore, { ApeTaxTuple, TaxonomyClass } from '../../stores/TaxStore';
+import OntologyTreeSelect from '../OntologyTreeSelect';
 
 interface InputsOutputSelectionProps {
   parameterTuple: ApeTaxTuple;
@@ -11,7 +11,10 @@ interface InputsOutputSelectionProps {
 
 const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ parameterTuple, dataTaxonomy }) => {
 
-  const onTypeChange = (root: string, node: TreeNode) => {
+  const onTypeChange = (root: string, node: TaxonomyClass | null) => {
+    if (node === null) {
+      return;
+    }
     runInAction(() => {
       parameterTuple[root] = node;
     });
@@ -24,12 +27,11 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
         Object.values(dataTaxonomy).map((paramClass) => {
           // try {
           return (
-            <TreeSelectionBox
+            <OntologyTreeSelect
               key={paramClass.id}
-              nodes={paramClass.subsets}
-              value={parameterTuple ? parameterTuple[paramClass.id] : taxStore.getEmptyTaxParameter(taxStore.availableDataTax)}
-              root={paramClass.id}
-              onChange={(node: TreeNode) => onTypeChange(paramClass.id, node)}
+              ontology={paramClass}
+              value={parameterTuple ? parameterTuple[paramClass.id] : taxStore.copyTaxonomyClass(paramClass)}
+              setValue={(value: TaxonomyClass | null) => onTypeChange(paramClass.id, value)}
               placeholder={paramClass.label}
             />
           );

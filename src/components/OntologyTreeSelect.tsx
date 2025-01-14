@@ -18,6 +18,11 @@ const { TreeNode } = TreeSelect;
  */
 const separator: string = '\n';
 
+type NodeEntry = {
+  label: string,
+  id: string
+};
+
 /**
  * Props interface for {@link OntologyTreeSelect}
  */
@@ -25,9 +30,9 @@ interface OntologyTreeSelectProps {
   /** The ontology to turn into a TreeSelect */
   ontology: TaxonomyClass;
   /** The current value */
-  value: { type: string, label: string, id: string };
+  value: NodeEntry;
   /** Set the label in the parent component */
-  setValue: (value: { type: string | null, label: string | null, id: string | null}) => void;
+  setValue: (value: TaxonomyClass | null) => void;
   /** The placeholder text for the TreeSelect */
   placeholder: string;
 }
@@ -43,7 +48,7 @@ function serializeOntology(node: TaxonomyClass, parents: TaxonomyClass[] = []) {
 
   // List of children nodes, only assign if node.children isn't null
   let childrenNodes: any[] | null = null;
-  if (node.subsets !== null) {
+  if (node.subsets !== null && node.subsets !== undefined) {
     childrenNodes = node.subsets.map((child: TaxonomyClass) => serializeOntology(child, route));
   }
 
@@ -76,7 +81,7 @@ function searchInTree(id: string, node: TaxonomyClass, parents: string[] = []) {
   }
 
   let output: string | null = null;
-  if (node.subsets !== null) {
+  if (node.subsets !== null && node.subsets !== undefined) {
     /*
      * Iterate over the children and call SearchInTree on them and store
      * the value in output. If the return value is not null, it means we
@@ -112,14 +117,14 @@ function OntologyTreeSelect(props: OntologyTreeSelectProps) {
       result = searchInTree(value.id, ontology);
     }
 
-    return result;
+    return result || "";
   };
 
   /*
    * Store the path to the node in the hooks. The actual value gets updated
    * by onChange, so this is a copy that is better to work with in this environment.
    */
-  const [path, setPath]: [string | null, (value: string | null) => void] = useState(findPath());
+  const [path, setPath]: [string, (value: string) => void] = useState(findPath());
 
   /*
    * This check is here to see if the path needs updating. When the OntologyTreeSelect
@@ -135,7 +140,7 @@ function OntologyTreeSelect(props: OntologyTreeSelectProps) {
     } else {
       // Result is null, meaning that the id couldn't be found. Empty the value.
       message.error(`Node with id ${value.id} could not be found in the tree`);
-      setValue({ label: null, type: null, id: null });
+      setValue(null);
     }
   }
 
@@ -146,8 +151,8 @@ function OntologyTreeSelect(props: OntologyTreeSelectProps) {
   const onChange = (key: string): void => {
     if (key === undefined) {
       // If the key is undefined (meaning that the value is being cleared), empty the value
-      setValue({ label: null, type: null, id: null });
-      setPath(null);
+      setValue(null);
+      setPath("");
     } else {
       // Walk through the tree and go to the node given by splitting the key
 
@@ -169,7 +174,7 @@ function OntologyTreeSelect(props: OntologyTreeSelectProps) {
       });
 
       // Set the value to the node value
-      setValue({ id: node.id, label: node.label, type: ontology.id });
+      setValue({ id: node.id, label: node.label, root: "", subsets: [] });
       setPath(key);
     }
   };
