@@ -88,12 +88,13 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
             <div className="flex items-center space-x-4">
               <div className="tooltip tooltip-right" data-tip="Provide information about data formats, types and operations to guide the workflow generation.">
                 <span className="text-3xl flex-grow-0 w-40">Constraints</span>
-                </div>
-              <div className="flex flex-grow">
+              </div>
+              <div className="flex flex-grow flex-row space-x-4">
                 {
                   workflowConfig.constraints.map((constraint: ConstraintInstance, constraintIndex: number) => {
                     const root = "http://edamontology.org/operation_0004";
-                    return (<div key={constraintIndex}>
+                    return (<div key={constraintIndex}
+                                className="flex flex-col space-y-2">
                       <select className="select select-bordered w-full max-w-xs"
                               style={{ fontWeight: 'bold' }}
                               value={constraint.id}

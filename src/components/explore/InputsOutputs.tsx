@@ -82,7 +82,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           {/* Inputs */}
           <div className="flex items-center space-x-4">
               <span className="text-3xl flex-grow-0 w-32">Inputs</span>
-            <div className="flex flex-grow items-center">
+            <div className="flex flex-grow items-center flex-row space-x-4 w-50">
               {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
                 return (<InputsOutputSelection key={index} parameterTuple={input} dataTaxonomy={allDataTax} />)
               })}
@@ -98,7 +98,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           {/* Outputs */}
           <div className="flex items-center space-x-4">
               <span className="text-3xl flex-grow-0 w-32">Outputs</span>
-            <div className="flex flex-grow items-center">
+            <div className="flex flex-grow items-center flex-row space-x-4">
               {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
                 return (<InputsOutputSelection key={index} parameterTuple={output} dataTaxonomy={allDataTax} />)
               })}

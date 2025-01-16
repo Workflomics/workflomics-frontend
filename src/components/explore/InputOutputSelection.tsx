@@ -21,8 +21,9 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
   };
 
   return (
-    <div className="tooltip tooltip-bottom"
+    <div className="tooltip tooltip-bottom flex flex-col space-y-2"
     data-tip="Specify data type and format as concrete as possible.">
+      <span style={{visibility: 'hidden'}}>This is just a dummy to take up some space</span>
       {
         Object.values(dataTaxonomy).map((paramClass) => {
           // try {
