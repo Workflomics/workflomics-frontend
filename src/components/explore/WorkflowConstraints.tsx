@@ -91,13 +91,13 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                 </div>
               <div className="flex flex-grow">
                 {
-                  workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
+                  workflowConfig.constraints.map((constraint: ConstraintInstance, constraintIndex: number) => {
                     const root = "http://edamontology.org/operation_0004";
-                    return (<div key={index}>
+                    return (<div key={constraintIndex}>
                       <select className="select select-bordered w-full max-w-xs"
                               style={{ fontWeight: 'bold' }}
                               value={constraint.id}
-                              onChange={(e) => onConstraintTypeChange(index, e.target.value)}>
+                              onChange={(e) => onConstraintTypeChange(constraintIndex, e.target.value)}>
                         <option disabled selected>Select the constraint type</option>
                         { allConstraints.map((constraint: ConstraintTemplate) => {
                           return <option 
@@ -106,19 +106,15 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                         })}
                       </select>
 
-                      {constraint.id !== "" && constraint.parameters.length > 0 && 
-                      <OntologyTreeSelect 
-                        ontology={allToolsTax[root]}
-                        value={constraint.parameters.length > 0 ? constraint.parameters[0][root] : taxStore.copyTaxonomyClass(allToolsTax[root])}
-                        setValue={(value: TaxonomyClass | null) => onParameterChange(index, 0, value, root)}
-                        placeholder="Operation" />}
-                      {constraint.id !== "" && constraint.parameters.length === 2 && 
-                      <OntologyTreeSelect 
-                        ontology={allToolsTax[root]}
-                        value={constraint.parameters.length > 0 ? constraint.parameters[1][root] : taxStore.copyTaxonomyClass(allToolsTax[root])}
-                        setValue={(value: TaxonomyClass | null) => onParameterChange(index, 1, value, root)}
-                        placeholder="Operation" />
-                        }
+                      { constraint.id !== "" && constraint.parameters.map((parameter: ApeTaxTuple, parameterIndex: number) => {
+                          return (<OntologyTreeSelect
+                            key={parameterIndex}
+                            ontology={allToolsTax[root]}
+                            value={parameter[root]}
+                            setValue={(value: TaxonomyClass | null) => onParameterChange(constraintIndex, parameterIndex, value, root)}
+                            placeholder="Operation" />);
+                      })}
+
                     </div>);
                   })
                 }
