@@ -196,7 +196,6 @@ function OntologyTreeSelect(props: OntologyTreeSelectProps) {
   return (
     <TreeSelect
       data-testid="OntologyTreeSelect"
-      style={{ width: '100%' }}
       showSearch
       value={path}
       placeholder={placeholder}
