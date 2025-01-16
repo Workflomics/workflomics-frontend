@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import { ConstraintInstance, WorkflowConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { ConstraintTemplate } from '../../stores/ConstraintStore';
-import { TreeNode, TreeSelectionBox } from '../TreeSelectionBox';
+import OntologyTreeSelect from '../OntologyTreeSelect';
 import { runInAction } from 'mobx';
-import { ApeTaxTuple } from '../../stores/TaxStore';
+import { ApeTaxTuple, TaxonomyClass } from '../../stores/TaxStore';
 
 const WorkflowConstraints: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
@@ -40,10 +40,14 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     });
   };
 
-  const onConstraintTypeChange = (constraintIndex: number, node: TreeNode) => {
+  const onConstraintTypeChange = (constraintIndex: number, constraintID: string) => {
     runInAction(() => {
-      console.log("Constraint type change", constraintIndex, node.label);
-      const template: ConstraintTemplate = node as unknown as ConstraintTemplate;
+      const constraint = allConstraints.find((constraint) => constraint.id === constraintID);
+      if (constraint === undefined) {
+        return;
+      }
+      console.log("Constraint type change", constraintIndex, constraint.label);
+      const template: ConstraintTemplate = constraint as unknown as ConstraintTemplate;
       const parameters: ApeTaxTuple[] = template.parameters.map((parameter) => {
         //TODO: not only support tools
         return taxStore.getEmptyTaxParameter(taxStore.availableToolTax);
@@ -52,11 +56,14 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     });
   };
 
-  const onParameterChange = (constraintIndex: number, parameterIndex: number, node: TreeNode, root: string) => {
+  const onParameterChange = (constraintIndex: number, parameterIndex: number, value: TaxonomyClass | null, root: string) => {
+    if (value === null) {
+      return;
+    }
     runInAction(() => {
-      console.log("Parameter change", constraintIndex, node.label, root);
+      console.log("Parameter change", constraintIndex, value.label, root);
       const constraintInstance: ConstraintInstance = workflowConfig.constraints[constraintIndex];
-      constraintInstance.parameters[parameterIndex][root] = node;
+      constraintInstance.parameters[parameterIndex][root] = value;
     });
   };
 
@@ -87,23 +94,29 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                   workflowConfig.constraints.map((constraint: ConstraintInstance, index: number) => {
                     const root = "http://edamontology.org/operation_0004";
                     return (<div key={index}>
-                      <TreeSelectionBox value={constraint} root={""}
-                        nodes={allConstraints} onChange={(node: TreeNode) => onConstraintTypeChange(index, node)}
-                        placeholder="Type of constraint" style={{ fontWeight: 'bold' }} />
+                      <select className="select select-bordered w-full max-w-xs"
+                              style={{ fontWeight: 'bold' }}
+                              value={constraint.id}
+                              onChange={(e) => onConstraintTypeChange(index, e.target.value)}>
+                        <option disabled selected>Select the constraint type</option>
+                        { allConstraints.map((constraint: ConstraintTemplate) => {
+                          return <option 
+                            key={constraint.id}
+                            value={constraint.id}>{constraint.label}</option>;
+                        })}
+                      </select>
 
                       {constraint.id !== "" && constraint.parameters.length > 0 && 
-                      <TreeSelectionBox 
-                        value={constraint.parameters.length > 0 ? constraint.parameters[0][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
-                        nodes={allToolsTax[root].subsets}
-                        root={root}
-                        onChange={(node: TreeNode) => onParameterChange(index, 0, node, root)}
+                      <OntologyTreeSelect 
+                        ontology={allToolsTax[root]}
+                        value={constraint.parameters.length > 0 ? constraint.parameters[0][root] : taxStore.copyTaxonomyClass(allToolsTax[root])}
+                        setValue={(value: TaxonomyClass | null) => onParameterChange(index, 0, value, root)}
                         placeholder="Operation" />}
                       {constraint.id !== "" && constraint.parameters.length === 2 && 
-                      <TreeSelectionBox 
-                        value={constraint.parameters.length > 0 ? constraint.parameters[1][root] : { id: allToolsTax.id, label: allToolsTax.label, subsets: [] }}
-                        nodes={allToolsTax[root].subsets}
-                        root={root}
-                        onChange={(node: TreeNode) => onParameterChange(index, 1, node, root)}
+                      <OntologyTreeSelect 
+                        ontology={allToolsTax[root]}
+                        value={constraint.parameters.length > 0 ? constraint.parameters[1][root] : taxStore.copyTaxonomyClass(allToolsTax[root])}
+                        setValue={(value: TaxonomyClass | null) => onParameterChange(index, 1, value, root)}
                         placeholder="Operation" />
                         }
                     </div>);

@@ -94,7 +94,7 @@ export class TaxStore {
   }
 
   copyTaxonomyClass(taxonomyClass: TaxonomyClass): TaxonomyClass {
-    return { id: taxonomyClass.id, label: taxonomyClass.label, root: taxonomyClass.root, subsets: taxonomyClass.subsets };
+    return { id: taxonomyClass.id, label: taxonomyClass.label, root: taxonomyClass.root, subsets: [] };
   }
 
 }

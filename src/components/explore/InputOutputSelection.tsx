@@ -11,12 +11,12 @@ interface InputsOutputSelectionProps {
 
 const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ parameterTuple, dataTaxonomy }) => {
 
-  const onTypeChange = (root: string, node: TaxonomyClass | null) => {
-    if (node === null) {
+  const onTypeChange = (root: string, value: TaxonomyClass | null) => {
+    if (value === null) {
       return;
     }
     runInAction(() => {
-      parameterTuple[root] = node;
+      parameterTuple[root] = value;
     });
   };
 
