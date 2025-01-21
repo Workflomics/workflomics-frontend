@@ -26,7 +26,7 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
   const removeButton = () => (
     <button
       className="remove-button btn btn-square btn-outline btn-sm"
-      style={{ position: "absolute", top: "4px", right: "-10px", zIndex: 10, border: "none"}}
+      style={{ position: "absolute", top: "-2px", right: "-10px", zIndex: 10, border: "none"}}
       onClick={() => { removeEntry(); }} >
         <Icon path={mdiClose} size={1} />
     </button>
