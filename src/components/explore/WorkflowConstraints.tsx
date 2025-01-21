@@ -8,6 +8,8 @@ import { ConstraintTemplate } from '../../stores/ConstraintStore';
 import OntologyTreeSelect from '../OntologyTreeSelect';
 import { runInAction } from 'mobx';
 import { ApeTaxTuple, TaxonomyClass } from '../../stores/TaxStore';
+import { mdiClose } from '@mdi/js';
+import Icon from '@mdi/react';
 
 const WorkflowConstraints: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
@@ -34,9 +36,9 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
     });
   };
 
-  const removeConstraint = () => {
+  const removeConstraint = (index: number) => {
     runInAction(() => {
-      workflowConfig.constraints.pop();
+      workflowConfig.constraints.splice(index, 1);
     });
   };
 
@@ -94,7 +96,13 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                   workflowConfig.constraints.map((constraint: ConstraintInstance, constraintIndex: number) => {
                     const root = "http://edamontology.org/operation_0004";
                     return (<div key={constraintIndex}
-                                className="flex flex-col space-y-2">
+                                className="remove-button-container flex flex-col space-y-2 relative">
+                      <button
+                        className="remove-button btn btn-square btn-outline btn-sm"
+                        style={{ position: "absolute", top: "-4px", right: "-10px", zIndex: 10, border: "none"}}
+                        onClick={() => { removeConstraint(constraintIndex); }} >
+                          <Icon path={mdiClose} size={1} />
+                      </button>
                       <select className="select select-bordered w-full max-w-xs"
                               style={{ fontWeight: 'bold' }}
                               value={constraint.id}
@@ -119,11 +127,9 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                     </div>);
                   })
                 }
+                {/* "Add constraint" button */}
                 <div className="tooltip tooltip-bottom" data-tip="Add an additional constraint to the specification.">
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addConstraint()}>+</button>
-              </div>
-              <div className="tooltip tooltip-bottom" data-tip="Remove the last specified constraint.">
-              <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeConstraint()}>-</button>
+                  <button className="btn m-1 w-12 h-12 text-lg mt-6" onClick={() => addConstraint()}>+</button>
                 </div>
               </div >
             </div >

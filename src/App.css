@@ -74,3 +74,18 @@ body.body-modal-open {
   width: 7px;
   border-bottom: 1px solid black;
 }
+
+.remove-button-container {
+  padding-top: 1rem;
+}
+
+.remove-button {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.remove-button-container:hover .remove-button {
+  opacity: 1;
+  visibility: visible;
+}

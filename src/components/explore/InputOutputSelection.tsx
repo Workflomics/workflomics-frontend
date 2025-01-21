@@ -24,16 +24,16 @@ const InputsOutputSelection: React.FC<InputsOutputSelectionProps> = observer(({ 
   };
 
   const removeButton = () => (
-    <div className='flex'><span style={{visibility: 'hidden'}}>This is a dummy to take up some space</span>
     <button
-      className="btn btn-square btn-outline btn-sm align-right"
-      style={{ position: "absolute", top: 0, left: 0, border: "none" }}
+      className="remove-button btn btn-square btn-outline btn-sm"
+      style={{ position: "absolute", top: "4px", right: "-10px", zIndex: 10, border: "none"}}
       onClick={() => { removeEntry(); }} >
         <Icon path={mdiClose} size={1} />
-    </button></div>
+    </button>
   );
+
   return (
-    <div className="tooltip tooltip-bottom flex flex-col space-y-2"
+    <div className="remove-button-container tooltip tooltip-bottom flex flex-col space-y-2 w-64 relative"
     data-tip="Specify data type and format as concrete as possible.">
       { removeButton() }
       {

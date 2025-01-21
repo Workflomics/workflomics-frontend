@@ -90,8 +90,9 @@ const InputsOutputs: React.FC<any> = observer((props) => {
                     dataTaxonomy={allDataTax}
                     removeEntry={() => removeInput(index)}/>)
               })}
+              {/* "Add input" button */}
               <div className="tooltip tooltip-bottom" data-tip="Add an additional input file.">
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
+                <button className="btn m-1 w-12 h-12 text-lg mt-0" onClick={() => addInput()}>+</button>
               </div>
             </div>
           </div>
@@ -107,8 +108,9 @@ const InputsOutputs: React.FC<any> = observer((props) => {
                   dataTaxonomy={allDataTax}
                   removeEntry={() => removeOutput(index)}/>)
               })}
+              {/* "Add output" button */}
               <div className="tooltip tooltip-bottom" data-tip="Add an additional output file.">
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
+                <button className="btn m-1 w-12 h-12 text-lg mt-0" onClick={() => addOutput()}>+</button>
               </div>
             </div>
           </div>
