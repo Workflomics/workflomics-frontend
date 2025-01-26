@@ -27,9 +27,9 @@ const InputsOutputs: React.FC<any> = observer((props) => {
     });
   };
 
-  const removeInput = () => {
+  const removeInput = (index: number) => {
     runInAction(() => {
-      workflowConfig.inputs.pop();
+      workflowConfig.inputs.splice(index, 1);
     });
   };
 
@@ -39,9 +39,9 @@ const InputsOutputs: React.FC<any> = observer((props) => {
     });
   };
 
-  const removeOutput = () => {
+  const removeOutput = (index: number) => {
     runInAction(() => {
-      workflowConfig.outputs.pop();
+      workflowConfig.outputs.splice(index, 1);
     });
   };
 
@@ -82,15 +82,17 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           {/* Inputs */}
           <div className="flex items-center space-x-4">
               <span className="text-3xl flex-grow-0 w-32">Inputs</span>
-            <div className="flex flex-grow items-center">
+            <div className="flex flex-grow items-center flex-row space-x-4 w-50">
               {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
-                return (<InputsOutputSelection key={index} parameterTuple={input} dataTaxonomy={allDataTax} />)
+                return (<InputsOutputSelection
+                    key={index}
+                    parameterTuple={input}
+                    dataTaxonomy={allDataTax}
+                    removeEntry={() => removeInput(index)}/>)
               })}
+              {/* "Add input" button */}
               <div className="tooltip tooltip-bottom" data-tip="Add an additional input file.">
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addInput()}>+</button>
-              </div>
-              <div className="tooltip tooltip-bottom" data-tip="Remove the last input file.">
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeInput()}>-</button>
+                <button className="btn m-1 w-12 h-12 text-lg mt-0" onClick={() => addInput()}>+</button>
               </div>
             </div>
           </div>
@@ -98,16 +100,18 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           {/* Outputs */}
           <div className="flex items-center space-x-4">
               <span className="text-3xl flex-grow-0 w-32">Outputs</span>
-            <div className="flex flex-grow items-center">
+            <div className="flex flex-grow items-center flex-row space-x-4">
               {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
-                return (<InputsOutputSelection key={index} parameterTuple={output} dataTaxonomy={allDataTax} />)
+                return (<InputsOutputSelection
+                  key={index}
+                  parameterTuple={output}
+                  dataTaxonomy={allDataTax}
+                  removeEntry={() => removeOutput(index)}/>)
               })}
+              {/* "Add output" button */}
               <div className="tooltip tooltip-bottom" data-tip="Add an additional output file.">
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => addOutput()}>+</button>
+                <button className="btn m-1 w-12 h-12 text-lg mt-0" onClick={() => addOutput()}>+</button>
               </div>
-              <div className="tooltip tooltip-bottom" data-tip="Remove the last output file.">
-                <button className="btn m-1 w-12 h-12 text-lg" onClick={() => removeOutput()}>-</button>
-                </div>
             </div>
           </div>
 

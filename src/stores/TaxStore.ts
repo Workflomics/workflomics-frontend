@@ -12,7 +12,7 @@ export interface TaxonomyClass {
 }
 
 /**
- * The type represents a data/operation touple used in APE configuration. It represents either an operation, or a data instance class (obtained from a taxonomy).
+ * The type represents a data/operation tuple used in APE configuration. It represents either an operation, or a data instance class (obtained from a taxonomy).
  * In each case it comprises of a map of dimensions to taxonomy classes used to depict the given dimension. 
  * 
  * Note: In case of the operation there is only one dimension of data. 
@@ -91,6 +91,10 @@ export class TaxStore {
       emptyTaxParameter[taxRoot.id] = { id: taxRoot.id, label: taxRoot.label, root: taxRoot.root, subsets: [] };
     }
     return emptyTaxParameter;
+  }
+
+  copyTaxonomyClass(taxonomyClass: TaxonomyClass): TaxonomyClass {
+    return { id: taxonomyClass.id, label: taxonomyClass.label, root: taxonomyClass.root, subsets: [] };
   }
 
 }
