@@ -202,7 +202,7 @@ function OntologyTreeSelect(props: OntologyTreeSelectProps) {
       allowClear
       onChange={onChange}
       treeDefaultExpandedKeys={[ontology.id]}
-      dropdownMatchSelectWidth={400}
+      popupMatchSelectWidth={400}
       filterTreeNode={filterTreeNode}
     >
       { serializeOntology(ontology) }

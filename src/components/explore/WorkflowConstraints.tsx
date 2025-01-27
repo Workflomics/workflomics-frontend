@@ -107,11 +107,13 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
                               style={{ fontWeight: 'bold' }}
                               value={constraint.id}
                               onChange={(e) => onConstraintTypeChange(constraintIndex, e.target.value)}>
-                        <option disabled selected>Select the constraint type</option>
-                        { allConstraints.map((constraint: ConstraintTemplate) => {
-                          return <option 
-                            key={constraint.id}
-                            value={constraint.id}>{constraint.label}</option>;
+                        <option disabled value="">Select the constraint type</option>
+                        {allConstraints.map((constraint: ConstraintTemplate) => {
+                          return (
+                            <option 
+                              key={constraint.id}
+                              value={constraint.id}>{constraint.label}</option>
+                          );
                         })}
                       </select>
 
