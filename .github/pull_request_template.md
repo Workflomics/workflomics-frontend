@@ -13,6 +13,3 @@
 - [ ] Self-reviewed and commented where needed.
 - [ ] Documentation updated if needed.
 - [ ] No new warnings or errors.
-
-## Additional Notes
-<!-- Any extra context or details. -->

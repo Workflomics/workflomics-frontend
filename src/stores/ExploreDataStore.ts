@@ -300,7 +300,6 @@ export class ExploreDataStore {
       outputs: this.inputsOutputsToJSON(config.outputs),
       constraints: this.constraintsToJSON(run_constraints),
     };
-    console.log(obj);
     return obj;
   }
 
