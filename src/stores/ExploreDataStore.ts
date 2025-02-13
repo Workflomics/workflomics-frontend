@@ -1,12 +1,9 @@
 import { makeAutoObservable } from "mobx";
-import {
-  ConstraintInstance,
-  WorkflowConfig,
-  WorkflowSolution,
-  isTaxParameterComplete,
-} from "./WorkflowTypes";
 import { makePersistable } from "mobx-persist-store";
+import { UserConfig, WorkflowSolution, isTaxParameterComplete } from "./WorkflowTypes";
 import { ApeTaxTuple } from "./TaxStore";
+import { ConstraintInstance } from "./ConstraintStore";
+import domainStore, { DomainConfig, JsonConstraintInstance } from "./DomainStore";
 
 /**
  * TODO: Default inputs should be read from the domain configuration file.
@@ -14,6 +11,7 @@ import { ApeTaxTuple } from "./TaxStore";
 const emptyWorkflowConfig = () => {
   return {
     domain: undefined,
+    domainConfig: undefined,
     inputs: [
       {
         "http://edamontology.org/data_0006": {
@@ -69,8 +67,12 @@ const emptyWorkflowConfig = () => {
   };
 };
 
+
+
+/** Store for exploration configuration and solutions  */
 export class ExploreDataStore {
-  workflowConfig: WorkflowConfig = emptyWorkflowConfig();
+  userConfig: UserConfig = emptyWorkflowConfig();
+
   workflowSolutions: WorkflowSolution[] = [];
   selectedWorkflowSolutions: WorkflowSolution[] = [];
   isGenerating: boolean = false;
@@ -80,7 +82,7 @@ export class ExploreDataStore {
     makeAutoObservable(this, {}, { deep: true });
     makePersistable(this, {
       name: "ExploreDataStore",
-      properties: ["workflowConfig", "workflowSolutions"],
+      properties: ["userConfig", "workflowSolutions"],
       storage: window.localStorage,
     });
   }
@@ -112,20 +114,13 @@ export class ExploreDataStore {
    * @param allConstraints list of constraints
    * @returns JSON representation of the constraints
    */
-  constraintsToJSON(allConstraints: ConstraintInstance[]) {
+  constraintsToJSON(allConstraints: ConstraintInstance[]): JsonConstraintInstance[] {
     const newConst = allConstraints
       .filter((constraint) => constraint.id !== "")
       .map((constraint) => {
         return {
           constraintid: constraint!.id,
-          parameters: constraint!.parameters.map(
-            this.parameterToJSON
-            //TODO: how to pass the parameters?
-            // param => Object.entries(param).reduce(
-            //   (obj, [key, data]) => { return { ...obj, [key]: data.id} }, {}
-            // )
-          ),
-          // "parameters": value!.parameters.map(this.parameterToJSON)
+          parameters: constraint!.parameters.map(this.parameterToJSON),
         };
       });
     newConst.push({
@@ -164,15 +159,15 @@ export class ExploreDataStore {
     return newConst;
   }
 
-  async configToJSON(config: WorkflowConfig): Promise<any> {
-    // These should be dynamically generated from the domain configuration file
-    const dataRoot: string = "http://edamontology.org/data_0006";
-    const formatRoot: string = "http://edamontology.org/format_1915";
-    const toolsRoot: string = "operation_0004";
-
-    const default_domain_config = await this.readDomainConfig(
-      config.domain?.repo_url
-    );
+  /** Combines the default domain config with the selected options in the GUI
+   *  (inputs, outputs, constraints, generation parameters) to create a configuration
+   *  to use for synthesis.
+   */
+  constructSynthesisConfig(config: UserConfig): DomainConfig {
+    const defaultConfig = domainStore.currentDomainConfig;
+    if (!defaultConfig) {
+      throw new Error("No domain configuration found");
+    }
 
     const run_constraints: ConstraintInstance[] = [];
     // The execution is not working with the constraints pulled from the domain config
@@ -183,26 +178,29 @@ export class ExploreDataStore {
       }
     });
 
-    const obj: any = {
-      ontology_path: default_domain_config?.ontology_path,
-      ontologyPrefixIRI: default_domain_config?.ontologyPrefixIRI,
-      toolsTaxonomyRoot: toolsRoot,
-      dataDimensionsTaxonomyRoots: [dataRoot, formatRoot],
-      tool_annotations_path: default_domain_config?.tool_annotations_path,
-      strict_tool_annotations: default_domain_config?.strict_tool_annotations,
-      timeout_sec: config.timeout,
+    const obj: DomainConfig = {
+      ontology_path:  defaultConfig.ontology_path,
+      ontologyPrefixIRI: defaultConfig.ontologyPrefixIRI,
+      toolsTaxonomyRoot: defaultConfig.toolsTaxonomyRoot,
+      dataDimensionsTaxonomyRoots: defaultConfig.dataDimensionsTaxonomyRoots,
+      tool_annotations_path: defaultConfig.tool_annotations_path,
+      constraints_path: defaultConfig.constraints_path,
+      strict_tool_annotations: defaultConfig.strict_tool_annotations,
+      timeout_sec: config.timeout.toString(),
+      solutions_dir_path: defaultConfig.solutions_dir_path || ".",
       solution_length: {
         min: config.minSteps,
         max: config.maxSteps,
       },
-      solutions: config.solutionCount,
-      number_of_execution_scripts: config.solutionCount,
-      number_of_generated_graphs: config.solutionCount,
+      solutions: config.solutionCount.toString(),
+      number_of_execution_scripts: config.solutionCount.toString(),
+      number_of_generated_graphs: config.solutionCount.toString(),
+      number_of_cwl_files: config.solutionCount.toString(),
       debug_mode: "false",
-      use_workflow_input: default_domain_config?.use_workflow_input || "all",
+      use_workflow_input: defaultConfig?.use_workflow_input || "all",
       use_all_generated_data:
-        default_domain_config?.use_all_generated_data || "one",
-      tool_seq_repeat: default_domain_config?.tool_seq_repeat || "false",
+        defaultConfig?.use_all_generated_data || "one",
+      tool_seq_repeat: defaultConfig?.tool_seq_repeat || "false",
       inputs: this.inputsOutputsToJSON(config.inputs),
       outputs: this.inputsOutputsToJSON(config.outputs),
       constraints: this.constraintsToJSON(run_constraints),
@@ -210,8 +208,8 @@ export class ExploreDataStore {
     return obj;
   }
 
-  async runSynthesis(config: WorkflowConfig) {
-    const configJson: any = await this.configToJSON(config);
+  runSynthesis(config: UserConfig) {
+    const synthesisConfig: DomainConfig = this.constructSynthesisConfig(config);
 
     this.isGenerating = true;
     this.workflowSolutions = [];
@@ -220,7 +218,7 @@ export class ExploreDataStore {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(configJson),
+      body: JSON.stringify(synthesisConfig),
     })
       .then((response) => {
         if (!response.ok) {

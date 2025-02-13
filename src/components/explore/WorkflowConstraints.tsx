@@ -2,7 +2,8 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
 import { Link } from 'react-router-dom';
-import { ConstraintInstance, WorkflowConfig } from '../../stores/WorkflowTypes';
+import { UserConfig } from '../../stores/WorkflowTypes';
+import { ConstraintInstance } from '../../stores/ConstraintStore';
 import { useStore } from '../../store';
 import { ConstraintTemplate } from '../../stores/ConstraintStore';
 import OntologyTreeSelect from '../OntologyTreeSelect';
@@ -13,9 +14,9 @@ import Icon from '@mdi/react';
 
 const WorkflowConstraints: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
-  const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
+  const workflowConfig: UserConfig = exploreDataStore.userConfig;
   let { constraintStore } = useStore();
-  const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraints.filter(
+  const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraintTemplates.filter(
     (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m" || constraint.id === "connected_op" || constraint.id === "not_connected_op"
   );
   let { taxStore } = useStore();
@@ -23,8 +24,8 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
   React.useEffect(() => {
     if (workflowConfig.domain !== undefined) {
-      constraintStore.fetchData(workflowConfig.domain.repo_url);
-      taxStore.fetchData(workflowConfig.domain.repo_url);
+      constraintStore.fetchConstraintTemplates(workflowConfig.domain.repo_url);
+      taxStore.fetchTools(workflowConfig.domain.repo_url);
     }
   }, [constraintStore, taxStore, workflowConfig.domain]);
 
@@ -86,7 +87,7 @@ const WorkflowConstraints: React.FC<any> = observer((props) => {
 
           {/* Constraints */}
           { !constraintStore.isLoading && !taxStore.isLoading && !constraintStore.error && !taxStore.error && 
-            constraintStore.availableConstraints.length > 0 && Object.entries(allToolsTax).length > 0 &&
+            constraintStore.availableConstraintTemplates.length > 0 && Object.entries(allToolsTax).length > 0 &&
             <div className="flex items-center space-x-4">
               <div className="tooltip tooltip-right" data-tip="Provide information about data formats, types and operations to guide the workflow generation.">
                 <span className="text-3xl flex-grow-0 w-40">Constraints</span>

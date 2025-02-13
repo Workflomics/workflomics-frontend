@@ -4,23 +4,23 @@ import { useStore } from '../../store';
 import { Domain } from '../../stores/DomainStore';
 import { useNavigate } from 'react-router-dom';
 import { ExplorationProgress } from './ExplorationProgress';
-import { WorkflowConfig } from '../../stores/WorkflowTypes';
 import { runInAction } from 'mobx';
 
 const ChooseDomain: React.FC<any> = observer((props) => {
   let { domainStore } = useStore();
-  const domains: Domain[] = domainStore.availableDomains;
   let { exploreDataStore } = useStore();
-  const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
   const navigate = useNavigate();
+  const domains: Domain[] = domainStore.availableDomains;
 
   React.useEffect(() => {
-    domainStore.fetchData();
+    domainStore.fetchDomains();
   }, [domainStore]);
 
   const onChooseDomain = (domain: Domain) => {
     runInAction(() => {
-      workflowConfig.domain = domain;
+      // Set the newly selected domain and start fetching the configuration
+      exploreDataStore.userConfig.domain = domain;
+      domainStore.fetchDomainConfig(domain.repo_url);
     });
     navigate('/explore/inputs-outputs');
   };
