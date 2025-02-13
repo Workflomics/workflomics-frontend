@@ -12,7 +12,8 @@ export interface TaxonomyClass {
 }
 
 /**
- * The type represents a data/operation tuple used in APE configuration. It represents either an operation, or a data instance class (obtained from a taxonomy).
+ * The type represents a data/operation tuple used in APE configuration. 
+ * It represents either an operation, or a data instance class (obtained from a taxonomy).
  * In each case it comprises of a map of dimensions to taxonomy classes used to depict the given dimension. 
  * 
  * Note: In case of the operation there is only one dimension of data. 
@@ -38,14 +39,9 @@ export class TaxStore {
   }
 
   /**
-   * Fetches data on operation and data taxonomies from the server.
-   * @param config_path The path to the APE configuration file.
+   * Fetches available taxonomies for tools from the server.
+   * @param config_path The path to the domain configuration file to be used by APE.
    */
-  async fetchData(config_path: string) {
-    this.fetchDataDimensions(config_path);
-    this.fetchTools(config_path);
-  }
-
   async fetchTools(config_path: string) {
     this.isLoading = true;
     this.error = "";
@@ -66,7 +62,14 @@ export class TaxStore {
     });
   }
 
+  /**
+   * Fetches available taxonomies for data from the server.
+   * @param config_path The path to the domain configuration file to be used by APE.
+   */
   async fetchDataDimensions(config_path: string) {
+    this.isLoading = true;
+    this.error = "";
+
     const responseData = await fetch(`/ape/data_taxonomy?config_path=${config_path}`);
     const resultData = await responseData.json();
     runInAction(() => {
@@ -82,7 +85,6 @@ export class TaxStore {
         this.availableDataTax = taxMap;
       }
     });
-
   }
 
   getEmptyTaxParameter(root: ApeTaxTuple): ApeTaxTuple {

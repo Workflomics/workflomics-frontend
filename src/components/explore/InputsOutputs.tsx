@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
-import { WorkflowConfig } from '../../stores/WorkflowTypes';
+import { UserConfig } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { ApeTaxTuple } from '../../stores/TaxStore';
 
 const InputsOutputs: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
-  const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
+  const workflowConfig: UserConfig = exploreDataStore.userConfig;
   let { taxStore } = useStore();
   const allDataTax: ApeTaxTuple = taxStore.availableDataTax;
 
