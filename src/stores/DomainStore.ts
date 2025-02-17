@@ -63,7 +63,6 @@ export interface TopicOfResearch {
 export class DomainStore {
 
   availableDomains: Domain[] = [];
-  currentDomainConfig: DomainConfig | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -97,7 +96,7 @@ export class DomainStore {
    */
   
   async fetchDomainConfig(url: string): Promise<void> {
-    this.currentDomainConfig = null;
+    exploreDataStore.domainConfig = undefined;
     if (!url) {
       console.error("Domain configuration URL is undefined.");
     }
@@ -110,7 +109,7 @@ export class DomainStore {
       }
       const json = await response.json();
       if (isDomainConfig(json)) {
-        this.currentDomainConfig = json;
+        exploreDataStore.domainConfig = json;
       }
       else {
         console.error(

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
 import { Link } from 'react-router-dom';
-import { UserConfig } from '../../stores/WorkflowTypes';
+import { UserParams } from '../../stores/WorkflowTypes';
 import { ConstraintInstance } from '../../stores/ConstraintStore';
 import { useStore } from '../../store';
 import { ConstraintTemplate } from '../../stores/ConstraintStore';
@@ -14,7 +14,7 @@ import Icon from '@mdi/react';
 
 const WorkflowConstraints: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
-  const workflowConfig: UserConfig = exploreDataStore.userConfig;
+  const workflowConfig: UserParams = exploreDataStore.userParams;
   let { constraintStore } = useStore();
   const allConstraints: ConstraintTemplate[] = constraintStore.availableConstraintTemplates.filter(
     (constraint: ConstraintTemplate) => constraint.id === "use_m" || constraint.id === "nuse_m" || constraint.id === "connected_op" || constraint.id === "not_connected_op"

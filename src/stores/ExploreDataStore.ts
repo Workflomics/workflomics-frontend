@@ -1,63 +1,17 @@
 import { makeAutoObservable } from "mobx";
 import { makePersistable } from "mobx-persist-store";
-import { UserConfig, WorkflowSolution, isTaxParameterComplete } from "./WorkflowTypes";
+import { UserParams, WorkflowSolution, isTaxParameterComplete } from "./WorkflowTypes";
 import { ApeTaxTuple } from "./TaxStore";
 import constraintStore, { ConstraintInstance } from "./ConstraintStore";
-import domainStore, { Domain, DomainConfig, JsonConstraintInstance } from "./DomainStore";
+import { Domain, DomainConfig, JsonConstraintInstance } from "./DomainStore";
 
-/**
- * TODO: Default inputs should be read from the domain configuration file.
- */
-const emptyUserConfig = (): UserConfig => {
+
+const emptyUserConfig = (): UserParams => {
   return {
     domain: undefined,
-    inputs: [
-      {
-        "http://edamontology.org/data_0006": {
-          id: "http://edamontology.org/data_0943",
-          label: "Mass spectrum",
-          root: "http://edamontology.org/data_0006",
-          subsets: [],
-        },
-        "http://edamontology.org/format_1915": {
-          id: "http://edamontology.org/format_3244",
-          label: "mzML",
-          root: "http://edamontology.org/format_1915",
-          subsets: [],
-        },
-      },
-      {
-        "http://edamontology.org/data_0006": {
-          id: "http://edamontology.org/data_2976",
-          label: "Protein sequence",
-          root: "http://edamontology.org/data_0006",
-          subsets: [],
-        },
-        "http://edamontology.org/format_1915": {
-          id: "http://edamontology.org/format_1929",
-          label: "FASTA",
-          root: "http://edamontology.org/format_1915",
-          subsets: [],
-        },
-      },
-    ],
-    outputs: [
-      {
-        "http://edamontology.org/data_0006": {
-          id: "http://edamontology.org/data_3753",
-          label: "Over-representation data",
-          root: "http://edamontology.org/data_0006",
-          subsets: [],
-        },
-        "http://edamontology.org/format_1915": {
-          id: "http://edamontology.org/format_3464",
-          label: "JSON",
-          root: "http://edamontology.org/format_1915",
-          subsets: [],
-        },
-      },
-    ],
-    constraints: [{ id: "", label: "", parameters: [] } as ConstraintInstance],
+    inputs: [],
+    outputs: [],
+    constraints: [],
     minSteps: 3,
     maxSteps: 4,
     timeout: 120,
@@ -66,13 +20,17 @@ const emptyUserConfig = (): UserConfig => {
 };
 
 
-
 /** Store for exploration configuration and solutions  */
 export class ExploreDataStore {
-  userConfig: UserConfig = emptyUserConfig();
+  userParams: UserParams = emptyUserConfig();
 
+  /** The domain configuration of the current domain.
+   *  It is used for demo inputs/outputs and as base configuration for synthesis */
+  domainConfig: DomainConfig | undefined = undefined;
+  
   workflowSolutions: WorkflowSolution[] = [];
   selectedWorkflowSolutions: WorkflowSolution[] = [];
+
   isGenerating: boolean = false;
   generationError: string = "";
 
@@ -80,7 +38,7 @@ export class ExploreDataStore {
     makeAutoObservable(this, {}, { deep: true });
     makePersistable(this, {
       name: "ExploreDataStore",
-      properties: ["userConfig", "workflowSolutions"],
+      properties: ["userParams", "domainConfig", "workflowSolutions"],
       storage: window.localStorage,
     });
   }
@@ -89,10 +47,10 @@ export class ExploreDataStore {
    * Sets the domain and clears any domain-specific configuration
    */
   setDomain(domain: Domain) {
-    this.userConfig.domain = domain;
-    this.userConfig.inputs = [];
-    this.userConfig.outputs = [];
-    this.userConfig.constraints = [];
+    this.userParams.domain = domain;
+    this.userParams.inputs = [];
+    this.userParams.outputs = [];
+    this.userParams.constraints = [];
   }
 
   /**
@@ -141,23 +99,13 @@ export class ExploreDataStore {
    *  (inputs, outputs, constraints, generation parameters) to create a configuration
    *  to use for synthesis.
    */
-  constructSynthesisConfig(config: UserConfig): DomainConfig {
-    const defaultConfig = domainStore.currentDomainConfig;
+  constructSynthesisConfig(config: UserParams): DomainConfig {
+    const defaultConfig = this.domainConfig;
     if (!defaultConfig) {
       throw new Error("No domain configuration found");
     }
 
-    const userConstraints: JsonConstraintInstance[] = this.constraintsToJSON(config.constraints);
-    // TODO: 
-    // The execution is not working with the constraints pulled from the domain config
-    // (await this.fetchConstraints(default_domain_config?.constraints_path)) || [];
-    // config.constraints?.forEach((constraint) => {
-    //   if (constraint.id !== "") {
-    //     user_constraints?.push(constraint);
-    //   }
-    // });
-
-    const obj: DomainConfig = {
+    return {
       ontology_path:  defaultConfig.ontology_path,
       ontologyPrefixIRI: defaultConfig.ontologyPrefixIRI,
       toolsTaxonomyRoot: defaultConfig.toolsTaxonomyRoot,
@@ -166,7 +114,7 @@ export class ExploreDataStore {
       constraints_path: defaultConfig.constraints_path,
       strict_tool_annotations: defaultConfig.strict_tool_annotations,
       timeout_sec: config.timeout,
-      //solutions_dir_path: defaultConfig.solutions_dir_path || ".",
+      solutions_dir_path: defaultConfig.solutions_dir_path || ".",
       solution_length: {
         min: config.minSteps,
         max: config.maxSteps,
@@ -182,12 +130,11 @@ export class ExploreDataStore {
       tool_seq_repeat: defaultConfig?.tool_seq_repeat || "false",
       inputs: this.inputsOutputsToJSON(config.inputs),
       outputs: this.inputsOutputsToJSON(config.outputs),
-      constraints: userConstraints,
+      constraints: this.constraintsToJSON(config.constraints),
     };
-    return obj;
   }
 
-  runSynthesis(config: UserConfig) {
+  runSynthesis(config: UserParams) {
     const synthesisConfig: DomainConfig = this.constructSynthesisConfig(config);
 
     this.isGenerating = true;

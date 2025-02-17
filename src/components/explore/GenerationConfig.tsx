@@ -2,12 +2,12 @@ import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserConfig } from '../../stores/WorkflowTypes';
+import { UserParams } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 
 const GenerationConfig: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
-  const workflowConfig: UserConfig = exploreDataStore.userConfig;
+  const workflowConfig: UserParams = exploreDataStore.userParams;
   const navigate = useNavigate();
 
   const runSynthesis = () => {

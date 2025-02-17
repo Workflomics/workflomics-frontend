@@ -67,57 +67,6 @@ export class ConstraintStore {
     });
   }
 
-  // /**
-  //  * Fetches constraints from a given URL and returns them as an array of ConstraintInstance objects.
-  //  * @param constraintsUrl The URL of the constraints JSON file.
-  //  * @returns An array of ConstraintInstance objects or undefined in case of an error.
-  //  */
-  // async fetchConstraints(
-  //   constraintsUrl: string | undefined
-  // ): Promise<ConstraintInstance[] | undefined> {
-  //   if (!constraintsUrl) {
-  //     console.error("Constraints URL is undefined.");
-  //     return undefined;
-  //   }
-  //   try {
-  //     const response = await fetch(constraintsUrl); // Await the response
-  //     if (!response.ok) {
-  //       throw new Error(
-  //         `Failed to fetch constraints: ${response.status} ${response.statusText}`
-  //       );
-  //     }
-  //     const json = await response.json(); // Await the JSON parsing
-  //     console.log("Fetched JSON:", json); // Log to inspect the fetched data
-
-  //     return json.constraints.map((constraint: any) => {
-  //       return {
-  //         id: constraint.constraintid,
-  //         label: constraint.constraintid,
-  //         parameters: constraint.parameters.map((param: any) => {
-  //           return Object.entries(param).reduce((obj, [key, data]) => {
-  //             if (Array.isArray(data)) {
-  //               if (data.length === 1 && data[0] !== null) {
-  //                 // If the data array has a single non-null value, use it
-  //                 return { ...obj, [key]: data[0] };
-  //               } else {
-  //                 // If the array has multiple items or is null, log it
-  //                 console.warn(`Unexpected data format for ${key}:`, data);
-  //                 return { ...obj, [key]: null }; // You can handle this case differently if needed
-  //               }
-  //             }
-  //             return { ...obj, [key]: data }; // In case data is not an array
-  //           }, {});
-  //         }),
-  //       };
-  //     });
-  //   } catch (error) {
-  //     console.error("Error fetching constraints:", error);
-  //     return undefined;
-  //   }
-  // }
-
-
-
 }
 
 const constraintStore = new ConstraintStore();

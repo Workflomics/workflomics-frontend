@@ -12,7 +12,7 @@ export function isTaxParameterComplete(taxParam: ApeTaxTuple): boolean {
 /**
  * Represents the current user-selected configuration for the APE workflow generation.
  */
-export type UserConfig = {
+export type UserParams = {
 
   /** The currently selected domain */
   domain: Domain | undefined
