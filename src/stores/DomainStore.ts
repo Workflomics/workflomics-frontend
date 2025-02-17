@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { ApeTaxTuple } from "./TaxStore";
-import { ConstraintInstance } from "./ConstraintStore";
+import exploreDataStore from "./ExploreDataStore";
+import constraintStore from "./ConstraintStore";
 
 /** A domain entry that represents a domain for selection in a list.
  *  It contains a link to the domain's configuration file.
@@ -34,17 +34,17 @@ export interface DomainConfig {
   constraints_path: string;
 
   strict_tool_annotations: string;
-  timeout_sec: string;
+  timeout_sec: number;
   solutions_dir_path: string;
   solution_length: {
     min: number;
     max: number;
   };
-  solutions: string;
+  solutions: number;
 
-  number_of_execution_scripts: string;
-  number_of_generated_graphs: string;
-  number_of_cwl_files: string;
+  number_of_execution_scripts: number;
+  number_of_generated_graphs: number;
+  number_of_cwl_files: number;
   debug_mode: string;
   use_workflow_input: string;
   use_all_generated_data: string;
@@ -77,6 +77,19 @@ export class DomainStore {
     });
   }
 
+  async selectDomain(domain: Domain) {
+    runInAction(() => {
+      // Set the newly selected domain
+      exploreDataStore.setDomain(domain);
+
+      // Fetch the domain configuration
+      domainStore.fetchDomainConfig(domain.repo_url);
+
+      // Fetch the constraints for the domain
+      constraintStore.fetchDomainConstraints(domain.repo_url);
+    });
+  }
+
   /**
    * Reads a domain configuration JSON from a URL and returns it as an object.
    * @param url The URL of the domain configuration JSON file.
@@ -84,6 +97,7 @@ export class DomainStore {
    */
   
   async fetchDomainConfig(url: string): Promise<void> {
+    this.currentDomainConfig = null;
     if (!url) {
       console.error("Domain configuration URL is undefined.");
     }

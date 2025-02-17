@@ -4,11 +4,9 @@ import { useStore } from '../../store';
 import { Domain } from '../../stores/DomainStore';
 import { useNavigate } from 'react-router-dom';
 import { ExplorationProgress } from './ExplorationProgress';
-import { runInAction } from 'mobx';
 
 const ChooseDomain: React.FC<any> = observer((props) => {
   let { domainStore } = useStore();
-  let { exploreDataStore } = useStore();
   const navigate = useNavigate();
   const domains: Domain[] = domainStore.availableDomains;
 
@@ -17,11 +15,7 @@ const ChooseDomain: React.FC<any> = observer((props) => {
   }, [domainStore]);
 
   const onChooseDomain = (domain: Domain) => {
-    runInAction(() => {
-      // Set the newly selected domain and start fetching the configuration
-      exploreDataStore.userConfig.domain = domain;
-      domainStore.fetchDomainConfig(domain.repo_url);
-    });
+    domainStore.selectDomain(domain);
     navigate('/explore/inputs-outputs');
   };
 

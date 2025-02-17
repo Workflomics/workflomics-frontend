@@ -2,16 +2,15 @@ import { makeAutoObservable } from "mobx";
 import { makePersistable } from "mobx-persist-store";
 import { UserConfig, WorkflowSolution, isTaxParameterComplete } from "./WorkflowTypes";
 import { ApeTaxTuple } from "./TaxStore";
-import { ConstraintInstance } from "./ConstraintStore";
-import domainStore, { DomainConfig, JsonConstraintInstance } from "./DomainStore";
+import constraintStore, { ConstraintInstance } from "./ConstraintStore";
+import domainStore, { Domain, DomainConfig, JsonConstraintInstance } from "./DomainStore";
 
 /**
  * TODO: Default inputs should be read from the domain configuration file.
  */
-const emptyWorkflowConfig = () => {
+const emptyUserConfig = (): UserConfig => {
   return {
     domain: undefined,
-    domainConfig: undefined,
     inputs: [
       {
         "http://edamontology.org/data_0006": {
@@ -63,7 +62,6 @@ const emptyWorkflowConfig = () => {
     maxSteps: 4,
     timeout: 120,
     solutionCount: 10,
-    run_id: "",
   };
 };
 
@@ -71,7 +69,7 @@ const emptyWorkflowConfig = () => {
 
 /** Store for exploration configuration and solutions  */
 export class ExploreDataStore {
-  userConfig: UserConfig = emptyWorkflowConfig();
+  userConfig: UserConfig = emptyUserConfig();
 
   workflowSolutions: WorkflowSolution[] = [];
   selectedWorkflowSolutions: WorkflowSolution[] = [];
@@ -88,7 +86,17 @@ export class ExploreDataStore {
   }
 
   /**
-   * Returns a JSON representation of a list of inputs or outputs that can be used in a workflow config.
+   * Sets the domain and clears any domain-specific configuration
+   */
+  setDomain(domain: Domain) {
+    this.userConfig.domain = domain;
+    this.userConfig.inputs = [];
+    this.userConfig.outputs = [];
+    this.userConfig.constraints = [];
+  }
+
+  /**
+   * Returns a JSON representation of a list of inputs or outputs that can be used in a configuration.
    * @param inputsOutputs list of inputs or outputs
    * @returns JSON representation of the inputs or outputs
    */
@@ -99,7 +107,7 @@ export class ExploreDataStore {
   }
 
   /**
-   * Returns a JSON representation of a TaxParameter that can be used in a workflow config.
+   * Returns a JSON representation of a TaxParameter that can be used in a configuration.
    * @param param taxonomy parameter
    * @returns JSON representation of the parameter
    */
@@ -110,12 +118,13 @@ export class ExploreDataStore {
   }
 
   /**
-   * Returns a JSON representation of a list of constraints that can be used in a workflow config.
-   * @param allConstraints list of constraints
+   * Returns a JSON representation of a list of constraints that can be used in a configuration.
+   * @param userConstraints list of constraints
    * @returns JSON representation of the constraints
    */
-  constraintsToJSON(allConstraints: ConstraintInstance[]): JsonConstraintInstance[] {
-    const newConst = allConstraints
+  constraintsToJSON(userConstraints: ConstraintInstance[]): JsonConstraintInstance[] {
+    // Convert user constraints to synthesis format
+    const synthesisConstraints = userConstraints
       .filter((constraint) => constraint.id !== "")
       .map((constraint) => {
         return {
@@ -123,40 +132,9 @@ export class ExploreDataStore {
           parameters: constraint!.parameters.map(this.parameterToJSON),
         };
       });
-    newConst.push({
-      constraintid: "not_connected_op",
-      parameters: [
-        {
-          operation_0004: ["PeptideProphet"],
-        },
-        {
-          operation_0004: ["PeptideProphet"],
-        },
-      ],
-    });
-    newConst.push({
-      constraintid: "not_connected_op",
-      parameters: [
-        {
-          operation_0004: ["operation_0335"],
-        },
-        {
-          operation_0004: ["operation_0335"],
-        },
-      ],
-    });
-    newConst.push({
-      constraintid: "connected_op",
-      parameters: [
-        {
-          operation_0004: ["PeptideProphet"],
-        },
-        {
-          operation_0004: ["ProteinProphet"],
-        },
-      ],
-    });
-    return newConst;
+
+    // Add domain-specific "fixed" constraints
+    return synthesisConstraints.concat(constraintStore.domainConstraints);
   }
 
   /** Combines the default domain config with the selected options in the GUI
@@ -169,14 +147,15 @@ export class ExploreDataStore {
       throw new Error("No domain configuration found");
     }
 
-    const run_constraints: ConstraintInstance[] = [];
+    const userConstraints: JsonConstraintInstance[] = this.constraintsToJSON(config.constraints);
+    // TODO: 
     // The execution is not working with the constraints pulled from the domain config
     // (await this.fetchConstraints(default_domain_config?.constraints_path)) || [];
-    config.constraints?.forEach((constraint) => {
-      if (constraint.id !== "") {
-        run_constraints?.push(constraint);
-      }
-    });
+    // config.constraints?.forEach((constraint) => {
+    //   if (constraint.id !== "") {
+    //     user_constraints?.push(constraint);
+    //   }
+    // });
 
     const obj: DomainConfig = {
       ontology_path:  defaultConfig.ontology_path,
@@ -186,16 +165,16 @@ export class ExploreDataStore {
       tool_annotations_path: defaultConfig.tool_annotations_path,
       constraints_path: defaultConfig.constraints_path,
       strict_tool_annotations: defaultConfig.strict_tool_annotations,
-      timeout_sec: config.timeout.toString(),
-      solutions_dir_path: defaultConfig.solutions_dir_path || ".",
+      timeout_sec: config.timeout,
+      //solutions_dir_path: defaultConfig.solutions_dir_path || ".",
       solution_length: {
         min: config.minSteps,
         max: config.maxSteps,
       },
-      solutions: config.solutionCount.toString(),
-      number_of_execution_scripts: config.solutionCount.toString(),
-      number_of_generated_graphs: config.solutionCount.toString(),
-      number_of_cwl_files: config.solutionCount.toString(),
+      solutions: config.solutionCount,
+      number_of_execution_scripts: config.solutionCount,
+      number_of_generated_graphs: config.solutionCount,
+      number_of_cwl_files: config.solutionCount,
       debug_mode: "false",
       use_workflow_input: defaultConfig?.use_workflow_input || "all",
       use_all_generated_data:
@@ -203,7 +182,7 @@ export class ExploreDataStore {
       tool_seq_repeat: defaultConfig?.tool_seq_repeat || "false",
       inputs: this.inputsOutputsToJSON(config.inputs),
       outputs: this.inputsOutputsToJSON(config.outputs),
-      constraints: this.constraintsToJSON(run_constraints),
+      constraints: userConstraints,
     };
     return obj;
   }

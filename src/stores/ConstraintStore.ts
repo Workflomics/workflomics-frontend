@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { ApeTaxTuple } from "./TaxStore";
+import { JsonConstraintInstance } from "./DomainStore";
 
 
 /** An instance of a constraint */
@@ -20,7 +21,7 @@ export interface ConstraintTemplate {
 export class ConstraintStore {
 
   /** Domain constraints are fixed and always added to the config for a synthesis */
-  domainConstraints: ConstraintInstance[] = [];
+  domainConstraints: JsonConstraintInstance[] = [];
 
   /** Templates for constraints that can be added by the user */
   availableConstraintTemplates: ConstraintTemplate[] = [];
@@ -34,6 +35,7 @@ export class ConstraintStore {
   }
 
   async fetchDomainConstraints(config_path: string) {
+    this.domainConstraints = [];
     this.isLoading = true;
     this.error = "";
     const response = await fetch(`/ape/domain_constraints?config_path=${config_path}`);

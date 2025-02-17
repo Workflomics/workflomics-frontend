@@ -1,5 +1,5 @@
 import { DesigntimeBenchmarks } from "./BenchmarkTypes";
-import { Domain, DomainConfig } from "./DomainStore";
+import { Domain } from "./DomainStore";
 import { ApeTaxTuple } from "./TaxStore";
 import { ConstraintInstance } from "./ConstraintStore";
 
@@ -16,9 +16,6 @@ export type UserConfig = {
 
   /** The currently selected domain */
   domain: Domain | undefined
-
-  /** The domain config for the currently selected domain */
-  domainConfig: DomainConfig | undefined
 
   /** The currently selected inputs, outputs, constraints */
   inputs: ApeTaxTuple[]
