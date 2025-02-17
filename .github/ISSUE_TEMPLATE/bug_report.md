@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ## Note
-Not all fields are obligatory, but the more details you provide, the easier it will be for us to address the issue. Feel free to omit sections that you feel are not relevant to your report.
+Not all fields are obligatory, but the more details you provide, the easier it will be for us to address the issue.
 
 ## Description
 <!-- Provide a clear and concise description of what the bug is. -->
@@ -33,6 +33,3 @@ Steps to reproduce the behavior:
 
 ## Console Logs
 <!-- If possible, add console logs to help diagnose the problem. -->
-
-## Additional Context
-<!-- Add any other context about the problem here. -->

@@ -65,6 +65,9 @@ POSTGRES_PASSWORD=<password>
 WF_DATA_DIR=<data directory>
 ```
 
+The POSTGRES_PASSWORD is the password that is used to login to the Postgres database. The password can be set to anything the user wants, but it might be a good idea to use a password manager to generate a secure password and share it with other users that need access to hosted the database.
+The WF_DATA_DIR is the directory where the data is stored.
+
 At the moment, ports are hard-coded in the docker-compose.yml.
 
 To start the database, API to the database and RestAPE, run the following:

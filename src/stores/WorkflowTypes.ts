@@ -1,6 +1,7 @@
 import { DesigntimeBenchmarks } from "./BenchmarkTypes";
 import { Domain } from "./DomainStore";
 import { ApeTaxTuple } from "./TaxStore";
+import { ConstraintInstance } from "./ConstraintStore";
 
 export function isTaxParameterComplete(taxParam: ApeTaxTuple): boolean {
   return Object.entries(taxParam).reduce((complete, [key, data]) => {
@@ -9,24 +10,23 @@ export function isTaxParameterComplete(taxParam: ApeTaxTuple): boolean {
 }
 
 /**
- * Represents a configuration for a workflow.
+ * Represents the current user-selected configuration for the APE workflow generation.
  */
-export type WorkflowConfig = {
+export type UserParams = {
+
+  /** The currently selected domain */
   domain: Domain | undefined
+
+  /** The currently selected inputs, outputs, constraints */
   inputs: ApeTaxTuple[]
   outputs: ApeTaxTuple[]
   constraints: ConstraintInstance[]
-  //order: ...
-  minSteps: Number
-  maxSteps: Number
-  timeout: Number
-  solutionCount: Number
-}
 
-export type ConstraintInstance = {
-  id: string,
-  label: string,
-  parameters: ApeTaxTuple[]
+  /** Other synthesis parameters */
+  minSteps: number
+  maxSteps: number
+  timeout: number
+  solutionCount: number
 }
 
 export type WorkflowSolution = {

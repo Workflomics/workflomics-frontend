@@ -1,8 +1,16 @@
 import { makeAutoObservable, runInAction } from "mobx";
+import { ApeTaxTuple } from "./TaxStore";
+import { JsonConstraintInstance } from "./DomainStore";
 
-/**
- * A constraint as it is stored in the backend.
- */
+
+/** An instance of a constraint */
+export type ConstraintInstance = {
+  id: string,
+  label: string,
+  parameters: ApeTaxTuple[]
+}
+
+/** Template for a constraint that can be added by the user */
 export interface ConstraintTemplate {
   id: string
   label: string
@@ -12,7 +20,13 @@ export interface ConstraintTemplate {
 
 export class ConstraintStore {
 
-  availableConstraints: ConstraintTemplate[] = [];
+  /** Domain constraints are fixed and always added to the config for a synthesis */
+  domainConstraints: JsonConstraintInstance[] = [];
+
+  /** Templates for constraints that can be added by the user */
+  availableConstraintTemplates: ConstraintTemplate[] = [];
+
+  /** Status variables */
   isLoading: boolean = false;
   error: string = "";
 
@@ -20,16 +34,11 @@ export class ConstraintStore {
     makeAutoObservable(this);
   }
 
-  async fetchData(config_path: string) {
+  async fetchDomainConstraints(config_path: string) {
+    this.domainConstraints = [];
     this.isLoading = true;
     this.error = "";
-    //TODO: figure out how to get the config.json from github
-    // const rewrittenConfigPath = config_path.replace("https://github.com/", "https://raw.githubusercontent.com/")
-    //     .replace("/tree/", "/") + "/config.json";
-    // "https://github.com/sanctuuary/APE_UseCases/tree/master/MassSpectometry"
-    // "https://raw.githubusercontent.com/Workflomics/domain-annotations/main/MassSpectometry/config.json"
-
-    const response = await fetch(`/ape/constraints?config_path=${config_path}`);
+    const response = await fetch(`/ape/domain_constraints?config_path=${config_path}`);
     const result = await response.json();
     runInAction(() => {
       this.isLoading = false;
@@ -37,7 +46,23 @@ export class ConstraintStore {
         this.error = result.error;
       }
       else {
-        this.availableConstraints = result;
+        this.domainConstraints = result;
+      }
+    });
+  }
+
+  async fetchConstraintTemplates(config_path: string) {
+    this.isLoading = true;
+    this.error = "";
+    const response = await fetch(`/ape/constraint_templates?config_path=${config_path}`);
+    const result = await response.json();
+    runInAction(() => {
+      this.isLoading = false;
+      if (result.error !== undefined) {
+        this.error = result.error;
+      }
+      else {
+        this.availableConstraintTemplates = result;
       }
     });
   }
