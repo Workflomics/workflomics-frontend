@@ -27,6 +27,9 @@ export class ExploreDataStore {
   /** The domain configuration of the current domain.
    *  It is used for demo inputs/outputs and as base configuration for synthesis */
   domainConfig: DomainConfig | undefined = undefined;
+
+  /** Domain constraints are fixed and always added to the config for a synthesis */
+  domainConstraints: JsonConstraintInstance[] = [];
   
   workflowSolutions: WorkflowSolution[] = [];
   selectedWorkflowSolutions: WorkflowSolution[] = [];
@@ -38,7 +41,7 @@ export class ExploreDataStore {
     makeAutoObservable(this, {}, { deep: true });
     makePersistable(this, {
       name: "ExploreDataStore",
-      properties: ["userParams", "domainConfig", "workflowSolutions"],
+      properties: ["userParams", "domainConfig", "domainConstraints", "workflowSolutions"],
       storage: window.localStorage,
     });
   }
@@ -92,7 +95,7 @@ export class ExploreDataStore {
       });
 
     // Add domain-specific "fixed" constraints
-    return synthesisConstraints.concat(constraintStore.domainConstraints);
+    return synthesisConstraints.concat(this.domainConstraints);
   }
 
   /** Combines the default domain config with the selected options in the GUI
