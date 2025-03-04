@@ -7,11 +7,13 @@ import { runInAction } from "mobx";
 import { useNavigate } from "react-router-dom";
 import { WorkflowCard } from "./WorkflowCard";
 import "./GenerationResults.css";
+import { Domain } from "../../stores/DomainStore";
 
 const GenerationResults: React.FC<any> = observer((props) => {
   const navigate = useNavigate();
   const { exploreDataStore } = useStore();
   const workflowSolutions = exploreDataStore.workflowSolutions;
+  const domain: Domain = exploreDataStore.userParams.domain!;
   const [doShowTechBenchmarks, setShowTechBenchmarks] = React.useState(false);
   const [solutionModalOpen, setSolutionModalOpen] = React.useState(false);
   const [modalSolution, setModalSolution] = React.useState(
@@ -237,6 +239,10 @@ const GenerationResults: React.FC<any> = observer((props) => {
                     )}
                   </ul>
                   </div>
+                  { !domain.executable && 
+                  (<div className="flex gap-2 text-red-700 font-bold">
+                    <span>Note: CWL files for the currently selected domain are not executable</span>
+                  </div>)}
                 </div>
 
                 {/* Cards for selected solutions */}
