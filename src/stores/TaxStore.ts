@@ -99,6 +99,32 @@ export class TaxStore {
     return { id: taxonomyClass.id, label: taxonomyClass.label, root: taxonomyClass.root, subsets: [] };
   }
 
+  findDataTaxonomyClass = (id: string, root: string): TaxonomyClass | undefined => {
+    const fullID = "http://edamontology.org/" + id;
+    const rootTC: TaxonomyClass = this.availableDataTax["http://edamontology.org/" + root];
+    console.log(root, rootTC, fullID);
+    if (rootTC.id === fullID) {
+      return rootTC;
+    }
+    return this.findDataTaxonomyClassInParent(fullID, rootTC);
+  };
+
+  findDataTaxonomyClassInParent = (id: string, parent: TaxonomyClass): TaxonomyClass | undefined => {
+    if (!parent.subsets) {
+      return undefined;
+    }
+    for (let tc of parent.subsets) {
+      if (tc.id === id) {
+        return tc;
+      }
+      const tc2 = this.findDataTaxonomyClassInParent(id, tc);
+      if (tc2 !== undefined) {
+        return tc2;
+      }
+    }
+    return undefined;
+  };
+
 }
 
 const taxStore = new TaxStore();

@@ -6,7 +6,7 @@ import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
 import { runInAction } from 'mobx';
-import { ApeTaxTuple } from '../../stores/TaxStore';
+import { ApeTaxTuple, TaxonomyClass } from '../../stores/TaxStore';
 
 
 const InputsOutputs: React.FC<any> = observer((props) => {
@@ -45,31 +45,30 @@ const InputsOutputs: React.FC<any> = observer((props) => {
     });
   };
 
+  /** Looks up the ontology terms in the taxonomy and converts the data structure from that
+   *  used in the domain config to the one used in the store, so it can be used in the UI.
+   */
+  const domainConfigInputOutputToTaxTuple = (inOutputs: Record<string, string[]>[], ontologyPrefix: string): Record<string, TaxonomyClass>[] => {
+    return inOutputs.map((inOutput) => {
+      return Object.entries(inOutput).reduce((obj, [key, value]) => {
+          const tc: TaxonomyClass = taxStore.findDataTaxonomyClass(value[0], key)!;
+          if (!key.startsWith(ontologyPrefix)) {
+            key = ontologyPrefix + key;
+          }
+          return { ...obj, [key]: tc };
+        }, {});
+      });
+  }
+
+  /** Fills the inputs and outputs with those specified in the domain config (i.e. the defaults) */
   const useDemoData = () => {
     runInAction(() => {
-      userParams.inputs = [
-        {
-          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006", subsets: [] },
-          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915", subsets: [] },
-        },
-        {
-          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006", subsets: [] },
-          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915", subsets: [] },
-        }
-      ];
-      userParams.outputs = [
-        {
-          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_3753", label: "Over-representation data", root: "http://edamontology.org/data_0006", subsets: [] },
-          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3464", label: "JSON", root: "http://edamontology.org/format_1915", subsets: [] },
-        }
-      ];
-      // // Make a copy of the default inputs in the domain config
-      // const config = exploreDataStore.domainConfig;
-      // if (config === undefined) {
-      //   return;
-      // }
-      // userParams.inputs = JSON.parse(JSON.stringify(config.inputs));
-      // userParams.outputs = JSON.parse(JSON.stringify(config.outputs));
+      const config = exploreDataStore.domainConfig;
+      if (config === undefined) {
+        return;
+      }
+      userParams.inputs = domainConfigInputOutputToTaxTuple(config.inputs, config.ontologyPrefixIRI);
+      userParams.outputs = domainConfigInputOutputToTaxTuple(config.outputs, config.ontologyPrefixIRI);
     });
   };
 
