@@ -14,7 +14,7 @@ export type ConstraintInstance = {
 export interface ConstraintTemplate {
   id: string
   label: string
-  parameters: { [key: string]: string }[]
+  parameters: Record<string, string>[]
 };
 
 

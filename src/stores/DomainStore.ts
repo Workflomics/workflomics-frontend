@@ -18,7 +18,7 @@ export interface Domain {
 /** A constraint instance as it is represented for APE */
 export interface JsonConstraintInstance {
   constraintid: string;
-  parameters: { [key: string]: string []}[];
+  parameters: Record<string, string>[];
 }
 
 /** A domain configuration object that contains the configuration of the domain.
@@ -50,8 +50,8 @@ export interface DomainConfig {
   use_all_generated_data: string;
   tool_seq_repeat: string;
 
-  inputs: { [key: string]: string[] }[];
-  outputs: { [key: string]: string[] }[];
+  inputs: Record<string, string[]>[];
+  outputs: Record<string, string[]>[];
   constraints: JsonConstraintInstance[];
 }
 

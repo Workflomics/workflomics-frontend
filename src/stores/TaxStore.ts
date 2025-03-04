@@ -18,7 +18,7 @@ export interface TaxonomyClass {
  * 
  * Note: In case of the operation there is only one dimension of data. 
  */
-export type ApeTaxTuple = { [key: string]: TaxonomyClass };
+export type ApeTaxTuple = Record<string, TaxonomyClass>;
 
 /**
  * The class represents a store for the taxonomy data. It is used to store the data on operation and data taxonomies,
