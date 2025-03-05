@@ -18,7 +18,7 @@ export interface Domain {
 /** A constraint instance as it is represented for APE */
 export interface JsonConstraintInstance {
   constraintid: string;
-  parameters: Record<string, string>[];
+  parameters: Record<string, string[]>[];
 }
 
 /** A domain configuration object that contains the configuration of the domain.

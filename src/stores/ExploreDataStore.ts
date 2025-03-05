@@ -2,7 +2,7 @@ import { makeAutoObservable } from "mobx";
 import { makePersistable } from "mobx-persist-store";
 import { UserParams, WorkflowSolution, isTaxParameterComplete } from "./WorkflowTypes";
 import { ApeTaxTuple } from "./TaxStore";
-import constraintStore, { ConstraintInstance } from "./ConstraintStore";
+import { ConstraintInstance } from "./ConstraintStore";
 import { Domain, DomainConfig, JsonConstraintInstance } from "./DomainStore";
 
 
