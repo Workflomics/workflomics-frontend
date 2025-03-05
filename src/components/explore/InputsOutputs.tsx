@@ -1,68 +1,74 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 import { ExplorationProgress } from './ExplorationProgress';
-import { WorkflowConfig } from '../../stores/WorkflowTypes';
+import { UserParams } from '../../stores/WorkflowTypes';
 import { useStore } from '../../store';
 import { InputsOutputSelection } from './InputOutputSelection';
 import { Link } from 'react-router-dom';
 import { runInAction } from 'mobx';
-import { ApeTaxTuple } from '../../stores/TaxStore';
+import { ApeTaxTuple, TaxonomyClass } from '../../stores/TaxStore';
 
 
 const InputsOutputs: React.FC<any> = observer((props) => {
   let { exploreDataStore } = useStore();
-  const workflowConfig: WorkflowConfig = exploreDataStore.workflowConfig;
+  const userParams: UserParams = exploreDataStore.userParams;
   let { taxStore } = useStore();
   const allDataTax: ApeTaxTuple = taxStore.availableDataTax;
 
   React.useEffect(() => {
-    if (workflowConfig.domain !== undefined) {
-      taxStore.fetchDataDimensions(workflowConfig.domain.repo_url);
+    if (userParams.domain !== undefined) {
+      taxStore.fetchDataDimensions(userParams.domain.repo_url);
     }
-  }, [taxStore, workflowConfig.domain]);
+  }, [taxStore, userParams.domain]);
 
   const addInput = () => {
     runInAction(() => {
-      workflowConfig.inputs.push(taxStore.getEmptyTaxParameter(taxStore.availableDataTax));
+      userParams.inputs.push(taxStore.getEmptyTaxParameter(taxStore.availableDataTax));
     });
   };
 
   const removeInput = (index: number) => {
     runInAction(() => {
-      workflowConfig.inputs.splice(index, 1);
+      userParams.inputs.splice(index, 1);
     });
   };
 
   const addOutput = () => {
     runInAction(() => {
-      workflowConfig.outputs.push(taxStore.getEmptyTaxParameter(taxStore.availableDataTax));
+      userParams.outputs.push(taxStore.getEmptyTaxParameter(taxStore.availableDataTax));
     });
   };
 
   const removeOutput = (index: number) => {
     runInAction(() => {
-      workflowConfig.outputs.splice(index, 1);
+      userParams.outputs.splice(index, 1);
     });
   };
 
+  /** Looks up the ontology terms in the taxonomy and converts the data structure from that
+   *  used in the domain config to the one used in the store, so it can be used in the UI.
+   */
+  const domainConfigInputOutputToTaxTuple = (inOutputs: Record<string, string[]>[], ontologyPrefix: string): Record<string, TaxonomyClass>[] => {
+    return inOutputs.map((inOutput) => {
+      return Object.entries(inOutput).reduce((obj, [key, value]) => {
+          const tc: TaxonomyClass = taxStore.findDataTaxonomyClass(value[0], key)!;
+          if (!key.startsWith(ontologyPrefix)) {
+            key = ontologyPrefix + key;
+          }
+          return { ...obj, [key]: tc };
+        }, {});
+      });
+  }
+
+  /** Fills the inputs and outputs with those specified in the domain config (i.e. the defaults) */
   const useDemoData = () => {
     runInAction(() => {
-      workflowConfig.inputs = [
-        {
-          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_0943", label: "Mass spectrum", root: "http://edamontology.org/data_0006", subsets: [] },
-          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3244", label: "mzML", root: "http://edamontology.org/format_1915", subsets: [] },
-        },
-        {
-          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_2976", label: "Protein sequence", root: "http://edamontology.org/data_0006", subsets: [] },
-          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_1929", label: "FASTA", root: "http://edamontology.org/format_1915", subsets: [] },
-        }
-      ]
-      workflowConfig.outputs = [
-        {
-          "http://edamontology.org/data_0006": { id: "http://edamontology.org/data_3753", label: "Over-representation data", root: "http://edamontology.org/data_0006", subsets: [] },
-          "http://edamontology.org/format_1915": { id: "http://edamontology.org/format_3464", label: "JSON", root: "http://edamontology.org/format_1915", subsets: [] },
-        }
-      ];
+      const config = exploreDataStore.domainConfig;
+      if (config === undefined) {
+        return;
+      }
+      userParams.inputs = domainConfigInputOutputToTaxTuple(config.inputs, config.ontologyPrefixIRI);
+      userParams.outputs = domainConfigInputOutputToTaxTuple(config.outputs, config.ontologyPrefixIRI);
     });
   };
 
@@ -76,14 +82,14 @@ const InputsOutputs: React.FC<any> = observer((props) => {
 
           {/* Status messages */}
           {taxStore.isLoading && <div className="alert alert-info">Loading data taxonomy...</div>}
-          {workflowConfig.domain === undefined && <div className="alert alert-error">Domain could not be retrieved</div>}
+          {userParams.domain === undefined && <div className="alert alert-error">Domain could not be retrieved</div>}
           {taxStore.error && <div className="alert alert-error">Data taxonomy could not be retrieved ({taxStore.error})</div>}
 
           {/* Inputs */}
           <div className="flex items-center space-x-4">
               <span className="text-3xl flex-grow-0 w-32">Inputs</span>
             <div className="flex flex-grow items-center flex-row space-x-4 w-50">
-              {workflowConfig.inputs.map((input: ApeTaxTuple, index: number) => {
+              {userParams.inputs.map((input: ApeTaxTuple, index: number) => {
                 return (<InputsOutputSelection
                     key={index}
                     parameterTuple={input}
@@ -101,7 +107,7 @@ const InputsOutputs: React.FC<any> = observer((props) => {
           <div className="flex items-center space-x-4">
               <span className="text-3xl flex-grow-0 w-32">Outputs</span>
             <div className="flex flex-grow items-center flex-row space-x-4">
-              {workflowConfig.outputs.map((output: ApeTaxTuple, index: number) => {
+              {userParams.outputs.map((output: ApeTaxTuple, index: number) => {
                 return (<InputsOutputSelection
                   key={index}
                   parameterTuple={output}
