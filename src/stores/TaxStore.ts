@@ -12,12 +12,13 @@ export interface TaxonomyClass {
 }
 
 /**
- * The type represents a data/operation tuple used in APE configuration. It represents either an operation, or a data instance class (obtained from a taxonomy).
+ * The type represents a data/operation tuple used in APE configuration. 
+ * It represents either an operation, or a data instance class (obtained from a taxonomy).
  * In each case it comprises of a map of dimensions to taxonomy classes used to depict the given dimension. 
  * 
  * Note: In case of the operation there is only one dimension of data. 
  */
-export type ApeTaxTuple = { [key: string]: TaxonomyClass };
+export type ApeTaxTuple = Record<string, TaxonomyClass>;
 
 /**
  * The class represents a store for the taxonomy data. It is used to store the data on operation and data taxonomies,
@@ -38,14 +39,9 @@ export class TaxStore {
   }
 
   /**
-   * Fetches data on operation and data taxonomies from the server.
-   * @param config_path The path to the APE configuration file.
+   * Fetches available taxonomies for tools from the server.
+   * @param config_path The path to the domain configuration file to be used by APE.
    */
-  async fetchData(config_path: string) {
-    this.fetchDataDimensions(config_path);
-    this.fetchTools(config_path);
-  }
-
   async fetchTools(config_path: string) {
     this.isLoading = true;
     this.error = "";
@@ -66,7 +62,14 @@ export class TaxStore {
     });
   }
 
+  /**
+   * Fetches available taxonomies for data from the server.
+   * @param config_path The path to the domain configuration file to be used by APE.
+   */
   async fetchDataDimensions(config_path: string) {
+    this.isLoading = true;
+    this.error = "";
+
     const responseData = await fetch(`/ape/data_taxonomy?config_path=${config_path}`);
     const resultData = await responseData.json();
     runInAction(() => {
@@ -82,7 +85,6 @@ export class TaxStore {
         this.availableDataTax = taxMap;
       }
     });
-
   }
 
   getEmptyTaxParameter(root: ApeTaxTuple): ApeTaxTuple {
@@ -96,6 +98,32 @@ export class TaxStore {
   copyTaxonomyClass(taxonomyClass: TaxonomyClass): TaxonomyClass {
     return { id: taxonomyClass.id, label: taxonomyClass.label, root: taxonomyClass.root, subsets: [] };
   }
+
+  findDataTaxonomyClass = (id: string, root: string): TaxonomyClass | undefined => {
+    const fullID = "http://edamontology.org/" + id;
+    const rootTC: TaxonomyClass = this.availableDataTax["http://edamontology.org/" + root];
+    console.log(root, rootTC, fullID);
+    if (rootTC.id === fullID) {
+      return rootTC;
+    }
+    return this.findDataTaxonomyClassInParent(fullID, rootTC);
+  };
+
+  findDataTaxonomyClassInParent = (id: string, parent: TaxonomyClass): TaxonomyClass | undefined => {
+    if (!parent.subsets) {
+      return undefined;
+    }
+    for (let tc of parent.subsets) {
+      if (tc.id === id) {
+        return tc;
+      }
+      const tc2 = this.findDataTaxonomyClassInParent(id, tc);
+      if (tc2 !== undefined) {
+        return tc2;
+      }
+    }
+    return undefined;
+  };
 
 }
 
