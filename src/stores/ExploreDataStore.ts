@@ -13,7 +13,7 @@ const emptyUserConfig = (): UserParams => {
     outputs: [],
     constraints: [],
     minSteps: 3,
-    maxSteps: 4,
+    maxSteps: 5,
     timeout: 120,
     solutionCount: 10,
   };
