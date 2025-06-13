@@ -80,7 +80,7 @@ export class TaxStore {
       else {
         const taxMap: ApeTaxTuple = {};
         for (let dataTax of resultData) {
-          taxMap[dataTax.id] = dataTax;
+          taxMap[dataTax.id] = this.cleanTaxonomyClass(dataTax);
         }
         this.availableDataTax = taxMap;
       }
@@ -124,6 +124,33 @@ export class TaxStore {
     }
     return undefined;
   };
+
+  /**
+   * Removes entries from the taxonomy class which are invalid for the UI.
+   * Currently, those are plain taxonomy entries, i.e. the ones with label ending with "_p".
+   *
+   * @param current The current taxonomy class in the recursive cleaning.
+   */
+  cleanTaxonomyClass = (current: TaxonomyClass): TaxonomyClass => {
+
+    const currentOut = this.copyTaxonomyClass(current);
+    let subTaxs: Array<TaxonomyClass> = [];
+
+    if (current.subsets){
+      /* Copy all elements of the subtree which have a specific property. */
+      for (let tc of current.subsets) {
+
+        /* Copy non-plain taxonomy classes. */
+        if (! tc.id.endsWith("_plain") ) {
+          subTaxs.push(this.cleanTaxonomyClass(tc));
+        }
+
+      }
+    }
+
+    currentOut.subsets = subTaxs;
+    return currentOut;
+  }
 
 }
 
