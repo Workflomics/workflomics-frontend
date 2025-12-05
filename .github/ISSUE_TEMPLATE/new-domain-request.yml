@@ -1,0 +1,62 @@
+name: New Domain Integration
+description: Request the addition of a new domain to the Workflomics platform
+title: "[DOMAIN] Add domain: "
+labels: ["enhancement"]
+assignees: []
+
+body:
+  - type: input
+    id: domain_name
+    attributes:
+      label: Domain Name
+      description: Full name of the domain to be added
+      placeholder: e.g., proteomics-ms
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Short description of the domain and its purpose
+      placeholder: Describe what the domain includes, e.g., tools for MS-based proteomics workflows
+    validations:
+      required: true
+
+  - type: input
+    id: config_link
+    attributes:
+      label: Domain Config URL
+      description: Link to the domain's **raw** `config.json` file (must be publicly accessible)
+      placeholder: https://raw.githubusercontent.com/Workflomics/tools-and-domains/refs/heads/main/domains/proteomics/config.json
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: validation
+    attributes:
+      label: Domain Validation
+      description: Confirm the following before submitting
+      options:
+        - label: I have validated the domain locally using the API CLI (`java -jar APE.jar synthesis ape`)
+          required: true
+        - label: I added the script to update the SQL database in the `database/03_import_data.sql` script
+          required: true
+        - label: All referenced tools and types are accessible and properly configured
+          required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Any other relevant information for the reviewers
+      placeholder: Optional
+
+  - type: checkboxes
+    id: next_steps
+    attributes:
+      label: Next Steps
+      description: Post-review checklist
+      options:
+        - label: Update the SQL database using the provided script after approval
+        - label: Confirm successful integration in the Workflomics platform after deployment
