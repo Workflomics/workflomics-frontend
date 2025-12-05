@@ -25,7 +25,7 @@ services:
       - ./database:/docker-entrypoint-initdb.d
 
   restape:
-    image: ghcr.io/sanctuuary/restape:latest
+    image: ghcr.io/workflomics/restape:latest
     restart: always
     ports:
       - "8080:4444"
