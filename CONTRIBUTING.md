@@ -6,8 +6,8 @@ To ensure the highest standards of code quality and maintainability, we ask all 
 
 ### TypeScript Standards
 
-- Follow standard [TypeScript Do's and Don'ts](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html).
 - Use `eslint` and `prettier` for linting and formatting your code. Ensure your code passes all lint checks before submitting a pull request.
+
 ### React Best Practices
 
 - Keep components small and focused on a single responsibility.
