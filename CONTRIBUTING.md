@@ -4,7 +4,8 @@ To ensure the highest standards of code quality and maintainability, we ask all 
 
 ### TypeScript Standards
 
-- Follow the [TypeScript coding guidelines](https://github.com/microsoft/TypeScript/wiki/Coding-guidelines) for TypeScript code.
+### TypeScript Standards
+
 - Use `eslint` and `prettier` for linting and formatting your code. Ensure your code passes all lint checks before submitting a pull request.
 
 ### React Best Practices
