@@ -155,9 +155,9 @@ const GenerationResults: React.FC<any> = observer((props) => {
           workflowSolutions.length === 0 && (
             <div className="alert alert-warning">
               {" "}
-              No solutions were found for given specification. Try a different a
+              No solutions were found for given specification. Try a different
               specification (e.g., change maximum workflow length, expected
-              inputs and/or outputs, or remove some constraints).{" "}
+              inputs and/or outputs, or remove some constraints) or consider using a non-executable domain.{" "}
             </div>
           )}
         {exploreDataStore.generationError && (
