@@ -68,6 +68,36 @@ const GenerationResults: React.FC<any> = observer((props) => {
       });
   };
 
+  const downloadSnakeFile = (run_id: string, snakemake_name: string) => {
+      const request = {
+        run_id: run_id,
+        file_name: snakemake_name,
+      };
+      fetch("/ape/snakemake", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          const blob = new Blob([data], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = snakemake_name;
+          link.click();
+          URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error(
+            "There has been a problem with accessing a snakemake file from the REST APE service:",
+            error
+          );
+        });
+    };
+
   const downloadInputFile = (run_id: string) => {
     fetch(`/ape/cwl_input?run_id=${run_id}`)
       .then((response) => response.text())
@@ -232,6 +262,17 @@ const GenerationResults: React.FC<any> = observer((props) => {
                               }
                             >
                               CWL
+                            </button>
+                            <button
+                              className="text-blue-500 hover:underline"
+                              onClick={() =>
+                                downloadSnakeFile(
+                                  workflow.run_id,
+                                  workflow.snakemake_name
+                                )
+                              }
+                            >
+                              SMK
                             </button>
                           </div>
                         </li>
