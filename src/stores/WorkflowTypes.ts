@@ -36,6 +36,7 @@ export type WorkflowSolution = {
   descriptive_name: string,
   description: string,
   cwl_name: string,
+  snakemake_name: string,
   figure_name: string,
   benchmark_file: string,
   isSelected: boolean,
