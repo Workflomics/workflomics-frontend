@@ -11,6 +11,7 @@ import { WorkflowConstraints } from './components/explore/WorkflowConstraints';
 import { GenerationConfig } from './components/explore/GenerationConfig';
 import { GenerationResults } from './components/explore/GenerationResults';
 import { VisualizeBenchmark } from './components/benchmark/VisualizeBenchmarks';
+import { GenerateAlternatives} from "./components/generate_alternatives/GenerateAlternatives";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,9 @@ const router = createBrowserRouter([
           { path: "configuration", element: <GenerationConfig /> },
           { path: "results", element: <GenerationResults /> }
         ]
+      },
+      {
+        path: "generate-alternatives", element: <GenerateAlternatives />
       },
       {
         path: "benchmark",
