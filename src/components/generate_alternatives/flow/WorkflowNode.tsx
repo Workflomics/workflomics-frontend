@@ -1,8 +1,9 @@
 import React from "react";
 import { Handle, Position, NodeProps } from "reactflow";
 import { Icons } from "../ui/Icons";
+import { WorkflowNodeData } from "../types";
 
-const WorkflowNode = ({ data }: NodeProps) => {
+const WorkflowNode = ({ data }: NodeProps<WorkflowNodeData>) => {
     const { label, type, status } = data;
     const isData = type !== "tool";
 
@@ -17,15 +18,15 @@ const WorkflowNode = ({ data }: NodeProps) => {
         labelStyle = "text-slate-500 font-medium italic";
         icon = <Icons.Data className="w-4 h-4 text-slate-400" />;
     } else {
-        if (status === "Fixed") {
+        if (status === "Keep") {
             containerStyle =
                 "bg-white border-slate-300 shadow-sm border-l-4 border-l-slate-600";
             icon = <Icons.Gear className="w-4 h-4 text-slate-600" />;
             labelStyle = "text-slate-800 font-bold";
             statusIndicator = (
                 <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest ml-auto">
-          KEEP
-        </span>
+                    KEEP
+                </span>
             );
         } else if (status === "Vary") {
             containerStyle =
@@ -34,8 +35,8 @@ const WorkflowNode = ({ data }: NodeProps) => {
             labelStyle = "text-slate-900 font-bold";
             statusIndicator = (
                 <span className="bg-[#f06455] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full ml-auto">
-          VARY
-        </span>
+                    VARY
+                </span>
             );
         } else if (status === "Ban") {
             containerStyle =
@@ -44,8 +45,8 @@ const WorkflowNode = ({ data }: NodeProps) => {
             labelStyle = "text-slate-400 line-through decoration-slate-400";
             statusIndicator = (
                 <span className="text-[9px] font-bold text-rose-400 uppercase tracking-widest ml-auto">
-          BAN
-        </span>
+                    BAN
+                </span>
             );
         }
     }
@@ -69,15 +70,15 @@ const WorkflowNode = ({ data }: NodeProps) => {
                 position={Position.Top}
                 className="!bg-slate-300 !w-2 !h-2 !-mt-1"
             />
-            <div className={`shrink-0`}>{icon}</div>
+            <div className="shrink-0">{icon}</div>
             <div className="flex-1 flex flex-col overflow-hidden">
-        <span className="text-[8px] uppercase font-bold tracking-wider opacity-50 mb-0.5">
-          {type}
-        </span>
+                <span className="text-[8px] uppercase font-bold tracking-wider opacity-50 mb-0.5">
+                    {type}
+                </span>
                 <div className="flex items-center justify-between">
-          <span className={`text-xs truncate ${labelStyle}`} title={label}>
-            {label}
-          </span>
+                    <span className={`text-xs truncate ${labelStyle}`} title={label}>
+                        {label}
+                    </span>
                 </div>
             </div>
             {statusIndicator && (
