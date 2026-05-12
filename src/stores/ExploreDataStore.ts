@@ -213,6 +213,39 @@ export class ExploreDataStore {
         // Handle error, display fallback image, or show error message
       });
   }
+
+  runSynthesisWithRawConfig(config: object, excludeToolSequence?: string): Promise<void> {
+    this.isGenerating = true;
+    this.generationError = "";
+    this.workflowSolutions = [];
+    return fetch("/ape/run_synthesis_and_bench", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(config),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+        return response.json();
+      })
+      .then((data: WorkflowSolution[]) => {
+        // §5.4: Lösungen mit identischer Tool-Sequenz zum Eingabeworkflow entfernen
+        const filtered = excludeToolSequence
+          ? data.filter((s) => s.descriptive_name !== excludeToolSequence)
+          : data;
+        this.workflowSolutions = filtered;
+        this.workflowSolutions.forEach((solution) => {
+          solution.isSelected = true;
+          this.loadImage(solution);
+          this.loadBenchmarkData(solution);
+        });
+        this.isGenerating = false;
+      })
+      .catch((error) => {
+        this.generationError = error.message ?? "Synthesis failed";
+        this.isGenerating = false;
+        throw error;
+      });
+  }
 }
 
 const exploreDataStore = new ExploreDataStore();
