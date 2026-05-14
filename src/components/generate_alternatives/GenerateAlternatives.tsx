@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import ReactFlow, { Background, useReactFlow } from "reactflow";
 import "reactflow/dist/style.css";
 import { useNavigate } from "react-router-dom";
@@ -21,20 +21,9 @@ function FitViewOnChange({ trigger }: { trigger: number }) {
     return null;
 }
 
-const APE_WARM_URL = "/ape/alternatives/warm";
-
 const GenerateAlternatives = observer(() => {
     const { exploreDataStore } = useStore();
     const navigate = useNavigate();
-    const [isWarming, setIsWarming] = useState(true);
-    const [warmError, setWarmError] = useState<string | null>(null);
-
-    useEffect(() => {
-        fetch(APE_WARM_URL)
-            .then((res) => { if (!res.ok) throw new Error(`Server error ${res.status}`); })
-            .catch((err) => setWarmError(err.message ?? "EDAM-Ontologie konnte nicht geladen werden."))
-            .finally(() => setIsWarming(false));
-    }, []);
     const {
         nodes,
         edges,
@@ -94,26 +83,6 @@ const GenerateAlternatives = observer(() => {
             // error shown via exploreDataStore.generationError
         }
     }, [parsedWorkflow, stepStatus, edgeStatus, edgeEndpoints, configParams, exploreDataStore, navigate]);
-
-    if (isWarming) {
-        return (
-            <div className="flex flex-col items-center justify-center w-full h-full gap-4 bg-slate-50">
-                <svg className="w-8 h-8 animate-spin text-[#f06455]" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-                </svg>
-                <p className="text-sm text-slate-500">EDAM-Ontologie wird geladen…</p>
-            </div>
-        );
-    }
-
-    if (warmError) {
-        return (
-            <div className="flex flex-col items-center justify-center w-full h-full gap-3 bg-slate-50">
-                <p className="text-sm text-rose-500 bg-rose-50 px-4 py-2 rounded-lg">{warmError}</p>
-            </div>
-        );
-    }
 
     return (
         <div className="flex flex-col w-full p-6 bg-slate-50 h-full">
