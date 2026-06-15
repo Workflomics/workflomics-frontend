@@ -1,11 +1,6 @@
 import { generateApeConfig } from "./apeConfigBuilder";
 import { ParsedWorkflow } from "../types";
 
-/**
- * T-MAP-01: Validierung der APE-Konfigurationsgenerierung (FA 2–5).
- * Prüft die JSON-Ausgabe des apeConfigBuilder für alle Constraint-Status.
- */
-
 const WORKFLOW: ParsedWorkflow = {
     nodes: [
         { id: "input_1", label: "input_1", type: "input" },
@@ -44,7 +39,7 @@ function parse(
 
 // ── Keep (use_m) ─────────────────────────────────────────────────────────────
 
-test("T-MAP-01: Keep generates use_m constraint", () => {
+test("testKeepGeneratesUseMConstraint", () => {
     const config = parse({ ToolA_01: "Keep" });
     const c = config.constraints.find((x: any) => x.constraintid === "use_m");
     expect(c).toBeDefined();
@@ -53,7 +48,7 @@ test("T-MAP-01: Keep generates use_m constraint", () => {
 
 // ── Ban (not_use_m) ───────────────────────────────────────────────────────────
 
-test("T-MAP-01: Ban generates not_use_m constraint", () => {
+test("testBanGeneratesNotUseMConstraint", () => {
     const config = parse({ ToolB_01: "Ban" });
     const c = config.constraints.find((x: any) => x.constraintid === "not_use_m");
     expect(c).toBeDefined();
@@ -62,14 +57,14 @@ test("T-MAP-01: Ban generates not_use_m constraint", () => {
 
 // ── Vary (no constraint) ──────────────────────────────────────────────────────
 
-test("T-MAP-01: Vary produces no constraint entry", () => {
+test("testVaryProducesNoConstraint", () => {
     const config = parse({ ToolA_01: "Vary" });
     expect(config.constraints).toHaveLength(0);
 });
 
 // ── Chain (connected_op) ──────────────────────────────────────────────────────
 
-test("T-MAP-01: Chain generates connected_op constraint", () => {
+test("testChainGeneratesConnectedOp", () => {
     const edgeId = "e-ToolA_01-ToolB_01";
     const config = parse(
         {},
@@ -84,7 +79,7 @@ test("T-MAP-01: Chain generates connected_op constraint", () => {
 
 // ── Break (not_connected_op) ──────────────────────────────────────────────────
 
-test("T-MAP-01: Break generates not_connected_op constraint", () => {
+test("testBreakGeneratesNotConnectedOp", () => {
     const edgeId = "e-ToolB_01-ToolC_01";
     const config = parse(
         {},
@@ -99,14 +94,14 @@ test("T-MAP-01: Break generates not_connected_op constraint", () => {
 
 // ── I/O-Mapping ───────────────────────────────────────────────────────────────
 
-test("T-MAP-01: inputs are mapped from parsed workflow", () => {
+test("testInputsMappedFromWorkflow", () => {
     const config = parse({});
     expect(config.inputs).toHaveLength(1);
     expect(config.inputs[0]["http://edamontology.org/format_1915"])
         .toContain("http://edamontology.org/format_3728");
 });
 
-test("T-MAP-01: outputs are mapped from parsed workflow", () => {
+test("testOutputsMappedFromWorkflow", () => {
     const config = parse({});
     expect(config.outputs).toHaveLength(1);
     expect(config.outputs[0]["http://edamontology.org/format_1915"])
@@ -115,7 +110,7 @@ test("T-MAP-01: outputs are mapped from parsed workflow", () => {
 
 // ── Kombination ───────────────────────────────────────────────────────────────
 
-test("T-MAP-01: multiple constraints combine correctly", () => {
+test("testMultipleConstraintsCombine", () => {
     const edgeId = "e-ToolA_01-ToolB_01";
     const config = parse(
         { ToolA_01: "Keep", ToolC_01: "Ban" },
