@@ -4,7 +4,6 @@ import { Icons } from "../ui/Icons";
 
 
 const CustomEdge = ({
-                        id,
                         sourceX,
                         sourceY,
                         targetX,

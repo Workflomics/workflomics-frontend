@@ -1,14 +1,22 @@
 import dagre from "dagre";
 import { Node, Edge } from "reactflow";
 
+const TOOL_W = 210;
+const TOOL_H = 70;
+const DATA_W = 180;
+const DATA_H = 38;
+
 export const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
     const dagreGraph = new dagre.graphlib.Graph();
     dagreGraph.setDefaultEdgeLabel(() => ({}));
-    // TB = Top to Bottom
     dagreGraph.setGraph({ rankdir: "TB", nodesep: 60, ranksep: 80 });
 
     nodes.forEach((node) => {
-        dagreGraph.setNode(node.id, { width: 190, height: 60 });
+        const isTool = node.data?.type === "tool";
+        dagreGraph.setNode(node.id, {
+            width: isTool ? TOOL_W : DATA_W,
+            height: isTool ? TOOL_H : DATA_H,
+        });
     });
 
     edges.forEach((edge) => {
@@ -18,12 +26,15 @@ export const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
     dagre.layout(dagreGraph);
 
     const layoutedNodes = nodes.map((node) => {
-        const nodeWithPosition = dagreGraph.node(node.id);
+        const pos = dagreGraph.node(node.id);
+        const isTool = node.data?.type === "tool";
+        const w = isTool ? TOOL_W : DATA_W;
+        const h = isTool ? TOOL_H : DATA_H;
         return {
             ...node,
             position: {
-                x: nodeWithPosition.x - 190 / 2,
-                y: nodeWithPosition.y - 60 / 2,
+                x: pos.x - w / 2,
+                y: pos.y - h / 2,
             },
         };
     });
