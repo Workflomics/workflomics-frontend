@@ -1,5 +1,29 @@
 import { NodeStatus, ParsedWorkflow } from "../types";
 
+// Maps CWL step labels (= APE predicateLabel) to their taxonomy IDs in tools.json.
+// Required because APE generates step names from label, but constraints need the id.
+// Source: https://github.com/Workflomics/tools-and-domains/blob/main/domains/proteomics/tools.json
+const LABEL_TO_TOOL_IDS: Record<string, string[]> = {
+    Comet:                  ["Comet"],
+    PeptideProphet:         ["PeptideProphet"],
+    ProteinProphet:         ["ProteinProphet"],
+    StPeter:                ["StPeter"],
+    mzRecal:                ["mzrecal1"],
+    idconvert:              ["idconvert_to_pepXML", "idconvert_to_mzIdentML"],
+    GOEnrichment:           ["GOEnrichment"],
+    gProfiler:              ["gProfiler"],
+    XTandem:                ["XTandem"],
+    protXml2IdList:         ["protXml2IdList"],
+    MS_Amanda:              ["MS_Amanda"],
+    MSFragger:              ["MSFragger"],
+    Sage:                   ["Sage-proteomics"],
+    wcloud:                 ["wcloud"],
+    word_cloud:             ["word_cloud"],
+    pepXml2ProteinNameList: ["pepXml2ProteinNameList"],
+};
+
+const toolIds = (label: string): string[] => LABEL_TO_TOOL_IDS[label] ?? [label];
+
 export const generateApeConfig = (
     stepStatus: Record<string, NodeStatus>,
     edgeStatus: Record<string, string>,
@@ -52,9 +76,9 @@ export const generateApeConfig = (
         const label = nodeLabelById[id];
         if (!label) return;
         if (status === "Keep") {
-            config.constraints.push({ constraintid: "use_m", parameters: [{ operation_0004: [label] }] });
+            config.constraints.push({ constraintid: "use_m", parameters: [{ operation_0004: toolIds(label) }] });
         } else if (status === "Ban") {
-            config.constraints.push({ constraintid: "not_use_m", parameters: [{ operation_0004: [label] }] });
+            config.constraints.push({ constraintid: "not_use_m", parameters: [{ operation_0004: toolIds(label) }] });
         }
         // Vary: APE hat freie Wahl, kein Constraint
     });
@@ -69,12 +93,12 @@ export const generateApeConfig = (
         if (status === "chain") {
             config.constraints.push({
                 constraintid: "connected_op",
-                parameters: [{ operation_0004: [sourceLabel] }, { operation_0004: [targetLabel] }],
+                parameters: [{ operation_0004: toolIds(sourceLabel) }, { operation_0004: toolIds(targetLabel) }],
             });
         } else if (status === "break") {
             config.constraints.push({
                 constraintid: "not_connected_op",
-                parameters: [{ operation_0004: [sourceLabel] }, { operation_0004: [targetLabel] }],
+                parameters: [{ operation_0004: toolIds(sourceLabel) }, { operation_0004: toolIds(targetLabel) }],
             });
         }
     });
