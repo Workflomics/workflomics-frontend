@@ -9,6 +9,7 @@ import CustomEdge from "./flow/CustomEdge";
 import { useWorkflowState } from "./hooks/useWorkflowState";
 import ConstraintSidebar from "./sidebar/ConstraintSidebar";
 import { Icons } from "./ui/Icons";
+import { InfoTooltip } from "./ui/InfoTooltip";
 import { useStore } from "../../store";
 import { generateApeConfig } from "./utils/apeConfigBuilder";
 
@@ -94,9 +95,26 @@ const GenerateAlternatives = observer(() => {
                 onChange={handleFileChange}
             />
 
-            <div className="flex gap-6 h-[750px]">
+            <div className="flex gap-6 h-[calc(100vh-19rem)] min-h-[500px]">
                 {/* Graph area */}
                 <div className="flex-1 relative">
+                    {/* Graph info icon — always visible */}
+                    <div className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/90 border border-slate-200 rounded-lg shadow-sm">
+                        <InfoTooltip
+                            align="right"
+                            side="bottom"
+                            text={<>
+                                <p className="mb-2">Visualizes the uploaded CWL v1.2 workflow as an interactive graph.</p>
+                                <ul className="space-y-1">
+                                    <li>Left-click a node: <span className="text-slate-600 font-semibold">Keep</span> → <span className="text-orange-500 font-semibold">Vary</span> → <span className="text-rose-600 font-semibold">Ban</span></li>
+                                    <li>Right-click a node: reverse cycle</li>
+                                    <li>Click a tool↔tool edge: <span className="text-teal-700 font-semibold">Chain</span> / <span className="text-rose-600 font-semibold">Break</span></li>
+                                </ul>
+                                <p className="mt-2 text-slate-400">Input and output nodes are not interactive.</p>
+                            </>}
+                        />
+                    </div>
+
                     {parsedWorkflow ? (
                         <>
                             {/* Filename pill + change-file button */}

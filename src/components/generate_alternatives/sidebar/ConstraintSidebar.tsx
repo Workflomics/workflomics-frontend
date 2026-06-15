@@ -1,7 +1,31 @@
 import React, { useMemo, useState } from "react";
 import { Icons } from "../ui/Icons";
+import { InfoTooltip } from "../ui/InfoTooltip";
 import { NodeStatus, ParsedWorkflow } from "../types";
 import { generateApeConfig } from "../utils/apeConfigBuilder";
+
+// Matches: quoted strings (optionally followed by a colon = key), booleans, null, numbers
+const JSON_TOKEN_RE = /("(?:\\.|[^"\\])*"(?:\s*:)?|\btrue\b|\bfalse\b|\bnull\b|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/;
+
+function JsonHighlight({ json }: { json: string }) {
+    const parts = json.split(JSON_TOKEN_RE);
+    return (
+        <pre className="text-xs font-mono leading-relaxed whitespace-pre text-left text-slate-500 rounded-lg p-5 overflow-auto">
+            {parts.map((part, i) => {
+                if (!part) return null;
+                if (part.startsWith('"')) {
+                    return part.trimEnd().endsWith(':')
+                        ? <span key={i} style={{ color: '#f06455' }}>{part}</span>
+                        : <span key={i} className="text-teal-700">{part}</span>;
+                }
+                if (part === 'true' || part === 'false') return <span key={i} className="text-rose-600">{part}</span>;
+                if (part === 'null') return <span key={i} className="text-slate-400">{part}</span>;
+                if (/^-?\d/.test(part)) return <span key={i} className="text-slate-700">{part}</span>;
+                return <React.Fragment key={i}>{part}</React.Fragment>;
+            })}
+        </pre>
+    );
+}
 
 interface ConstraintSidebarProps {
     stepStatus: Record<string, NodeStatus>;
@@ -91,9 +115,23 @@ export default function ConstraintSidebar({
                         <div className="p-1.5 bg-[#f06455]/10 rounded text-[#f06455]">
                             <Icons.List className="w-5 h-5" />
                         </div>
-                        <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">
+                        <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide flex-1">
                             Active Constraints
                         </h3>
+                        <InfoTooltip
+                            align="right"
+                            side="bottom"
+                            text={<>
+                                <p className="mb-2">Lists all constraints passed to APE for synthesis.</p>
+                                <ul className="space-y-1">
+                                    <li><span className="text-slate-600 font-semibold">Keep</span> — tool must appear in every result</li>
+                                    <li><span className="text-orange-500 font-semibold">Vary</span> — no constraint, tool can be substituted</li>
+                                    <li><span className="text-rose-600 font-semibold">Ban</span> — tool is excluded from all results</li>
+                                    <li><span className="text-teal-700 font-semibold">Chain</span> — two tools must appear consecutively</li>
+                                    <li><span className="text-rose-600 font-semibold">Break</span> — two tools must not appear consecutively</li>
+                                </ul>
+                            </>}
+                        />
                     </div>
 
                     {activeConstraints.length === 0 ? (
@@ -115,9 +153,24 @@ export default function ConstraintSidebar({
 
                 {/* APE Settings Panel */}
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-5 shrink-0 flex flex-col gap-4">
-                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-                        APE Settings
-                    </h3>
+                    <div className="flex items-center gap-2">
+                        <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide flex-1">
+                            APE Settings
+                        </h3>
+                        <InfoTooltip
+                            align="right"
+                            side="top"
+                            text={<>
+                                <p className="mb-2">Configure the APE synthesis parameters.</p>
+                                <ul className="space-y-1">
+                                    <li><span className="text-slate-800 font-semibold">Min / Max Length</span> — allowed range of workflow steps</li>
+                                    <li><span className="text-slate-800 font-semibold">Solutions</span> — max number of alternatives to generate</li>
+                                    <li><span className="text-slate-800 font-semibold">Timeout</span> — solver time limit in seconds</li>
+                                </ul>
+                                <p className="mt-2 text-slate-400">The uploaded workflow is always excluded from results.</p>
+                            </>}
+                        />
+                    </div>
                     <div className="grid grid-cols-2 gap-4">
                         {["minLength", "maxLength", "solutions", "timeout"].map((key) => (
                             <div key={key}>
@@ -200,9 +253,7 @@ export default function ConstraintSidebar({
 
                         {/* JSON body */}
                         <div className="overflow-auto flex-1 p-5">
-                            <pre className="text-xs text-slate-700 font-mono leading-relaxed whitespace-pre text-left">
-                                {jsonString}
-                            </pre>
+                            <JsonHighlight json={jsonString} />
                         </div>
                     </div>
                 </div>
