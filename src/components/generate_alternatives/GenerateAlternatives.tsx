@@ -128,7 +128,7 @@ const GenerateAlternatives = observer(() => {
                                     disabled={isLoading}
                                     className="ml-1 text-xs text-slate-400 hover:text-slate-700 disabled:opacity-50 transition-colors shrink-0"
                                 >
-                                    {isLoading ? "Parsing…" : "Ändern"}
+                                    {isLoading ? "Parsing…" : "Change"}
                                 </button>
                             </div>
 
@@ -172,8 +172,8 @@ const GenerateAlternatives = observer(() => {
                                         <Icons.Data className="w-8 h-8 text-slate-400 group-hover:text-[#f06455] transition-colors" />
                                     </div>
                                     <div className="text-center">
-                                        <p className="text-sm font-semibold text-slate-600">CWL-Datei hochladen</p>
-                                        <p className="text-xs text-slate-400 mt-1">Hier hineinziehen oder klicken zum Auswählen</p>
+                                        <p className="text-sm font-semibold text-slate-600">Upload CWL-File</p>
+                                        <p className="text-xs text-slate-400 mt-1">Drag here or click to upload</p>
                                     </div>
                                     {uploadError && (
                                         <p className="text-xs text-rose-500 bg-rose-50 px-3 py-1.5 rounded-lg">
