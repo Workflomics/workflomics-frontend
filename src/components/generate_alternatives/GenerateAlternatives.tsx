@@ -72,7 +72,7 @@ const GenerateAlternatives = observer(() => {
         const config = JSON.parse(
             generateApeConfig(stepStatus, edgeStatus, edgeEndpoints, configParams, parsedWorkflow)
         );
-        // §5.4: Tool-Sequenz des Eingabeworkflows als Referenz für Post-Filtering
+        // Tool-Sequenz des Eingabeworkflows als Referenz für Post-Filtering
         const inputToolSequence = parsedWorkflow.nodes
             .filter((n) => (n.type ?? "tool") === "tool")
             .map((n) => n.label)

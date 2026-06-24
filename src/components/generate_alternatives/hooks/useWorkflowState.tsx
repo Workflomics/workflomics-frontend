@@ -23,7 +23,7 @@ export const useWorkflowState = () => {
         solutions: 10,
     });
 
-    // Kap. 4.3: Graph neu aufbauen und alle Tools auf Keep initialisieren, sobald ein Workflow geladen wird
+    // Graph neu aufbauen und alle Tools auf Keep initialisieren, sobald ein Workflow geladen wird
     useEffect(() => {
         if (!parsedWorkflow) return;
         const nodeTypeById = Object.fromEntries(parsedWorkflow.nodes.map((n) => [n.id, n.type ?? "tool"]));
@@ -55,7 +55,7 @@ export const useWorkflowState = () => {
         setNodes(layouted.nodes);
         setEdges(layouted.edges);
 
-        // Kap. 4.3: nur Tool-Nodes bekommen einen initialen Keep-Status
+        // Nur Tool-Nodes bekommen einen initialen Keep-Status
         const initialStatus: Record<string, NodeStatus> = {};
         parsedWorkflow.nodes
             .filter((n) => (n.type ?? "tool") === "tool")
