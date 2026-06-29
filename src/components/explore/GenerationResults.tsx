@@ -68,6 +68,26 @@ const GenerationResults: React.FC<any> = observer((props) => {
       });
   };
 
+  const downloadInputFile = (run_id: string) => {
+    fetch(`/ape/cwl_input?run_id=${run_id}`)
+      .then((response) => response.text())
+      .then((data) => {
+        const blob = new Blob([data], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "input.yml";
+        link.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch((error) => {
+        console.error(
+          "There has been a problem with accessing cwl input file from the REST APE service:",
+          error
+        );
+      });
+  };
+
   const downloadSelectedWorkflows = () => {
     const selectedWorkflows: WorkflowSolution[] = workflowSolutions.filter(
       (workflow: WorkflowSolution) => workflow.isSelected
@@ -258,7 +278,20 @@ const GenerationResults: React.FC<any> = observer((props) => {
                       Download <br /> selected
                     </button>
                   </div>
-
+                  <div
+                    className="tooltip tooltip-right"
+                    data-tip="Download the CWL input file."
+                  >
+                    <button
+                      className="btn btn-primary"
+                      onClick={() =>
+                        downloadInputFile(workflowSolutions[0].run_id)
+                      }
+                    >
+                      Download <br />
+                      CWL input file
+                    </button>
+                  </div>
                 </div>
                 <div
                   className="tooltip tooltip-left"
