@@ -46,11 +46,11 @@ test("testKeepGeneratesUseMConstraint", () => {
     expect(c.parameters[0].operation_0004).toContain("ToolA");
 });
 
-// ── Ban (not_use_m) ───────────────────────────────────────────────────────────
+// ── Ban (nuse_m) ───────────────────────────────────────────────────────────
 
 test("testBanGeneratesNotUseMConstraint", () => {
     const config = parse({ ToolB_01: "Ban" });
-    const c = config.constraints.find((x: any) => x.constraintid === "not_use_m");
+    const c = config.constraints.find((x: any) => x.constraintid === "nuse_m");
     expect(c).toBeDefined();
     expect(c.parameters[0].operation_0004).toContain("ToolB");
 });
@@ -120,6 +120,6 @@ test("testMultipleConstraintsCombine", () => {
     expect(config.constraints).toHaveLength(3);
     const ids = config.constraints.map((c: any) => c.constraintid);
     expect(ids).toContain("use_m");
-    expect(ids).toContain("not_use_m");
+    expect(ids).toContain("nuse_m");
     expect(ids).toContain("connected_op");
 });

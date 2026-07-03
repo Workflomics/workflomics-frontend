@@ -70,7 +70,7 @@ export const generateApeConfig = (
         });
     });
 
-    // 2. Knoten-Constraints (Kap. 4.3): Keep → use_m, Ban → not_use_m, Vary → kein Constraint
+    // 2. Knoten-Constraints (Kap. 4.3): Keep → use_m, Ban → nuse_m, Vary → kein Constraint
     const nodeLabelById = Object.fromEntries(parsedWorkflow.nodes.map((n) => [n.id, n.label]));
     Object.entries(stepStatus).forEach(([id, status]) => {
         const label = nodeLabelById[id];
@@ -78,7 +78,7 @@ export const generateApeConfig = (
         if (status === "Keep") {
             config.constraints.push({ constraintid: "use_m", parameters: [{ operation_0004: toolIds(label) }] });
         } else if (status === "Ban") {
-            config.constraints.push({ constraintid: "not_use_m", parameters: [{ operation_0004: toolIds(label) }] });
+            config.constraints.push({ constraintid: "nuse_m", parameters: [{ operation_0004: toolIds(label) }] });
         }
         // Vary: APE hat freie Wahl, kein Constraint
     });
