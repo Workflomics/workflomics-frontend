@@ -1,9 +1,9 @@
-import { makeAutoObservable } from "mobx";
-import { makePersistable } from "mobx-persist-store";
-import { UserParams, WorkflowSolution, isTaxParameterComplete } from "./WorkflowTypes";
-import { ApeTaxTuple } from "./TaxStore";
-import { ConstraintInstance } from "./ConstraintStore";
-import { Domain, DomainConfig, JsonConstraintInstance } from "./DomainStore";
+import {makeAutoObservable} from "mobx";
+import {makePersistable} from "mobx-persist-store";
+import {isTaxParameterComplete, UserParams, WorkflowSolution} from "./WorkflowTypes";
+import {ApeTaxTuple} from "./TaxStore";
+import {ConstraintInstance} from "./ConstraintStore";
+import {Domain, DomainConfig, JsonConstraintInstance} from "./DomainStore";
 
 
 const emptyUserConfig = (): UserParams => {
@@ -190,8 +190,7 @@ export class ExploreDataStore {
     })
       .then((response) => response.blob())
       .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        solution.image = url;
+        solution.image = URL.createObjectURL(blob);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -212,6 +211,53 @@ export class ExploreDataStore {
         console.error("Error:", error);
         // Handle error, display fallback image, or show error message
       });
+  }
+
+  async runSynthesisWithRawConfig(config: object, excludeToolSequence?: string): Promise<void> {
+    this.isGenerating = true;
+    this.generationError = "";
+    this.workflowSolutions = [];
+    try {
+      const maxAttempts = 2;
+      const retryDelayMs = 1500;
+      let response!: Response;
+      let lastError = "";
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        response = await fetch("/ape/run_synthesis_and_bench", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(config),
+        });
+        if (response.ok) break;
+        const body = await response.text().catch(() => "");
+        lastError = `${response.status} ${response.statusText}${body ? `: ${body}` : ""}`;
+        if (attempt < maxAttempts - 1) {
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+        }
+      }
+      if (!response.ok)
+        throw new Error(lastError || "Synthesis failed");
+      const data = await response.json();
+      this.workflowSolutions = excludeToolSequence
+          ? data.filter((s: { descriptive_name: string; }) => s.descriptive_name !== excludeToolSequence)
+          : data;
+      this.workflowSolutions.forEach((solution) => {
+        solution.isSelected = true;
+        this.loadImage(solution);
+        this.loadBenchmarkData(solution);
+      });
+      this.isGenerating = false;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        this.generationError = error.message ?? "Synthesis failed";
+        this.isGenerating = false;
+      }
+      else {
+        this.generationError = "Unknown error" + error;
+        this.isGenerating = false;
+      }
+      throw error;
+    }
   }
 }
 
