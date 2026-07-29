@@ -16,6 +16,7 @@ const emptyUserConfig = (): UserParams => {
     maxSteps: 5,
     timeout: 120,
     solutionCount: 10,
+    createPartialScripts: true,
   };
 };
 
@@ -122,6 +123,7 @@ export class ExploreDataStore {
         min: config.minSteps,
         max: config.maxSteps,
       },
+      create_partial_scripts: config.createPartialScripts,
       solutions: config.solutionCount,
       number_of_execution_scripts: config.solutionCount,
       number_of_generated_graphs: config.solutionCount,

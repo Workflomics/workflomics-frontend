@@ -260,6 +260,11 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                   workflow.cwl_name
                                 )
                               }
+                              style={{
+                                      textDecoration: workflow.cwl_name === '' ? 'line-through' : 'none',
+                                      cursor: workflow.cwl_name === '' ? 'not-allowed' : 'pointer',
+                                    }}
+                              disabled={workflow.cwl_name === ''}
                             >
                               CWL
                             </button>
@@ -271,6 +276,11 @@ const GenerationResults: React.FC<any> = observer((props) => {
                                   workflow.snakemake_name
                                 )
                               }
+                              disabled={workflow.snakemake_name === ''}
+                              style={{
+                                      textDecoration: workflow.snakemake_name === '' ? 'line-through' : 'none',
+                                      cursor: workflow.snakemake_name === '' ? 'not-allowed' : 'pointer',
+                                    }}
                             >
                               SMK
                             </button>

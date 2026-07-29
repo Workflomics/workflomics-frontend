@@ -27,6 +27,7 @@ export type UserParams = {
   maxSteps: number
   timeout: number
   solutionCount: number
+  createPartialScripts: boolean
 }
 
 export type WorkflowSolution = {
