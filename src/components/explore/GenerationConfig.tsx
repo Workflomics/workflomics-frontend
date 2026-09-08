@@ -73,7 +73,7 @@ const GenerationConfig: React.FC<any> = observer((props) => {
                    data-tip="Specifies whether potentially non-executable workflow descriptions shall be generated.">
                 <label className="w-80 text-lg">Create Potentially Non-Executable Scripts</label>
                 <input type="checkbox"
-                       className="input input-bordered w-full max-w-xs"
+                       className="checkbox checkbox-primary"
                        checked={workflowConfig.createPartialScripts}
                        onChange={(event) => { workflowConfig.createPartialScripts = event.target.checked }}
                 />
