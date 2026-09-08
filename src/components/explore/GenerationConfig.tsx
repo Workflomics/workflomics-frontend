@@ -24,56 +24,56 @@ const GenerationConfig: React.FC<any> = observer((props) => {
         <div className="overflow-x-auto text-left space-y-6 mt-10">
 
           {/* Configuration */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-center space-x-4">
           <div className="tooltip tooltip-right" data-tip="Specify the parameters of the automated workflow generation process.">
               <h2 className="text-3xl w-80 m-4">Configuration</h2>
               </div>
             <div className="flex flex-col m-4">
               <div className="flex items-center m-2 tooltip tooltip-bottom"
                     data-tip="Specify minimal number of operations you expect in the desired workflow.">
-                  <label className="w-80 text-lg">Min # of steps</label>
+                  <label className="w-96 text-lg text-right pr-4">Min number of steps</label>
                 <input
                   type="number"
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-24"
                   value={workflowConfig.minSteps.toString()}
                   onChange={(event) => (workflowConfig.minSteps = parseInt(event.target.value))}
                 />
               </div>
                 <div className="flex items-center m-2 tooltip tooltip-bottom"
                     data-tip="Specify maximum number of operations you expect in the desired workflow.">
-                  <label className="w-80 text-lg">Max # of steps</label>
+                  <label className="w-96 text-lg text-right pr-4">Max number of steps</label>
                 <input
                   type="number"
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-24"
                   value={workflowConfig.maxSteps.toString()}
                   onChange={(event) => (workflowConfig.maxSteps = parseInt(event.target.value))}
                 />
               </div>
                   <div className="flex items-center m-2 tooltip tooltip-bottom"
                     data-tip="The maximum run time for the workflow generation. A reasonable value is 60 seconds for workflow tasks of average complexity.">
-                  <label className="w-80 text-lg">Timeout (seconds)</label>
+                  <label className="w-96 text-lg text-right pr-4">Timeout (seconds)</label>
                 <input
                   type="number"
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-24"
                   value={workflowConfig.timeout.toString()}
                   onChange={(event) => (workflowConfig.timeout = parseInt(event.target.value))}
                 />
               </div>
                     <div className="flex items-center m-2 tooltip tooltip-bottom"
                       data-tip="Specify desired number of workflows that satisfy the specification.">
-                  <label className="w-80 text-lg">Number of workflows (max)</label>
+                  <label className="w-96 text-lg text-right pr-4">Number of workflows (max)</label>
                 <input
                   type="number"
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-24"
                   value={workflowConfig.solutionCount.toString()}
                   onChange={(event) => (workflowConfig.solutionCount = parseInt(event.target.value))}
                 />
               </div>
               <div className="flex items-center m-2 tooltip tooltip-bottom"
                    data-tip="Specifies whether potentially non-executable workflow descriptions shall be generated.">
-                <label className="w-80 text-lg">Create Potentially Non-Executable Scripts</label>
+                <label className="w-96 text-lg text-right pr-4">Create Potentially Non-Executable Scripts</label>
                 <input type="checkbox"
-                       className="checkbox checkbox-primary"
+                       className="checkbox checkbox-primary border-base-300"
                        checked={workflowConfig.createPartialScripts}
                        onChange={(event) => { workflowConfig.createPartialScripts = event.target.checked }}
                 />
