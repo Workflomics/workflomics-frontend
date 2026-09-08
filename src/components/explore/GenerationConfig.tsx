@@ -75,7 +75,7 @@ const GenerationConfig: React.FC<any> = observer((props) => {
                 <input type="checkbox"
                        className="input input-bordered w-full max-w-xs"
                        checked={workflowConfig.createPartialScripts}
-                       onChange={(event) => (workflowConfig.createPartialScripts = !workflowConfig.createPartialScripts)}
+                       onChange={(event) => { workflowConfig.createPartialScripts = event.target.checked }}
                 />
               </div>
             </div>
