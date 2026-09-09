@@ -41,6 +41,7 @@ export interface DomainConfig {
     max: number;
   };
   solutions: number;
+  create_partial_scripts: boolean;
 
   number_of_execution_scripts: number;
   number_of_generated_graphs: number;

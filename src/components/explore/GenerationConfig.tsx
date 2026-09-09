@@ -69,6 +69,15 @@ const GenerationConfig: React.FC<any> = observer((props) => {
                   onChange={(event) => (workflowConfig.solutionCount = parseInt(event.target.value))}
                 />
               </div>
+              <div className="flex items-center m-2 tooltip tooltip-bottom"
+                   data-tip="Specifies whether potentially non-executable workflow descriptions shall be generated.">
+                <label className="w-80 text-lg">Create Potentially Non-Executable Scripts</label>
+                <input type="checkbox"
+                       className="checkbox checkbox-primary"
+                       checked={workflowConfig.createPartialScripts}
+                       onChange={(event) => { workflowConfig.createPartialScripts = event.target.checked }}
+                />
+              </div>
             </div>
           </div>
 
