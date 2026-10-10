@@ -40,6 +40,11 @@ authors:
     email: n.m.palmblad@lumc.nl
     affiliation: Leiden University Medical Center, Netherlands
     orcid: 'https://orcid.org/0000-0002-5865-8994'
+  - family-names: Strachardt
+    given-names: Aaron
+    email: aaron.strachardt@desy.de
+    affiliation: University of Potsdam, Germany
+    orcid: 'https://orcid.org/0009-0004-9542-1154'
 identifiers:
   - type: doi
     value: 10.5281/zenodo.10047136

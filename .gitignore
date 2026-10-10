@@ -32,3 +32,9 @@ web.zip
 # Docker-compose
 
 postgres_data/*
+
+# Local PostgREST binary (platform-specific, ~17MB)
+database/postgrest
+
+# Local postgrest config
+database/postgrest.conf
