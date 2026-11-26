@@ -54,6 +54,22 @@ To start the front-end, simply run
 npm start
 ```
 
+### Benchmark results
+
+On the benchmark visualization page, upload a benchmark JSON file and use the
+triangles in a column header to sort workflows by that column's aggregate value.
+The up triangle sorts ascending and the down triangle sorts descending. Expanded
+workflow steps stay with their workflow; uploading another file resets the sort.
+Numeric benchmarks with `"category": "scientific"` also have a target button.
+Enter a numeric target and press Enter to sort workflows from closest to farthest
+from that value. Nonnumeric or missing aggregate values are listed last.
+While target sorting is active, workflow aggregate colors in that column show
+relative distance: the closest is green and the farthest is orange. Equal
+distances share a color; if all distances are equal, they are green. Nonnumeric
+values are neutral. Other columns and expanded step colors keep their original
+desirability colors; switching away from target sorting restores the original
+aggregate colors.
+
 ## Deployment
 
 ### Back-end services

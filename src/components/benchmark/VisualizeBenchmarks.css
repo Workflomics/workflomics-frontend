@@ -8,3 +8,66 @@
 table.benchmark-results td {
   padding: 8px;
 }
+
+.benchmark-sort-controls {
+  display: inline-flex;
+  flex-direction: column;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.benchmark-sort-button {
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px;
+  opacity: 0.5;
+}
+
+.benchmark-sort-button[aria-pressed="true"] {
+  opacity: 1;
+}
+
+.benchmark-sort-button:focus-visible,
+.benchmark-target-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+.benchmark-target-button {
+  display: inline-flex;
+  margin-left: 6px;
+  vertical-align: middle;
+  opacity: 0.6;
+}
+
+.benchmark-target-button[aria-pressed="true"] {
+  opacity: 1;
+}
+
+.benchmark-target-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.benchmark-target-form input {
+  width: 7em;
+  padding: 2px 4px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.benchmark-target-form input::-webkit-inner-spin-button,
+.benchmark-target-form input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.benchmark-target-form [role="alert"] {
+  color: #b91c1c;
+  white-space: normal;
+}
